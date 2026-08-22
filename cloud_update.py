@@ -13,6 +13,7 @@ import re
 import os
 import sys
 import base64
+import subprocess
 import urllib.request
 import urllib.error
 from datetime import datetime, date as date_cls, timedelta
@@ -101,6 +102,16 @@ def parse_num(s):
 def parse_date(s):
     if not s: return None
     s = str(s).strip()
+    # 支持Excel序列号格式（如45253）
+    try:
+        serial = float(s)
+        if serial > 40000 and serial < 60000:  # Excel日期序列号范围
+            from datetime import timedelta
+            excel_epoch = date_cls(1899, 12, 30)
+            d = excel_epoch + timedelta(days=int(serial))
+            return d.strftime('%Y-%m-%d')
+    except:
+        pass
     m = re.match(r'(\d{4})[/-](\d{1,2})[/-](\d{1,2})', s)
     if m: return f"{m.group(1)}-{int(m.group(2)):02d}-{int(m.group(3)):02d}"
     m = re.match(r'(\d{1,2})月(\d{1,2})日?', s)
