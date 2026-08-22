@@ -1,0 +1,715 @@
+{
+ "2026-08-01": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   }
+  ],
+  "rest": "朱吴琪"
+ },
+ "2026-08-02": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-03": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-04": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-05": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-06": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-07": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-08": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "柚子",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪/琦琦",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-09": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "柚子",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": "琦琦"
+ },
+ "2026-08-10": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-11": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-12": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "柚子",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-13": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "柚子",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-14": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "柚子",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-15": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "柚子",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   }
+  ],
+  "rest": "周冰清"
+ },
+ "2026-08-16": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "柚子",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "樊斐",
+    "duration": 4.5
+   }
+  ],
+  "rest": "周冰清"
+ },
+ "2026-08-17": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "柚子",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-18": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   }
+  ],
+  "rest": "琦琦"
+ },
+ "2026-08-19": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-20": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "樊斐",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-21": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "樊斐",
+    "duration": 4.5
+   }
+  ],
+  "rest": "朱吴琪"
+ },
+ "2026-08-22": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-23": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": "琦琦"
+ },
+ "2026-08-24": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   }
+  ],
+  "rest": "周冰清"
+ },
+ "2026-08-25": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-26": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-27": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "樊斐",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-28": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-08-29": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "樊斐",
+    "duration": 4.5
+   }
+  ],
+  "rest": "琦琦"
+ },
+ "2026-08-30": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "琦琦",
+    "duration": 4.5
+   }
+  ],
+  "rest": "周冰清"
+ },
+ "2026-08-31": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   }
+  ],
+  "rest": "朱吴琪"
+ },
+ "2026-09-01": {
+  "slots": [
+   {
+    "time": "6:00-10:30",
+    "anchor": "琦琦",
+    "duration": 4.5
+   },
+   {
+    "time": "10:30-15:00",
+    "anchor": "周冰清",
+    "duration": 4.5
+   },
+   {
+    "time": "15:00-19:30",
+    "anchor": "樊斐",
+    "duration": 4.5
+   },
+   {
+    "time": "19:30-00:00",
+    "anchor": "朱吴琪",
+    "duration": 4.5
+   }
+  ],
+  "rest": null
+ },
+ "2026-09-02": {
+  "slots": [],
+  "rest": null
+ },
+ "2026-09-03": {
+  "slots": [],
+  "rest": null
+ }
+}
