@@ -76,7 +76,13 @@ def read_sheet_range(token, sheet_id, range_str):
     url = f'https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/{SHEET_TOKEN}/values/{sheet_id}!{range_str}'
     result = feishu_api_get(url, token)
     if result and result.get('code') == 0:
-        return result.get('data', {}).get('valueRange', {}).get('values', [])
+        values = result.get('data', {}).get('valueRange', {}).get('values', [])
+        # 把None替换成空字符串，避免数据处理逻辑把None当成'None'字符串
+        cleaned_values = []
+        for row in values:
+            cleaned_row = ['' if cell is None else cell for cell in row]
+            cleaned_values.append(cleaned_row)
+        return cleaned_values
     return None
 
 # ========== 数据处理函数 ==========
@@ -439,9 +445,9 @@ def main():
 
     # 5. 生成HTML
     log('生成HTML看板...')
-    result = os.system(f'{sys.executable} gen_html.py')
-    if result != 0:
-        log('HTML生成失败，终止')
+    result = subprocess.run([sys.executable, 'gen_html.py'], capture_output=True, text=True, encoding='utf-8')
+    if result.returncode != 0:
+        log(f'HTML生成失败: {result.stderr}')
         sys.exit(1)
     log('HTML生成完成')
 
