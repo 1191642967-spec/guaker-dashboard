@@ -1,1 +1,36 @@
+name: auto-update-dashboard
 
+on:
+  schedule:
+    - cron: '0 22 * * *'
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run cloud update script
+        env:
+          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
+          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python cloud_update.py
+
+      - name: Commit updates
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data_table1.json data_table2.json data_schedule.json update_record.json
+          git commit -m 'auto update data' || echo 'no changes'
+          git push || echo 'push failed'
