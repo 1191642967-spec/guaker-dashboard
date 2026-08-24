@@ -640,7 +640,12 @@ function renderKPI1(data) {
     {label:'客单价', value: fmt.num(avg(data,'avgOrderValue')), sub:'区间均值', color:'text-cyan-600', bg:'bg-cyan-50'},
     {label:'退款率', value: fmt.pct(avg(data,'refundRate')), sub:'区间均值', color:'text-red-600', bg:'bg-red-50'},
     {label:'商品曝光点击率', value: fmt.pct(avg(data,'productClickRate')), sub:'区间均值', color:'text-cyan-600', bg:'bg-cyan-50'},
-    {label:'点击成交转化率', value: fmt.pct(avg(data,'clickToBuyRate')), sub:'区间均值', color:'text-indigo-600', bg:'bg-indigo-50'}
+    {label:'点击成交转化率', value: fmt.pct(avg(data,'clickToBuyRate')), sub:'区间均值', color:'text-indigo-600', bg:'bg-indigo-50'},
+    {label:'小时均GMV', value: fmt.money(avg(data,'hourlyGmv')), sub:'区间均值', color:'text-blue-600', bg:'bg-blue-50'},
+    {label:'直播时长', value: fmt.num(sum(data,'duration')) + 'h', sub:'区间合计', color:'text-slate-600', bg:'bg-slate-50'},
+    {label:'新增粉丝', value: fmt.int(sum(data,'newFans')), sub:'区间合计', color:'text-green-600', bg:'bg-green-50'},
+    {label:'互动人数', value: fmt.int(sum(data,'interactionUsers')), sub:'区间合计', color:'text-amber-600', bg:'bg-amber-50'},
+    {label:'智能优惠券ROI', value: fmt.num(avg(data,'couponRoi')), sub:'区间均值', color:'text-violet-600', bg:'bg-violet-50'}
   ];
   document.getElementById('kpiCards1').innerHTML = kpis.map(k => `
     <div class="kpi-card glass-card rounded-2xl p-4">
