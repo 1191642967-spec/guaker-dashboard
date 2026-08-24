@@ -613,7 +613,9 @@ function renderKPI1(data) {
     {label:'场观', value: fmt.int(sum(data,'views')), sub:'区间合计', color:'text-purple-600', bg:'bg-purple-50'},
     {label:'成交件数', value: fmt.int(sum(data,'orders')), sub:'区间合计', color:'text-pink-600', bg:'bg-pink-50'},
     {label:'客单价', value: fmt.num(avg(data,'avgOrderValue')), sub:'区间均值', color:'text-cyan-600', bg:'bg-cyan-50'},
-    {label:'退款率', value: fmt.pct(avg(data,'refundRate')), sub:'区间均值', color:'text-red-600', bg:'bg-red-50'}
+    {label:'退款率', value: fmt.pct(avg(data,'refundRate')), sub:'区间均值', color:'text-red-600', bg:'bg-red-50'},
+    {label:'商品曝光点击率', value: fmt.pct(avg(data,'productClickRate')), sub:'区间均值', color:'text-cyan-600', bg:'bg-cyan-50'},
+    {label:'点击成交转化率', value: fmt.pct(avg(data,'clickToBuyRate')), sub:'区间均值', color:'text-indigo-600', bg:'bg-indigo-50'}
   ];
   document.getElementById('kpiCards1').innerHTML = kpis.map(k => `
     <div class="kpi-card glass-card rounded-2xl p-4">
