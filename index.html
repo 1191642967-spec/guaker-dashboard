@@ -1708,6 +1708,14 @@ document.querySelector('header h1')?.addEventListener('click', () => {
 checkAdminMode();
 
 // ==================== 初始化 ====================
+// 让日期输入框点击任意位置都能弹出日期选择器
+document.querySelectorAll('input[type="date"]').forEach(input => {
+  input.addEventListener('click', function() {
+    if (this.showPicker) {
+      this.showPicker();
+    }
+  });
+});
 initDateFilters();
 initDailyDateSelect();
 renderAll();
