@@ -1598,6 +1598,12 @@ function switchSubTab(tab) {
   document.getElementById('dailyPanel').classList.toggle('hidden', tab !== 'daily');
   document.getElementById('rangePanel').classList.toggle('hidden', tab !== 'range');
   renderAll();
+  // 延迟调用所有图表的resize方法，确保ECharts正确获取容器尺寸
+  setTimeout(() => {
+    Object.values(charts).forEach(chart => {
+      try { chart.resize(); } catch(e) {}
+    });
+  }, 100);
 }
 
 // 数据分析框
@@ -1680,8 +1686,13 @@ function renderAll() {
     renderDayRank();
     renderTable(2);
   }
-  // 重新初始化截图按钮
-  setTimeout(() => { initCardScreenshotButtons(); }, 100);
+  // 重新初始化截图按钮和图表resize
+  setTimeout(() => {
+    initCardScreenshotButtons();
+    Object.values(charts).forEach(chart => {
+      try { chart.resize(); } catch(e) {}
+    });
+  }, 100);
 }
 
 // ==================== 事件绑定 ====================
