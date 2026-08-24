@@ -541,12 +541,16 @@ function renderGmvChart(data) {
       return s;
     } },
     legend: { data: ['总GMV(加优惠券)','GMV'], top: 0, textStyle: baseTextStyle },
-    grid: { left: 50, right: 20, top: 35, bottom: 30 },
+    grid: { left: 50, right: 20, top: 40, bottom: 30 },
     xAxis: { type: 'category', data: data.map(r=>fmt.shortDate(r.date)), axisLabel: baseTextStyle, axisLine: {lineStyle:{color:'#e2e8f0'}} },
     yAxis: { type: 'value', axisLabel: {...baseTextStyle, formatter: v => v>=10000?(v/10000)+'万':v}, splitLine: {lineStyle:{color:'#f1f5f9'}} },
     series: [
-      { name: '总GMV(加优惠券)', type: 'line', smooth: true, data: data.map(r=>r.totalGmv), itemStyle:{color:'#2563eb'}, areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(37,99,235,0.2)'},{offset:1,color:'rgba(37,99,235,0)'}]}} },
-      { name: 'GMV', type: 'line', smooth: true, data: data.map(r=>r.gmv), itemStyle:{color:'#f59e0b'}, lineStyle:{type:'dashed'} }
+      { name: '总GMV(加优惠券)', type: 'line', smooth: true, data: data.map(r=>r.totalGmv), itemStyle:{color:'#2563eb'}, areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(37,99,235,0.2)'},{offset:1,color:'rgba(37,99,235,0)'}]}},
+        label: { show: true, position: 'top', fontSize: 9, fontWeight: 'bold', color: '#2563eb', formatter: p => p.value>=10000?(p.value/10000).toFixed(1)+'万':p.value },
+        symbol: 'circle', symbolSize: 5 },
+      { name: 'GMV', type: 'line', smooth: true, data: data.map(r=>r.gmv), itemStyle:{color:'#f59e0b'}, lineStyle:{type:'dashed'},
+        label: { show: true, position: 'bottom', fontSize: 9, fontWeight: 'bold', color: '#f59e0b', formatter: p => p.value>=10000?(p.value/10000).toFixed(1)+'万':p.value },
+        symbol: 'circle', symbolSize: 5 }
     ]
   });
 }
@@ -556,12 +560,16 @@ function renderRoiChart(data) {
   chart.setOption({
     tooltip: { trigger: 'axis', backgroundColor: 'rgba(255,255,255,0.95)', borderColor: '#e2e8f0', textStyle: {fontSize:12} },
     legend: { data: ['整体ROI','智能优惠券ROI'], top: 0, textStyle: baseTextStyle },
-    grid: { left: 45, right: 20, top: 35, bottom: 30 },
+    grid: { left: 45, right: 20, top: 40, bottom: 30 },
     xAxis: { type: 'category', data: data.map(r=>fmt.shortDate(r.date)), axisLabel: baseTextStyle, axisLine: {lineStyle:{color:'#e2e8f0'}} },
     yAxis: { type: 'value', axisLabel: baseTextStyle, splitLine: {lineStyle:{color:'#f1f5f9'}} },
     series: [
-      { name: '整体ROI', type: 'line', smooth: true, data: data.map(r=>r.overallRoi), itemStyle:{color:'#10b981'} },
-      { name: '智能优惠券ROI', type: 'line', smooth: true, data: data.map(r=>r.couponRoi), itemStyle:{color:'#8b5cf6'} }
+      { name: '整体ROI', type: 'line', smooth: true, data: data.map(r=>r.overallRoi), itemStyle:{color:'#10b981'},
+        label: { show: true, position: 'top', fontSize: 10, fontWeight: 'bold', color: '#10b981', formatter: '{c}' },
+        symbol: 'circle', symbolSize: 6 },
+      { name: '智能优惠券ROI', type: 'line', smooth: true, data: data.map(r=>r.couponRoi), itemStyle:{color:'#8b5cf6'},
+        label: { show: true, position: 'top', fontSize: 10, fontWeight: 'bold', color: '#8b5cf6', formatter: '{c}' },
+        symbol: 'circle', symbolSize: 6 }
     ]
   });
 }
@@ -612,8 +620,11 @@ function renderBarChart(data) {
       { type: 'value', name: '成交件数', axisLabel: baseTextStyle, splitLine: {show:false} }
     ],
     series: [
-      { name: '小时均GMV', type: 'bar', data: data.map(r=>r.hourlyGmv), itemStyle:{color:'#2563eb', borderRadius:[4,4,0,0]} },
-      { name: '成交件数', type: 'line', yAxisIndex: 1, smooth: true, data: data.map(r=>r.orders), itemStyle:{color:'#f59e0b'} }
+      { name: '小时均GMV', type: 'bar', data: data.map(r=>r.hourlyGmv), itemStyle:{color:'#2563eb', borderRadius:[4,4,0,0]},
+        label: { show: true, position: 'top', fontSize: 9, fontWeight: 'bold', color: '#2563eb', formatter: p => p.value>=10000?(p.value/10000).toFixed(1)+'万':p.value } },
+      { name: '成交件数', type: 'line', yAxisIndex: 1, smooth: true, data: data.map(r=>r.orders), itemStyle:{color:'#f59e0b'},
+        label: { show: true, position: 'top', fontSize: 9, fontWeight: 'bold', color: '#f59e0b' },
+        symbol: 'circle', symbolSize: 5 }
     ]
   });
 }
@@ -647,8 +658,10 @@ function renderDualAxisChart(chartId, data, opt) {
       { type: 'value', name: opt.rightName, nameTextStyle: {color:'#94a3b8',fontSize:10}, axisLabel: {...baseTextStyle, formatter: opt.rightAxisFmt || (v=>v)}, splitLine: {show:false} }
     ],
     series: [
-      { name: opt.leftSeries, type: 'bar', data: data.map(r=>r[opt.leftKey]), itemStyle:{color: opt.leftColor, borderRadius:[4,4,0,0]}, barMaxWidth: 30 },
-      { name: opt.rightSeries, type: 'line', yAxisIndex: 1, smooth: true, data: data.map(r=>r[opt.rightKey]), itemStyle:{color: opt.rightColor}, lineStyle:{width:2.5}, symbol: 'circle', symbolSize: 5 }
+      { name: opt.leftSeries, type: 'bar', data: data.map(r=>r[opt.leftKey]), itemStyle:{color: opt.leftColor, borderRadius:[4,4,0,0]}, barMaxWidth: 30,
+        label: { show: true, position: 'top', fontSize: 9, fontWeight: 'bold', color: opt.leftColor, formatter: p => opt.leftLabelFmt ? opt.leftLabelFmt(p.value) : p.value } },
+      { name: opt.rightSeries, type: 'line', yAxisIndex: 1, smooth: true, data: data.map(r=>r[opt.rightKey]), itemStyle:{color: opt.rightColor}, lineStyle:{width:2.5}, symbol: 'circle', symbolSize: 6,
+        label: { show: true, position: 'top', fontSize: 10, fontWeight: 'bold', color: opt.rightColor, formatter: p => opt.rightLabelFmt ? opt.rightLabelFmt(p.value) : p.value } }
     ]
   });
 }
