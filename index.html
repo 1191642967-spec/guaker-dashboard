@@ -896,18 +896,18 @@ function renderMonthlyBizCards() {
   });
 }
 
-// SVG漏斗图（均匀递减梯形，统一蓝色系，增强数据标签）
+// SVG漏斗图（均匀递减梯形，统一蓝色系，所有标签确保在截图范围内）
 function renderSvgFunnel(containerId, rawVals) {
   const container = document.getElementById(containerId);
   if (!rawVals.length || !rawVals[0].value) { container.innerHTML = '<div class="text-center text-slate-400 py-12 text-sm">暂无数据</div>'; return; }
 
-  const W = 560, H = 380;
-  const leftPad = 100, rightPad = 130;
+  const W = 640, H = 400;
+  const leftPad = 110, rightPad = 110;
   const funnelW = W - leftPad - rightPad;
   const n = rawVals.length;
-  const gap = 8;
-  const layerH = (H - 50 - gap*(n-1)) / n;
-  const topY = 25;
+  const gap = 10;
+  const layerH = (H - 60 - gap*(n-1)) / n;
+  const topY = 30;
 
   // 均匀递减宽度比例，保证形状规整
   const widthRatios = [1.0, 0.78, 0.60, 0.44, 0.28];
@@ -921,11 +921,11 @@ function renderSvgFunnel(containerId, rawVals) {
   svg += '<defs>';
   colors.forEach((c,i) => {
     svg += `<linearGradient id="fg_${gid}_${i}" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="${c}" stop-opacity="0.85"/><stop offset="100%" stop-color="${c}"/>
+      <stop offset="0%" stop-color="${c}" stop-opacity="0.9"/><stop offset="100%" stop-color="${c}"/>
     </linearGradient>`;
   });
-  svg += `<marker id="arrow_${gid}" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
-    <path d="M0,0 L7,3.5 L0,7 Z" fill="#adb5bd"/></marker>`;
+  svg += `<marker id="arrow_${gid}" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker>`;
   svg += '</defs>';
 
   // 绘制每层
@@ -938,41 +938,43 @@ function renderSvgFunnel(containerId, rawVals) {
     const x1r = leftPad + (funnelW + w1)/2;
     const x2l = leftPad + (funnelW - w2)/2;
     const x2r = leftPad + (funnelW + w2)/2;
+    const midY = (y1+y2)/2;
 
     svg += `<polygon points="${x1l},${y1} ${x1r},${y1} ${x2r},${y2} ${x2l},${y2}" fill="url(#fg_${gid}_${i})"/>`;
 
-    // 左侧环节名称标签（带序号圆点）
-    const labelX = leftPad - 15;
-    const labelY = (y1+y2)/2;
-    svg += `<circle cx="${labelX-32}" cy="${labelY-2}" r="10" fill="${colors[i]}" opacity="0.9"/>`;
-    svg += `<text x="${labelX-32}" y="${labelY+2}" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">${i+1}</text>`;
-    svg += `<text x="${labelX-18}" y="${labelY-1}" text-anchor="end" fill="#1e293b" font-size="12" font-weight="600">${rawVals[i].name}</text>`;
-    svg += `<text x="${labelX-18}" y="${labelY+13}" text-anchor="end" fill="#94a3b8" font-size="10" font-weight="500">${rawVals[i].value.toLocaleString()} 人</text>`;
+    // 左侧：序号圆点 + 环节名称 + 人数（确保x>10，在截图范围内）
+    const dotX = 25;
+    svg += `<circle cx="${dotX}" cy="${midY-4}" r="11" fill="${colors[i]}"/>`;
+    svg += `<text x="${dotX}" y="${midY}" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">${i+1}</text>`;
+    svg += `<text x="45" y="${midY-3}" text-anchor="start" fill="#1e293b" font-size="13" font-weight="700">${rawVals[i].name}</text>`;
+    svg += `<text x="45" y="${midY+12}" text-anchor="start" fill="#64748b" font-size="11" font-weight="600">${rawVals[i].value.toLocaleString()} 人</text>`;
 
-    // 内部文字（居中显示人数，增大字号提升清晰度）
+    // 漏斗内部居中：人数（大字）
     const cx = (x1l + x2l + x1r + x2r) / 4;
-    svg += `<text x="${cx}" y="${labelY-1}" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="bold">${rawVals[i].value.toLocaleString()}</text>`;
-    svg += `<text x="${cx}" y="${labelY+14}" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-weight="500">人数</text>`;
+    svg += `<text x="${cx}" y="${midY+1}" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="bold">${rawVals[i].value.toLocaleString()}</text>`;
 
-    // 右侧转化率 - 增大字号提升清晰度
+    // 右侧：转化率背景框（确保x+width < W-10，在截图范围内）
     if (i > 0) {
       const rate = rawVals[i].value / rawVals[i-1].value;
-      const rx = leftPad + funnelW + 20;
-      const ry = (y1+y2)/2;
+      const boxX = W - 95;
+      const boxW = 80;
+      const boxH = 34;
+      const boxY = midY - boxH/2;
       // 转化率背景框
-      svg += `<rect x="${rx+8}" y="${ry-16}" width="72" height="32" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>`;
-      svg += `<text x="${rx+44}" y="${ry-1}" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="bold">${(rate*100).toFixed(1)}%</text>`;
-      svg += `<text x="${rx+44}" y="${ry+12}" text-anchor="middle" fill="#64748b" font-size="9" font-weight="500">转化率</text>`;
+      svg += `<rect x="${boxX}" y="${boxY}" width="${boxW}" height="${boxH}" rx="7" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>`;
+      svg += `<text x="${boxX+boxW/2}" y="${midY-1}" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="bold">${(rate*100).toFixed(1)}%</text>`;
+      svg += `<text x="${boxX+boxW/2}" y="${midY+13}" text-anchor="middle" fill="#64748b" font-size="10" font-weight="500">转化率</text>`;
+      // 箭头连接线
       const prevY = topY + (i-1)*(layerH+gap) + layerH;
-      svg += `<line x1="${x2r+3}" y1="${prevY}" x2="${rx+5}" y2="${ry-8}" stroke="#dee2e6" stroke-width="1.2" marker-end="url(#arrow_${gid})"/>`;
+      svg += `<line x1="${x2r+5}" y1="${prevY}" x2="${boxX-8}" y2="${midY-10}" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow_${gid})"/>`;
     }
   }
 
-  // 底部整体转化率
+  // 底部整体转化率标签
   const overallRate = rawVals[n-1].value / rawVals[0].value;
-  const bottomY = H - 8;
-  svg += `<rect x="${leftPad+funnelW/2-70}" y="${bottomY-18}" width="140" height="22" rx="11" fill="#eff6ff" stroke="#dbeafe" stroke-width="1"/>`;
-  svg += `<text x="${leftPad+funnelW/2}" y="${bottomY-3}" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="bold">曝光→成交 整体转化率 ${(overallRate*100).toFixed(2)}%</text>`;
+  const bottomY = H - 12;
+  svg += `<rect x="${W/2-90}" y="${bottomY-20}" width="180" height="26" rx="13" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>`;
+  svg += `<text x="${W/2}" y="${bottomY-3}" text-anchor="middle" fill="#1e3a8a" font-size="13" font-weight="bold">曝光→成交 整体 ${(overallRate*100).toFixed(2)}%</text>`;
 
   svg += '</svg>';
   container.innerHTML = svg;
