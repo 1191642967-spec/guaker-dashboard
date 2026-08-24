@@ -2255,13 +2255,29 @@ window.addEventListener('load', function() {
   // 渲染所有内容
   renderAll();
   
-  // 延迟初始化截图按钮和图表resize，确保DOM渲染完成
-  setTimeout(() => {
-    initCardScreenshotButtons();
-    Object.values(charts).forEach(chart => {
-      try { chart.resize(); } catch(e) {}
-    });
-  }, 300);
+  // 多次延迟渲染和resize，确保ECharts图表完全渲染
+  var renderCount = 0;
+  function ensureChartsRendered() {
+    renderCount++;
+    try {
+      // 重新渲染所有内容
+      renderAll();
+      // resize所有图表
+      Object.values(charts).forEach(function(chart) {
+        try { chart.resize(); } catch(e) {}
+      });
+      // 初始化截图按钮
+      initCardScreenshotButtons();
+    } catch(e) {
+      console.error('第' + renderCount + '次渲染失败:', e);
+    }
+    // 最多渲染5次，确保成功
+    if (renderCount < 5) {
+      setTimeout(ensureChartsRendered, renderCount * 500 + 500);
+    }
+  }
+  // 开始多次渲染
+  setTimeout(ensureChartsRendered, 500);
 });
 </script>
 </body>
