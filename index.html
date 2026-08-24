@@ -2243,11 +2243,11 @@ window.addEventListener('load', function() {
   initDailyDateSelect();
   initWeekRankSelect();
   
-  // 绑定事件（确保DOM已加载完成）
-  document.getElementById('tab1Btn').onclick = () => switchTab(1);
-  document.getElementById('tab2Btn').onclick = () => switchTab(2);
-  document.getElementById('subTabDailyBtn').onclick = () => switchSubTab('daily');
-  document.getElementById('subTabRangeBtn').onclick = () => switchSubTab('range');
+  // 绑定事件（确保DOM已加载完成，使用addEventListener更可靠）
+  document.getElementById('tab1Btn').addEventListener('click', function() { switchTab(1); });
+  document.getElementById('tab2Btn').addEventListener('click', function() { switchTab(2); });
+  document.getElementById('subTabDailyBtn').addEventListener('click', function() { switchSubTab('daily'); });
+  document.getElementById('subTabRangeBtn').addEventListener('click', function() { switchSubTab('range'); });
   
   // 渲染所有内容
   renderAll();
