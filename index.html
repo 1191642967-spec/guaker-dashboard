@@ -942,12 +942,9 @@ function renderSvgFunnel(containerId, rawVals) {
 
     svg += `<polygon points="${x1l},${y1} ${x1r},${y1} ${x2r},${y2} ${x2l},${y2}" fill="url(#fg_${gid}_${i})"/>`;
 
-    // 左侧：序号圆点 + 环节名称 + 人数（确保x>10，在截图范围内）
-    const dotX = 25;
-    svg += `<circle cx="${dotX}" cy="${midY-4}" r="11" fill="${colors[i]}"/>`;
-    svg += `<text x="${dotX}" y="${midY}" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">${i+1}</text>`;
-    svg += `<text x="45" y="${midY-3}" text-anchor="start" fill="#1e293b" font-size="13" font-weight="700">${rawVals[i].name}</text>`;
-    svg += `<text x="45" y="${midY+12}" text-anchor="start" fill="#64748b" font-size="11" font-weight="600">${rawVals[i].value.toLocaleString()} 人</text>`;
+    // 左侧：环节名称 + 人数（去掉序号圆点，避免文字重叠）
+    svg += `<text x="15" y="${midY-4}" text-anchor="start" fill="#1e293b" font-size="13" font-weight="700">${rawVals[i].name}</text>`;
+    svg += `<text x="15" y="${midY+12}" text-anchor="start" fill="#64748b" font-size="11" font-weight="600">${rawVals[i].value.toLocaleString()} 人</text>`;
 
     // 漏斗内部居中：人数（大字）
     const cx = (x1l + x2l + x1r + x2r) / 4;
