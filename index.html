@@ -799,7 +799,26 @@ function renderDayRank() {
 
 // ==================== 图表 ====================
 function getChart(id) {
-  if (!charts[id]) charts[id] = echarts.init(document.getElementById(id));
+  if (typeof echarts === 'undefined') {
+    console.error('ECharts库未加载');
+    return null;
+  }
+  const el = document.getElementById(id);
+  if (!el) {
+    console.error('图表容器不存在:', id);
+    return null;
+  }
+  if (!charts[id]) {
+    // 确保容器有尺寸
+    if (el.offsetWidth === 0 || el.offsetHeight === 0) {
+      const computedStyle = window.getComputedStyle(el);
+      const w = el.style.width || computedStyle.width || '100%';
+      const h = el.style.height || computedStyle.height || '300px';
+      if (!el.style.width) el.style.width = w;
+      if (!el.style.height) el.style.height = h;
+    }
+    charts[id] = echarts.init(el);
+  }
   return charts[id];
 }
 
@@ -2107,9 +2126,18 @@ initDateFilters();
 initWeekCompare();
 initDailyDateSelect();
 initWeekRankSelect();
-renderAll();
-// 延迟初始化截图按钮，确保DOM渲染完成
-setTimeout(() => { initCardScreenshotButtons(); }, 300);
+
+// 等待页面完全加载后再渲染图表，确保ECharts库和DOM都已就绪
+window.addEventListener('load', function() {
+  renderAll();
+  // 延迟初始化截图按钮和图表resize，确保DOM渲染完成
+  setTimeout(() => {
+    initCardScreenshotButtons();
+    Object.values(charts).forEach(chart => {
+      try { chart.resize(); } catch(e) {}
+    });
+  }, 300);
+});
 </script>
 </body>
 </html>
