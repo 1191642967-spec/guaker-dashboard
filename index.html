@@ -441,9 +441,33 @@ function initDateFilters() {
   document.getElementById('dateStart').max = max;
   document.getElementById('dateEnd').min = min;
   document.getElementById('dateEnd').max = max;
-  document.getElementById('dateStart').value = min;
-  document.getElementById('dateEnd').value = max;
-  dateStart = min; dateEnd = max;
+  
+  // 默认显示上一个自然周的数据
+  const latestWeekStart = getWeekStart(max);
+  const latestWeekEnd = getWeekEnd(latestWeekStart);
+  const today = new Date().toISOString().split('T')[0];
+  const thisWeekStart = getWeekStart(today);
+  
+  let defaultStart, defaultEnd;
+  if (latestWeekStart >= thisWeekStart) {
+    // 最新数据在本周，默认显示上个自然周
+    const lastWeekDate = new Date(latestWeekStart);
+    lastWeekDate.setDate(lastWeekDate.getDate() - 7);
+    defaultStart = lastWeekDate.toISOString().split('T')[0];
+    defaultEnd = getWeekEnd(defaultStart);
+  } else {
+    // 最新数据不在本周，默认显示最新数据所在的自然周
+    defaultStart = latestWeekStart;
+    defaultEnd = latestWeekEnd;
+  }
+  
+  // 确保默认日期在数据范围内
+  if (defaultStart < min) defaultStart = min;
+  if (defaultEnd > max) defaultEnd = max;
+  
+  document.getElementById('dateStart').value = defaultStart;
+  document.getElementById('dateEnd').value = defaultEnd;
+  dateStart = defaultStart; dateEnd = defaultEnd;
 }
 
 // ==================== 双周数据对比 ====================
