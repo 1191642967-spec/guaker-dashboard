@@ -1827,11 +1827,11 @@ function renderAll() {
   }, 100);
 }
 
-// ==================== 事件绑定 ====================
-document.getElementById('tab1Btn').onclick = () => switchTab(1);
-document.getElementById('tab2Btn').onclick = () => switchTab(2);
-document.getElementById('subTabDailyBtn').onclick = () => switchSubTab('daily');
-document.getElementById('subTabRangeBtn').onclick = () => switchSubTab('range');
+// ==================== 事件绑定（已移到window.onload中，确保DOM加载完成） ====================
+// document.getElementById('tab1Btn').onclick = () => switchTab(1);
+// document.getElementById('tab2Btn').onclick = () => switchTab(2);
+// document.getElementById('subTabDailyBtn').onclick = () => switchSubTab('daily');
+// document.getElementById('subTabRangeBtn').onclick = () => switchSubTab('range');
 document.getElementById('dateStart').onchange = e => { dateStart = e.target.value; renderAll(); };
 document.getElementById('dateEnd').onchange = e => { dateEnd = e.target.value; renderAll(); };
 document.getElementById('resetDate').onclick = () => { initDateFilters(); document.getElementById('quickRangeLabel').textContent=''; renderAll(); };
