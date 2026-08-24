@@ -342,8 +342,9 @@
 
   <!-- 周度主播排名 -->
   <div class="glass-card rounded-2xl p-5 mb-5">
-    <div class="flex items-center gap-2 mb-4">
+    <div class="flex items-center gap-2 mb-4 flex-wrap">
       <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003da5, #2563eb);">周度排名</span>
+      <select id="weekRankSelect" class="border border-slate-200 rounded-lg px-3 py-1 text-xs focus:ring-2 focus:ring-indigo-400 outline-none bg-white"></select>
       <span id="weekRankLabel" class="text-xs text-slate-400"></span>
     </div>
     <div id="weekRankList" class="space-y-3"></div>
@@ -687,16 +688,76 @@ function renderMonthRank() {
   renderRankList('monthRankList', rank, 'monthRankLabel', `${y}年${m}月（${data.length}场）`);
 }
 
-function renderWeekRank() {
+// 获取自然周的周一和周日
+function getWeekRange(dateStr) {
+  const d = new Date(dateStr);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  const monday = new Date(d.setDate(diff));
+  const sunday = new Date(monday);
+  sunday.setDate(sunday.getDate() + 6);
+  return {
+    start: monday.toISOString().slice(0,10),
+    end: sunday.toISOString().slice(0,10)
+  };
+}
+
+// 初始化周排名下拉选择器
+function initWeekRankSelect() {
   const dates = [...new Set(ANCHOR.map(r=>r.date))].sort();
+  if (!dates.length) return;
+  const select = document.getElementById('weekRankSelect');
+  if (!select) return;
+  
+  // 获取所有不重复的自然周
+  const weeks = [];
+  const weekStarts = new Set();
+  dates.forEach(d => {
+    const range = getWeekRange(d);
+    if (!weekStarts.has(range.start)) {
+      weekStarts.add(range.start);
+      weeks.push(range);
+    }
+  });
+  weeks.sort((a,b) => a.start.localeCompare(b.start));
+  
+  // 填充下拉选项
+  select.innerHTML = weeks.map((w, i) => 
+    `<option value="${w.start}">第${i+1}周 (${w.start} ~ ${w.end})</option>`
+  ).join('');
+  
+  // 默认选择上个自然周（如果有）
   const latest = dates[dates.length-1];
-  if (!latest) { renderRankList('weekRankList', [], 'weekRankLabel', ''); return; }
-  const weekAgo = new Date(latest);
-  weekAgo.setDate(weekAgo.getDate() - 6);
-  const weekStart = weekAgo.toISOString().slice(0,10);
-  const data = ANCHOR.filter(r=>r.date >= weekStart && r.date <= latest);
+  const latestWeek = getWeekRange(latest);
+  const latestWeekIdx = weeks.findIndex(w => w.start === latestWeek.start);
+  if (latestWeekIdx > 0) {
+    // 上个自然周
+    select.value = weeks[latestWeekIdx - 1].start;
+  } else if (weeks.length > 0) {
+    select.value = weeks[weeks.length - 1].start;
+  }
+  
+  select.onchange = () => renderWeekRank();
+}
+
+function renderWeekRank() {
+  const select = document.getElementById('weekRankSelect');
+  let weekStart;
+  if (select && select.value) {
+    weekStart = select.value;
+  } else {
+    // 默认上个自然周
+    const dates = [...new Set(ANCHOR.map(r=>r.date))].sort();
+    if (!dates.length) { renderRankList('weekRankList', [], 'weekRankLabel', ''); return; }
+    const latest = dates[dates.length-1];
+    const latestWeek = getWeekRange(latest);
+    weekStart = latestWeek.start;
+  }
+  
+  const range = getWeekRange(weekStart);
+  const data = ANCHOR.filter(r=>r.date >= range.start && r.date <= range.end);
   const rank = getAnchorRank(data);
-  renderRankList('weekRankList', rank, 'weekRankLabel', `${weekStart} ~ ${latest}（${data.length}场）`);
+  renderRankList('weekRankList', rank, 'weekRankLabel', `${range.start} ~ ${range.end}（${data.length}场）`);
 }
 
 function renderDayRank() {
@@ -2005,6 +2066,7 @@ document.querySelectorAll('input[type="date"]').forEach(input => {
 initDateFilters();
 initWeekCompare();
 initDailyDateSelect();
+initWeekRankSelect();
 renderAll();
 // 延迟初始化截图按钮，确保DOM渲染完成
 setTimeout(() => { initCardScreenshotButtons(); }, 300);
