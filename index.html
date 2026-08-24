@@ -519,7 +519,7 @@ function compareWeeks() {
     const v1 = k.type === 'sum' ? sum(week1Data, k.key) : avg(week1Data, k.key);
     const v2 = k.type === 'sum' ? sum(week2Data, k.key) : avg(week2Data, k.key);
     const diff = v1 && v2 ? ((v2 - v1) / v1 * 100) : 0;
-    const diffColor = diff > 0 ? 'text-green-600' : diff < 0 ? 'text-red-600' : 'text-slate-400';
+    const diffColor = diff > 0 ? 'text-red-600' : diff < 0 ? 'text-green-600' : 'text-slate-400';
     const diffIcon = diff > 0 ? '↑' : diff < 0 ? '↓' : '→';
     const formatted1 = k.fmt === 'money' ? fmt.money(v1) : k.fmt === 'int' ? fmt.int(v1) : k.fmt === 'pct' ? fmt.pct(v1) : fmt.num(v1);
     const formatted2 = k.fmt === 'money' ? fmt.money(v2) : k.fmt === 'int' ? fmt.int(v2) : k.fmt === 'pct' ? fmt.pct(v2) : fmt.num(v2);
