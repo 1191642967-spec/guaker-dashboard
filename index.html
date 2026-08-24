@@ -2235,14 +2235,23 @@ document.querySelectorAll('input[type="date"]').forEach(input => {
     }
   });
 });
-initDateFilters();
-initWeekCompare();
-initDailyDateSelect();
-initWeekRankSelect();
-
 // 等待页面完全加载后再渲染图表，确保ECharts库和DOM都已就绪
 window.addEventListener('load', function() {
+  // 初始化日期筛选器
+  initDateFilters();
+  initWeekCompare();
+  initDailyDateSelect();
+  initWeekRankSelect();
+  
+  // 绑定事件（确保DOM已加载完成）
+  document.getElementById('tab1Btn').onclick = () => switchTab(1);
+  document.getElementById('tab2Btn').onclick = () => switchTab(2);
+  document.getElementById('subTabDailyBtn').onclick = () => switchSubTab('daily');
+  document.getElementById('subTabRangeBtn').onclick = () => switchSubTab('range');
+  
+  // 渲染所有内容
   renderAll();
+  
   // 延迟初始化截图按钮和图表resize，确保DOM渲染完成
   setTimeout(() => {
     initCardScreenshotButtons();
