@@ -842,9 +842,9 @@ function renderDualAxisChart(chartId, data, opt) {
     ],
     series: [
       { name: opt.leftSeries, type: 'bar', data: data.map(r=>r[opt.leftKey]), itemStyle:{color: opt.leftColor, borderRadius:[4,4,0,0]}, barMaxWidth: 30,
-        label: { show: true, position: 'top', fontSize: 9, fontWeight: 'bold', color: opt.leftColor, formatter: p => opt.leftLabelFmt ? opt.leftLabelFmt(p.value) : p.value } },
+        label: { show: true, position: 'top', fontSize: 9, fontWeight: 'bold', color: opt.leftColor, formatter: p => opt.leftLabelFmt ? opt.leftLabelFmt(p.value) : (opt.leftFmt ? opt.leftFmt(p.value) : p.value) } },
       { name: opt.rightSeries, type: 'line', yAxisIndex: 1, smooth: true, data: data.map(r=>r[opt.rightKey]), itemStyle:{color: opt.rightColor}, lineStyle:{width:2.5}, symbol: 'circle', symbolSize: 6,
-        label: { show: true, position: 'top', fontSize: 10, fontWeight: 'bold', color: opt.rightColor, formatter: p => opt.rightLabelFmt ? opt.rightLabelFmt(p.value) : p.value } }
+        label: { show: true, position: 'top', fontSize: 10, fontWeight: 'bold', color: opt.rightColor, formatter: p => opt.rightLabelFmt ? opt.rightLabelFmt(p.value) : (opt.rightFmt ? opt.rightFmt(p.value) : p.value) } }
     ]
   });
 }
