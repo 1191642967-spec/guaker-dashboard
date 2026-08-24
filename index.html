@@ -896,13 +896,13 @@ function renderMonthlyBizCards() {
   });
 }
 
-// SVG漏斗图（均匀递减梯形，统一蓝色系）
+// SVG漏斗图（均匀递减梯形，统一蓝色系，增强数据标签）
 function renderSvgFunnel(containerId, rawVals) {
   const container = document.getElementById(containerId);
   if (!rawVals.length || !rawVals[0].value) { container.innerHTML = '<div class="text-center text-slate-400 py-12 text-sm">暂无数据</div>'; return; }
 
-  const W = 520, H = 380;
-  const leftPad = 75, rightPad = 120;
+  const W = 560, H = 380;
+  const leftPad = 100, rightPad = 130;
   const funnelW = W - leftPad - rightPad;
   const n = rawVals.length;
   const gap = 8;
@@ -928,14 +928,6 @@ function renderSvgFunnel(containerId, rawVals) {
     <path d="M0,0 L7,3.5 L0,7 Z" fill="#adb5bd"/></marker>`;
   svg += '</defs>';
 
-  // 左侧整体转化率
-  const overallRate = rawVals[n-1].value / rawVals[0].value;
-  svg += `<text x="${leftPad-15}" y="${H/2-10}" text-anchor="middle" fill="#1e293b" font-size="20" font-weight="bold">${(overallRate*100).toFixed(2)}%</text>`;
-  svg += `<text x="${leftPad-15}" y="${H/2+10}" text-anchor="middle" fill="#64748b" font-size="11" font-weight="500">曝光-成交</text>`;
-  svg += `<text x="${leftPad-15}" y="${H/2+24}" text-anchor="middle" fill="#64748b" font-size="11" font-weight="500">转化率(人数)</text>`;
-  svg += `<path d="M${leftPad-35},${topY+10} L${leftPad-35},${H-20}" stroke="#e9ecef" stroke-width="1.5" fill="none"/>`;
-  svg += `<path d="M${leftPad-35},${H-20} L${leftPad-8},${H-20}" stroke="#e9ecef" stroke-width="1.5" fill="none" marker-end="url(#arrow_${gid})"/>`;
-
   // 绘制每层
   for (let i = 0; i < n; i++) {
     const w1 = widths[i];
@@ -949,23 +941,38 @@ function renderSvgFunnel(containerId, rawVals) {
 
     svg += `<polygon points="${x1l},${y1} ${x1r},${y1} ${x2r},${y2} ${x2l},${y2}" fill="url(#fg_${gid}_${i})"/>`;
 
-    // 内部文字（右对齐，贴近右侧）- 增大字号提升清晰度
-    const tx = x2r - 14;
-    svg += `<text x="${tx}" y="${y1+layerH/2-2}" text-anchor="end" fill="#ffffff" font-size="16" font-weight="bold">${rawVals[i].value.toLocaleString()}</text>`;
-    svg += `<text x="${tx}" y="${y1+layerH/2+15}" text-anchor="end" fill="rgba(255,255,255,0.9)" font-size="11" font-weight="500">${rawVals[i].name}人数</text>`;
+    // 左侧环节名称标签（带序号圆点）
+    const labelX = leftPad - 15;
+    const labelY = (y1+y2)/2;
+    svg += `<circle cx="${labelX-32}" cy="${labelY-2}" r="10" fill="${colors[i]}" opacity="0.9"/>`;
+    svg += `<text x="${labelX-32}" y="${labelY+2}" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">${i+1}</text>`;
+    svg += `<text x="${labelX-18}" y="${labelY-1}" text-anchor="end" fill="#1e293b" font-size="12" font-weight="600">${rawVals[i].name}</text>`;
+    svg += `<text x="${labelX-18}" y="${labelY+13}" text-anchor="end" fill="#94a3b8" font-size="10" font-weight="500">${rawVals[i].value.toLocaleString()} 人</text>`;
+
+    // 内部文字（居中显示人数，增大字号提升清晰度）
+    const cx = (x1l + x2l + x1r + x2r) / 4;
+    svg += `<text x="${cx}" y="${labelY-1}" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="bold">${rawVals[i].value.toLocaleString()}</text>`;
+    svg += `<text x="${cx}" y="${labelY+14}" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="10" font-weight="500">人数</text>`;
 
     // 右侧转化率 - 增大字号提升清晰度
     if (i > 0) {
       const rate = rawVals[i].value / rawVals[i-1].value;
-      const rx = leftPad + funnelW + 25;
+      const rx = leftPad + funnelW + 20;
       const ry = (y1+y2)/2;
-      svg += `<text x="${rx+28}" y="${ry-2}" text-anchor="middle" fill="#1e293b" font-size="15" font-weight="bold">${(rate*100).toFixed(2)}%</text>`;
-      svg += `<text x="${rx+28}" y="${ry+13}" text-anchor="middle" fill="#64748b" font-size="10" font-weight="500">${rawVals[i-1].name}-</text>`;
-      svg += `<text x="${rx+28}" y="${ry+25}" text-anchor="middle" fill="#64748b" font-size="10" font-weight="500">${rawVals[i].name}率(人数)</text>`;
+      // 转化率背景框
+      svg += `<rect x="${rx+8}" y="${ry-16}" width="72" height="32" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>`;
+      svg += `<text x="${rx+44}" y="${ry-1}" text-anchor="middle" fill="#1e293b" font-size="14" font-weight="bold">${(rate*100).toFixed(1)}%</text>`;
+      svg += `<text x="${rx+44}" y="${ry+12}" text-anchor="middle" fill="#64748b" font-size="9" font-weight="500">转化率</text>`;
       const prevY = topY + (i-1)*(layerH+gap) + layerH;
-      svg += `<line x1="${x2r+3}" y1="${prevY}" x2="${rx+3}" y2="${ry-8}" stroke="#dee2e6" stroke-width="1.2" marker-end="url(#arrow_${gid})"/>`;
+      svg += `<line x1="${x2r+3}" y1="${prevY}" x2="${rx+5}" y2="${ry-8}" stroke="#dee2e6" stroke-width="1.2" marker-end="url(#arrow_${gid})"/>`;
     }
   }
+
+  // 底部整体转化率
+  const overallRate = rawVals[n-1].value / rawVals[0].value;
+  const bottomY = H - 8;
+  svg += `<rect x="${leftPad+funnelW/2-70}" y="${bottomY-18}" width="140" height="22" rx="11" fill="#eff6ff" stroke="#dbeafe" stroke-width="1"/>`;
+  svg += `<text x="${leftPad+funnelW/2}" y="${bottomY-3}" text-anchor="middle" fill="#1e40af" font-size="12" font-weight="bold">曝光→成交 整体转化率 ${(overallRate*100).toFixed(2)}%</text>`;
 
   svg += '</svg>';
   container.innerHTML = svg;
