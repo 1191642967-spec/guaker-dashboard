@@ -1590,6 +1590,8 @@ function renderAll() {
     renderDayRank();
     renderTable(2);
   }
+  // 重新初始化截图按钮
+  setTimeout(() => { initCardScreenshotButtons(); }, 100);
 }
 
 // ==================== 事件绑定 ====================
@@ -1892,6 +1894,104 @@ document.querySelector('header h1')?.addEventListener('click', () => {
 
 checkAdminMode();
 
+// ==================== 板块截图功能 ====================
+async function captureElement(element, filename) {
+  if (!element) return;
+  try {
+    // 临时禁用Tailwind注入的style标签（含oklch，html2canvas不支持）
+    const twStyles = [];
+    document.querySelectorAll('style').forEach(s => {
+      if (s.textContent && s.textContent.includes('oklch')) {
+        s.disabled = true;
+        twStyles.push(s);
+      }
+    });
+    await new Promise(r => setTimeout(r, 50));
+
+    const canvas = await html2canvas(element, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      onclone: (clonedDoc) => {
+        clonedDoc.body.style.background = '#ffffff';
+        clonedDoc.querySelectorAll('.glass-card').forEach(el => {
+          el.style.background = '#ffffff';
+          el.style.backdropFilter = 'none';
+          el.style.webkitBackdropFilter = 'none';
+        });
+        // 隐藏截图按钮
+        clonedDoc.querySelectorAll('.card-screenshot-btn').forEach(btn => {
+          btn.style.display = 'none';
+        });
+      }
+    });
+
+    // 恢复样式
+    twStyles.forEach(s => { s.disabled = false; });
+
+    // 下载图片
+    const link = document.createElement('a');
+    link.download = filename + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    // 复制到剪贴板
+    try {
+      canvas.toBlob(async (blob) => {
+        if (blob && navigator.clipboard && window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          showToast('截图已保存并复制到剪贴板', 'success');
+        } else {
+          showToast('截图已保存', 'success');
+        }
+      }, 'image/png');
+    } catch(err) {
+      showToast('截图已保存', 'success');
+    }
+  } catch(e) {
+    document.querySelectorAll('style').forEach(s => { if(s.textContent && s.textContent.includes('oklch')) s.disabled = false; });
+    showToast('截图失败：' + e.message, 'error');
+  }
+}
+
+// 给每个卡片添加截图按钮
+function initCardScreenshotButtons() {
+  // 选择所有图表卡片和KPI卡片容器
+  const cards = document.querySelectorAll('.bg-white.rounded-xl.shadow-sm, .glass-card.rounded-2xl');
+  cards.forEach((card, index) => {
+    // 找到标题栏
+    const titleEl = card.querySelector('h3, h4, .text-sm.font-semibold');
+    if (!titleEl) return;
+    // 避免重复添加
+    if (card.querySelector('.card-screenshot-btn')) return;
+    
+    const btn = document.createElement('button');
+    btn.className = 'card-screenshot-btn';
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>';
+    btn.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:#f1f5f9;color:#64748b;cursor:pointer;transition:all 0.2s;border:none;margin-left:8px;';
+    btn.title = '截图当前板块';
+    btn.onmouseenter = () => { btn.style.background = '#e2e8f0'; btn.style.color = '#334155'; };
+    btn.onmouseleave = () => { btn.style.background = '#f1f5f9'; btn.style.color = '#64748b'; };
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const title = titleEl.textContent.trim() || '板块' + (index+1);
+      const safeTitle = title.replace(/[\/:*?"<>|]/g, '_');
+      const date = new Date().toISOString().slice(0,10);
+      captureElement(card, safeTitle + '_' + date);
+    };
+    
+    // 把按钮插入到标题栏
+    if (titleEl.parentNode) {
+      titleEl.style.display = 'inline-flex';
+      titleEl.style.alignItems = 'center';
+      titleEl.appendChild(btn);
+    }
+  });
+}
+
 // ==================== 初始化 ====================
 // 让日期输入框点击任意位置都能弹出日期选择器
 document.querySelectorAll('input[type="date"]').forEach(input => {
@@ -1905,6 +2005,8 @@ initDateFilters();
 initWeekCompare();
 initDailyDateSelect();
 renderAll();
+// 延迟初始化截图按钮，确保DOM渲染完成
+setTimeout(() => { initCardScreenshotButtons(); }, 300);
 </script>
 </body>
 </html>
