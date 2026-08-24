@@ -1782,41 +1782,45 @@ function renderAnalysis(data) {
 }
 
 function renderAll() {
-  const d1 = getFiltered(1);
-  const d2 = getFiltered(2);
-  if (currentTab === 1) {
-    if (currentSubTab === 'daily') {
-      // 日报表
-      renderMonthlyBizCards();
-      renderDailyKpiCards();
-      renderDailyFunnelChart();
-      renderDailyAnchorRank();
-      renderTodaySchedule();
-      renderTomorrowSchedule();
-      renderDailyAnalysis();
+  try {
+    const d1 = getFiltered(1);
+    const d2 = getFiltered(2);
+    if (currentTab === 1) {
+      if (currentSubTab === 'daily') {
+        // 日报表
+        try { renderMonthlyBizCards(); } catch(e) { console.error('renderMonthlyBizCards错误:', e); }
+        try { renderDailyKpiCards(); } catch(e) { console.error('renderDailyKpiCards错误:', e); }
+        try { renderDailyFunnelChart(); } catch(e) { console.error('renderDailyFunnelChart错误:', e); }
+        try { renderDailyAnchorRank(); } catch(e) { console.error('renderDailyAnchorRank错误:', e); }
+        try { renderTodaySchedule(); } catch(e) { console.error('renderTodaySchedule错误:', e); }
+        try { renderTomorrowSchedule(); } catch(e) { console.error('renderTomorrowSchedule错误:', e); }
+        try { renderDailyAnalysis(); } catch(e) { console.error('renderDailyAnalysis错误:', e); }
+      } else {
+        // 区间报表
+        try { renderKPI1(d1); } catch(e) { console.error('renderKPI1错误:', e); }
+        try { renderFunnelChart(d1); } catch(e) { console.error('renderFunnelChart错误:', e); }
+        try { renderBarChart(d1); } catch(e) { console.error('renderBarChart错误:', e); }
+        try { renderGmvChart(d1); } catch(e) { console.error('renderGmvChart错误:', e); }
+        try { renderRoiChart(d1); } catch(e) { console.error('renderRoiChart错误:', e); }
+        try { renderGmvRoiRangeChart(d1); } catch(e) { console.error('renderGmvRoiRangeChart错误:', e); }
+        try { renderClickRoiRangeChart(d1); } catch(e) { console.error('renderClickRoiRangeChart错误:', e); }
+        try { renderGmvConvRangeChart(d1); } catch(e) { console.error('renderGmvConvRangeChart错误:', e); }
+        try { renderViewsRoiRangeChart(d1); } catch(e) { console.error('renderViewsRoiRangeChart错误:', e); }
+        try { renderTable(1); } catch(e) { console.error('renderTable错误:', e); }
+        try { renderAnalysis(d1); } catch(e) { console.error('renderAnalysis错误:', e); }
+      }
     } else {
-      // 区间报表
-      renderKPI1(d1);
-      renderFunnelChart(d1);
-      renderBarChart(d1);
-      renderGmvChart(d1);
-      renderRoiChart(d1);
-      renderGmvRoiRangeChart(d1);
-      renderClickRoiRangeChart(d1);
-      renderGmvConvRangeChart(d1);
-      renderViewsRoiRangeChart(d1);
-      renderTable(1);
-      renderAnalysis(d1);
+      try { renderMonthRank(); } catch(e) { console.error('renderMonthRank错误:', e); }
+      try { renderWeekRank(); } catch(e) { console.error('renderWeekRank错误:', e); }
+      try { renderDayRank(); } catch(e) { console.error('renderDayRank错误:', e); }
+      try { renderTable(2); } catch(e) { console.error('renderTable2错误:', e); }
     }
-  } else {
-    renderMonthRank();
-    renderWeekRank();
-    renderDayRank();
-    renderTable(2);
+  } catch(e) {
+    console.error('renderAll顶层错误:', e);
   }
   // 重新初始化截图按钮和图表resize
   setTimeout(() => {
-    initCardScreenshotButtons();
+    try { initCardScreenshotButtons(); } catch(e) { console.error('initCardScreenshotButtons错误:', e); }
     Object.values(charts).forEach(chart => {
       try { chart.resize(); } catch(e) {}
     });
