@@ -1478,7 +1478,9 @@ function renderDailyKpiCards() {
     { label:'客单价', value: row.avgOrderValue?'¥'+row.avgOrderValue.toFixed(2):'-', sub:'件均金额', color:'#003da5' },
     { label:'新增粉丝', value: row.newFans?row.newFans.toLocaleString():'-', sub:'涨粉数', color:'#16a34a' },
     { label:'互动人数', value: row.interactionUsers?row.interactionUsers.toLocaleString():'-', sub:'参与互动', color:'#d4a574' },
-    { label:'退款率', value: row.refundRate!==null?(row.refundRate*100).toFixed(2)+'%':'-', sub:'退款占比', color:'#dc2626' }
+    { label:'退款率', value: row.refundRate!==null?(row.refundRate*100).toFixed(2)+'%':'-', sub:'退款占比', color:'#dc2626' },
+    { label:'商品曝光点击率', value: row.productClickRate!==null?(row.productClickRate*100).toFixed(2)+'%':'-', sub:'商品点击/曝光', color:'#0891b2' },
+    { label:'点击成交转化率', value: row.clickToBuyRate!==null?(row.clickToBuyRate*100).toFixed(2)+'%':'-', sub:'成交/商品点击', color:'#7c3aed' }
   ];
 
   container.innerHTML = kpis.map(k => `
