@@ -1632,49 +1632,20 @@ function renderDimensionCharts(data) {
     ]
   });
   
-  // 流量转化漏斗（优化版：梯形大小以美观为主，不盖住文字，深色系色块+白色文字）
+  // 流量转化漏斗（使用SVG绘制，参考当日转化漏斗样式，形状规整，不盖住文字）
   const totalExp = sum(data,'exposureCount');
   const totalWatch = sum(data,'watchCount');
   const totalProdExp = sum(data,'productExposureCount');
   const totalClick = sum(data,'productClickCount');
   const totalBuyer = sum(data,'buyerCount');
-  getChart('chartDimensionFunnel').setOption({
-    tooltip: {trigger:'item',formatter:'{b}: {c} 人'},
-    series: [{
-      type:'funnel',
-      left:'5%',top:10,bottom:10,width:'90%',
-      // 梯形大小以美观为主，不严格按照数据比例，确保所有梯形都有足够大小显示文字
-      minSize:'60%',
-      maxSize:'100%',
-      sort:'descending',
-      gap:6,
-      data:[
-        {value:totalExp,name:'直播间曝光',itemStyle:{color:'#001a4d'}},
-        {value:totalWatch,name:'直播间观看',itemStyle:{color:'#002b6b'}},
-        {value:totalProdExp,name:'商品曝光',itemStyle:{color:'#003da5'}},
-        {value:totalClick,name:'商品点击',itemStyle:{color:'#1e40af'}},
-        {value:totalBuyer,name:'成交',itemStyle:{color:'#2563eb'}}
-      ],
-      // 文字显示在梯形内部，白色加粗，确保不被盖住
-      label: {
-        show:true,
-        position:'inside',
-        formatter:'{b}\n{c} 人',
-        color:'#ffffff',
-        fontSize:14,
-        fontWeight:'bold',
-        lineHeight:22
-      },
-      labelLine: {show:false},
-      itemStyle: {
-        borderColor:'#ffffff',
-        borderWidth:3
-      },
-      emphasis: {
-        label: {fontSize:16,fontWeight:'bold'}
-      }
-    }]
-  });
+  const funnelVals = [
+    { name: '直播间曝光', value: totalExp },
+    { name: '直播间观看', value: totalWatch },
+    { name: '商品曝光', value: totalProdExp },
+    { name: '商品点击', value: totalClick },
+    { name: '成交', value: totalBuyer }
+  ];
+  renderSvgFunnel('chartDimensionFunnel', funnelVals);
   
   // GMV & ROI走势
   getChart('chartDimensionGmvRoi').setOption({
