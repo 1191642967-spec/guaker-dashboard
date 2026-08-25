@@ -1645,6 +1645,8 @@ function renderDimensionCharts(data) {
     { name: '商品点击', value: totalClick },
     { name: '成交', value: totalBuyer }
   ];
+  // 先清空容器内容，确保之前的ECharts实例被清除
+  document.getElementById('chartDimensionFunnel').innerHTML = '';
   renderSvgFunnel('chartDimensionFunnel', funnelVals);
   
   // GMV & ROI走势
