@@ -90,11 +90,10 @@
 <!-- ==================== Tab 1：直播间每日数据汇总 ==================== -->
 <section id="tab1" class="pt-6">
 
-  <!-- 子Tab切换 + 截图按钮 -->
+  <!-- 顶部按钮 -->
   <div class="flex items-center justify-between mb-5">
     <div class="flex gap-1 p-1 rounded-xl" style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);">
-      <button id="subTabDailyBtn" class="sub-tab-active px-5 py-2 rounded-lg text-sm font-medium transition-all">日报表</button>
-      <button id="subTabRangeBtn" class="sub-tab-inactive px-5 py-2 rounded-lg text-sm font-medium transition-all">区间报表</button>
+      <span class="px-5 py-2 rounded-lg text-sm font-medium text-white">桂格直播间运营数据看板</span>
     </div>
     <div class="flex items-center gap-2">
       <button id="refreshBtn" class="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all" style="background: linear-gradient(135deg, #003087, #003da5); color: white; box-shadow: 0 2px 8px rgba(0,48,135,0.3);">
@@ -198,132 +197,84 @@
 
   </div>
 
-  <!-- ========== 区间报表板块 ========== -->
-  <div id="rangePanel" class="hidden">
-    <!-- 日期范围筛选 -->
+  <!-- ========== 维度报表板块 ========== -->
+  <div class="mt-8">
+    <!-- 板块标题 -->
+    <div class="flex items-center gap-2 mb-5">
+      <div class="w-1 h-6 rounded-full" style="background: linear-gradient(180deg, #003da5, #2563eb);"></div>
+      <h2 class="text-lg font-bold text-white">维度报表</h2>
+      <span id="dimensionLabel" class="text-xs text-blue-200"></span>
+    </div>
+    
+    <!-- 日期选择器 -->
     <div class="flex items-center gap-3 mb-5 glass-card rounded-2xl p-4 flex-wrap">
-      <label class="text-sm text-slate-600 font-medium">日期范围：</label>
-      <input type="date" id="dateStart" class="border border-slate-200 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none bg-white/90 shadow-sm">
+      <label class="text-sm text-slate-600 font-medium">选择期间：</label>
+      <input type="date" id="dimensionStart" class="border border-slate-200 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none bg-white/90 shadow-sm">
       <span class="text-slate-400">至</span>
-      <input type="date" id="dateEnd" class="border border-slate-200 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none bg-white/90 shadow-sm">
-      <button id="resetDate" class="text-sm text-slate-500 hover:text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">重置</button>
+      <input type="date" id="dimensionEnd" class="border border-slate-200 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none bg-white/90 shadow-sm">
+      <button id="dimensionReset" class="text-sm text-slate-500 hover:text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">重置</button>
       <div class="flex items-center gap-2 ml-auto">
         <div class="flex gap-1">
-          <button id="quickWeek" class="text-sm px-3 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #003da5, #2563eb); color: white; box-shadow: 0 2px 8px rgba(0,61,165,0.3);">本周</button>
-          <button id="quickMonth" class="text-sm px-3 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #003087, #003da5); color: white; box-shadow: 0 2px 8px rgba(0,48,135,0.3);">本月</button>
-          <button id="quickQuarter" class="text-sm px-3 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #d4a574, #e8c99b); color: white; box-shadow: 0 2px 8px rgba(212,165,116,0.3);">本季度</button>
-        </div>
-        <span id="quickRangeLabel" class="text-xs text-slate-400 whitespace-nowrap"></span>
-      </div>
-    </div>
-
-    <!-- 双周数据对比 -->
-    <div class="glass-card rounded-2xl p-4 mb-5">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-sm font-bold text-slate-700 flex items-center gap-2">
-          <span class="inline-block w-1 h-4 rounded-full" style="background: linear-gradient(180deg, #003da5, #2563eb);"></span>
-          双周数据对比
-        </h3>
-        <button id="toggleWeekCompare" class="text-xs px-3 py-1 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #003da5, #2563eb); color: white;">展开对比</button>
-      </div>
-      <div id="weekComparePanel" class="hidden">
-        <div class="flex items-center gap-4 mb-4 flex-wrap">
-          <div class="flex items-center gap-2">
-            <label class="text-xs text-slate-500 font-medium">第一周：</label>
-            <select id="weekSelect1" class="border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-400 outline-none bg-white"></select>
-          </div>
-          <div class="flex items-center gap-2">
-            <label class="text-xs text-slate-500 font-medium">第二周：</label>
-            <select id="weekSelect2" class="border border-slate-200 rounded-lg px-3 py-1.5 text-xs focus:ring-2 focus:ring-indigo-400 outline-none bg-white"></select>
-          </div>
-          <button id="compareWeeks" class="text-xs px-4 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">开始对比</button>
-        </div>
-        <div id="weekCompareKpi" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-4"></div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div class="bg-white rounded-xl shadow-sm p-3 border border-slate-100">
-            <h4 class="text-xs font-semibold text-slate-600 mb-2">GMV 双周对比趋势</h4>
-            <div id="chartWeekCompareGmv" class="chart-box" style="height:280px;min-height:280px"></div>
-          </div>
-          <div class="bg-white rounded-xl shadow-sm p-3 border border-slate-100">
-            <h4 class="text-xs font-semibold text-slate-600 mb-2">ROI 双周对比趋势</h4>
-            <div id="chartWeekCompareRoi" class="chart-box" style="height:280px;min-height:280px"></div>
-          </div>
+          <button id="dimensionLastWeek" class="text-sm px-3 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #003da5, #2563eb); color: white; box-shadow: 0 2px 8px rgba(0,61,165,0.3);">上周</button>
+          <button id="dimensionThisWeek" class="text-sm px-3 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #003087, #003da5); color: white; box-shadow: 0 2px 8px rgba(0,48,135,0.3);">本周</button>
+          <button id="dimensionLastMonth" class="text-sm px-3 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #d4a574, #e8c99b); color: white; box-shadow: 0 2px 8px rgba(212,165,116,0.3);">上月</button>
         </div>
       </div>
     </div>
-
-    <!-- 区间KPI卡片 -->
-    <div id="kpiCards1" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6"></div>
-
-    <!-- 区间漏斗 + 小时均GMV -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
-        <h3 class="text-sm font-semibold text-slate-700 mb-2">流量转化漏斗（区间汇总）</h3>
-        <div id="chartFunnel" class="chart-box"></div>
-      </div>
-      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
-        <h3 class="text-sm font-semibold text-slate-700 mb-2">小时均GMV & 成交件数</h3>
-        <div id="chartBar" class="chart-box"></div>
-      </div>
-    </div>
-
-    <!-- 区间走势图 -->
+    
+    <!-- 关键数据指标看板 -->
+    <div id="dimensionKpiCards" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6"></div>
+    
+    <!-- 走势图区域 -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
       <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
         <h3 class="text-sm font-semibold text-slate-700 mb-2">GMV 趋势</h3>
-        <div id="chartGmv" class="chart-box"></div>
+        <div id="chartDimensionGmv" class="chart-box" style="height:320px;min-height:320px"></div>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
         <h3 class="text-sm font-semibold text-slate-700 mb-2">ROI 趋势</h3>
-        <div id="chartRoi" class="chart-box"></div>
+        <div id="chartDimensionRoi" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">小时均GMV & 成交件数</h3>
+        <div id="chartDimensionBar" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">流量转化漏斗</h3>
+        <div id="chartDimensionFunnel" class="chart-box" style="height:320px;min-height:320px"></div>
       </div>
     </div>
-
-    <!-- 区间关联走势图 -->
+    
+    <!-- 关联分析走势图 -->
     <div class="mb-2">
-      <h3 class="text-sm font-semibold text-slate-700 px-1">区间关联分析走势</h3>
+      <h3 class="text-sm font-semibold text-slate-700 px-1">关联分析走势</h3>
     </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
       <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
         <h3 class="text-sm font-semibold text-slate-700 mb-2">GMV & ROI 走势</h3>
-        <div id="chartGmvRoiRange" class="chart-box"></div>
+        <div id="chartDimensionGmvRoi" class="chart-box" style="height:320px;min-height:320px"></div>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
         <h3 class="text-sm font-semibold text-slate-700 mb-2">商品曝光点击率 & ROI 走势</h3>
-        <div id="chartClickRoiRange" class="chart-box"></div>
+        <div id="chartDimensionClickRoi" class="chart-box" style="height:320px;min-height:320px"></div>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
         <h3 class="text-sm font-semibold text-slate-700 mb-2">GMV & 点击成交转化率 走势</h3>
-        <div id="chartGmvConvRange" class="chart-box"></div>
+        <div id="chartDimensionGmvConv" class="chart-box" style="height:320px;min-height:320px"></div>
       </div>
       <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100">
         <h3 class="text-sm font-semibold text-slate-700 mb-2">直播间场观 & ROI 走势</h3>
-        <div id="chartViewsRoiRange" class="chart-box"></div>
+        <div id="chartDimensionViewsRoi" class="chart-box" style="height:320px;min-height:320px"></div>
       </div>
     </div>
-
-    <!-- 数据表格 -->
-    <div class="glass-card rounded-2xl overflow-hidden">
-      <div class="p-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
-        <h3 class="text-sm font-semibold text-slate-700">原始数据明细</h3>
-        <input type="text" id="search1" placeholder="搜索日期、指标..." class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm w-56 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-      </div>
-      <div class="overflow-x-auto">
-        <table id="table1" class="w-full text-xs">
-          <thead class="bg-slate-50 text-slate-600"></thead>
-          <tbody class="text-slate-700"></tbody>
-        </table>
-      </div>
-      <div id="pagination1" class="pagination flex items-center justify-between p-3 border-t border-slate-100 text-sm text-slate-600"></div>
-    </div>
-
-    <!-- 数据分析框 -->
+    
+    <!-- 数据总结 -->
     <div class="analysis-box rounded-2xl p-5 mt-5">
       <div class="flex items-center gap-2 mb-3">
-        <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003087, #003da5);">数据洞察分析</span>
-        <span id="analysisLabel" class="text-xs text-slate-400"></span>
+        <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003087, #003da5);">数据总结</span>
+        <span id="dimensionAnalysisLabel" class="text-xs text-slate-400"></span>
       </div>
-      <div id="analysisContent" class="text-sm text-slate-700 leading-relaxed space-y-2"></div>
+      <div id="dimensionAnalysisContent" class="text-sm text-slate-700 leading-relaxed space-y-2"></div>
     </div>
   </div>
 </section>
@@ -1555,41 +1506,180 @@ function renderDailyKpiCards() {
   `).join('');
 }
 
-// ==================== 渲染入口 ====================
-let currentSubTab = 'daily'; // 'daily' | 'range'
+// ==================== 维度报表 ====================
+let dimensionStart = '';
+let dimensionEnd = '';
 
-function switchSubTab(tab) {
-  currentSubTab = tab;
-  document.getElementById('subTabDailyBtn').className = tab==='daily'
-    ? 'sub-tab-active px-5 py-2 rounded-lg text-sm font-medium transition-all'
-    : 'sub-tab-inactive px-5 py-2 rounded-lg text-sm font-medium transition-all';
-  document.getElementById('subTabRangeBtn').className = tab==='range'
-    ? 'sub-tab-active px-5 py-2 rounded-lg text-sm font-medium transition-all'
-    : 'sub-tab-inactive px-5 py-2 rounded-lg text-sm font-medium transition-all';
-  document.getElementById('dailyPanel').classList.toggle('hidden', tab !== 'daily');
-  document.getElementById('rangePanel').classList.toggle('hidden', tab !== 'range');
-  // 延迟渲染，确保DOM更新后ECharts能获取正确的容器尺寸
-  setTimeout(function() {
-    // 先销毁旧实例，确保重新初始化
-    Object.keys(charts).forEach(function(key) {
-      try { charts[key].dispose(); } catch(e) {}
-      delete charts[key];
-    });
-    renderAll();
-    // 多次延迟resize，确保ECharts正确渲染
-    setTimeout(function() {
-      Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
-    }, 100);
-    setTimeout(function() {
-      Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
-    }, 300);
-  }, 100);
+function getDimensionData() {
+  return DAILY.filter(r => r.date >= dimensionStart && r.date <= dimensionEnd);
 }
 
-// 数据分析框
-function renderAnalysis(data) {
-  const label = document.getElementById('analysisLabel');
-  const content = document.getElementById('analysisContent');
+function initDimensionFilters() {
+  const dates = DAILY.map(r=>r.date).sort();
+  const min = dates[0], max = dates[dates.length-1];
+  document.getElementById('dimensionStart').min = min;
+  document.getElementById('dimensionStart').max = max;
+  document.getElementById('dimensionEnd').min = min;
+  document.getElementById('dimensionEnd').max = max;
+  
+  // 默认显示上一个自然周
+  const now = new Date();
+  const day = now.getDay() || 7;
+  const thisMonday = new Date(now); thisMonday.setDate(now.getDate() - day + 1);
+  const lastMonday = new Date(thisMonday); lastMonday.setDate(thisMonday.getDate() - 7);
+  const lastSunday = new Date(lastMonday); lastSunday.setDate(lastMonday.getDate() + 6);
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  
+  let start = fmt(lastMonday), end = fmt(lastSunday);
+  if (start < min) start = min;
+  if (end > max) end = max;
+  
+  dimensionStart = start; dimensionEnd = end;
+  document.getElementById('dimensionStart').value = start;
+  document.getElementById('dimensionEnd').value = end;
+  document.getElementById('dimensionLabel').textContent = start + ' ~ ' + end;
+}
+
+function renderDimensionKpi(data) {
+  const kpis = [
+    {label:'总GMV', value: fmt.money(sum(data,'totalGmv')), sub:'区间合计', color:'text-blue-600', bg:'bg-blue-50'},
+    {label:'投放消耗', value: fmt.money(sum(data,'adSpend')), sub:'区间合计', color:'text-orange-600', bg:'bg-orange-50'},
+    {label:'整体ROI', value: fmt.num(avg(data,'overallRoi')), sub:'区间均值', color:'text-green-600', bg:'bg-green-50'},
+    {label:'场观', value: fmt.int(sum(data,'views')), sub:'区间合计', color:'text-purple-600', bg:'bg-purple-50'},
+    {label:'成交件数', value: fmt.int(sum(data,'orders')), sub:'区间合计', color:'text-pink-600', bg:'bg-pink-50'},
+    {label:'客单价', value: fmt.num(avg(data,'avgOrderValue')), sub:'区间均值', color:'text-cyan-600', bg:'bg-cyan-50'},
+    {label:'退款率', value: fmt.pct(avg(data,'refundRate')), sub:'区间均值', color:'text-red-600', bg:'bg-red-50'}
+  ];
+  document.getElementById('dimensionKpiCards').innerHTML = kpis.map(k => `
+    <div class="rounded-xl p-3 border ${k.bg} border-slate-100">
+      <div class="text-xs text-slate-500 mb-1">${k.label}</div>
+      <div class="text-lg font-bold ${k.color}">${k.value}</div>
+      <div class="text-[10px] text-slate-400 mt-1">${k.sub}</div>
+    </div>
+  `).join('');
+}
+
+function renderDimensionCharts(data) {
+  const dates = data.map(r => r.date.slice(5));
+  
+  // GMV趋势
+  getChart('chartDimensionGmv').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['总GMV','GMV'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: {type:'value'},
+    series: [
+      {name:'总GMV',type:'line',smooth:true,data:data.map(r=>r.totalGmv),itemStyle:{color:'#003087'},areaStyle:{}},
+      {name:'GMV',type:'line',smooth:true,data:data.map(r=>r.gmv),itemStyle:{color:'#2563eb'}}
+    ]
+  });
+  
+  // ROI趋势
+  getChart('chartDimensionRoi').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['整体ROI','智能优惠券ROI'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: {type:'value'},
+    series: [
+      {name:'整体ROI',type:'line',smooth:true,data:data.map(r=>r.overallRoi),itemStyle:{color:'#16a34a'},areaStyle:{}},
+      {name:'智能优惠券ROI',type:'line',smooth:true,data:data.map(r=>r.couponRoi),itemStyle:{color:'#d4a574'}}
+    ]
+  });
+  
+  // 小时均GMV & 成交件数
+  getChart('chartDimensionBar').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['小时均GMV','成交件数'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'小时均GMV'},{type:'value',name:'成交件数'}],
+    series: [
+      {name:'小时均GMV',type:'bar',data:data.map(r=>r.hourlyGmv),itemStyle:{color:'#003087'}},
+      {name:'成交件数',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>r.orders),itemStyle:{color:'#c8102e'}}
+    ]
+  });
+  
+  // 流量转化漏斗
+  const totalExp = sum(data,'exposureCount');
+  const totalWatch = sum(data,'watchCount');
+  const totalProdExp = sum(data,'productExposureCount');
+  const totalClick = sum(data,'productClickCount');
+  const totalBuyer = sum(data,'buyerCount');
+  getChart('chartDimensionFunnel').setOption({
+    tooltip: {trigger:'item',formatter:'{b}: {c} 人'},
+    series: [{
+      type:'funnel',
+      left:'10%',top:20,bottom:20,width:'80%',
+      data:[
+        {value:totalExp,name:'直播间曝光'},
+        {value:totalWatch,name:'直播间观看'},
+        {value:totalProdExp,name:'商品曝光'},
+        {value:totalClick,name:'商品点击'},
+        {value:totalBuyer,name:'成交'}
+      ],
+      label: {show:true,position:'inside',formatter:'{b}\n{c} 人'},
+      itemStyle: {borderColor:'#fff',borderWidth:2}
+    }]
+  });
+  
+  // GMV & ROI走势
+  getChart('chartDimensionGmvRoi').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['GMV','ROI'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'GMV'},{type:'value',name:'ROI'}],
+    series: [
+      {name:'GMV',type:'bar',data:data.map(r=>r.totalGmv),itemStyle:{color:'#003087'}},
+      {name:'ROI',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>r.overallRoi),itemStyle:{color:'#16a34a'}}
+    ]
+  });
+  
+  // 商品曝光点击率 & ROI走势
+  getChart('chartDimensionClickRoi').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['商品曝光点击率','ROI'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'点击率',axisLabel:{formatter:'{value}%'}},{type:'value',name:'ROI'}],
+    series: [
+      {name:'商品曝光点击率',type:'bar',data:data.map(r=>(r.productClickRate*100).toFixed(2)),itemStyle:{color:'#2563eb'}},
+      {name:'ROI',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>r.overallRoi),itemStyle:{color:'#16a34a'}}
+    ]
+  });
+  
+  // GMV & 点击成交转化率走势
+  getChart('chartDimensionGmvConv').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['GMV','点击成交转化率'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'GMV'},{type:'value',name:'转化率',axisLabel:{formatter:'{value}%'}}],
+    series: [
+      {name:'GMV',type:'bar',data:data.map(r=>r.totalGmv),itemStyle:{color:'#003087'}},
+      {name:'点击成交转化率',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>(r.clickToBuyRate*100).toFixed(2)),itemStyle:{color:'#c8102e'}}
+    ]
+  });
+  
+  // 直播间场观 & ROI走势
+  getChart('chartDimensionViewsRoi').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['场观','ROI'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'场观'},{type:'value',name:'ROI'}],
+    series: [
+      {name:'场观',type:'bar',data:data.map(r=>r.views),itemStyle:{color:'#9333ea'}},
+      {name:'ROI',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>r.overallRoi),itemStyle:{color:'#16a34a'}}
+    ]
+  });
+}
+
+function renderDimensionAnalysis(data) {
+  const label = document.getElementById('dimensionAnalysisLabel');
+  const content = document.getElementById('dimensionAnalysisContent');
   if (!data || !data.length) {
     label.textContent = '';
     content.innerHTML = '<div class="text-slate-400 text-center py-4">所选区间暂无数据</div>';
@@ -1598,7 +1688,7 @@ function renderAnalysis(data) {
   const start = data[0].date, end = data[data.length-1].date;
   const days = data.length;
   label.textContent = start + ' ~ ' + end + '（' + days + '天）';
-
+  
   const totalGmv = data.reduce((s,r)=>s+(r.totalGmv||0),0);
   const avgGmv = totalGmv/days;
   const maxGmvRow = data.reduce((a,b)=>(a.totalGmv||0)>(b.totalGmv||0)?a:b);
@@ -1608,22 +1698,19 @@ function renderAnalysis(data) {
   const avgViews = data.reduce((s,r)=>s+(r.views||0),0)/days;
   const totalRefund = data.reduce((s,r)=>s+(r.refundAmount||0),0);
   const refundRate = totalGmv>0? totalRefund/totalGmv : 0;
-
-  // 转化率
+  
   const totalExp = data.reduce((s,r)=>s+(r.exposureCount||0),0);
   const totalWatch = data.reduce((s,r)=>s+(r.watchCount||0),0);
-  const totalProdExp = data.reduce((s,r)=>s+(r.productExposureCount||0),0);
   const totalClick = data.reduce((s,r)=>s+(r.productClickCount||0),0);
   const totalBuyer = data.reduce((s,r)=>s+(r.buyerCount||0),0);
   const exp2watch = totalExp? totalWatch/totalExp : 0;
   const click2buy = totalClick? totalBuyer/totalClick : 0;
-
-  // 趋势判断
+  
   const half = Math.floor(days/2);
   const firstHalf = data.slice(0, half).reduce((s,r)=>s+(r.totalGmv||0),0);
   const secondHalf = data.slice(half).reduce((s,r)=>s+(r.totalGmv||0),0);
   const trend = secondHalf > firstHalf*1.05 ? '上升' : secondHalf < firstHalf*0.95 ? '下降' : '平稳';
-
+  
   const html = `
     <p><span class="font-semibold" style="color:#003087">【经营概况】</span>统计区间共 ${days} 天，总GMV <span class="font-bold" style="color:#003087">¥${totalGmv.toLocaleString()}</span>，日均 <span class="font-bold">¥${avgGmv.toFixed(0)}</span>；单日最高 ${maxGmvRow.date} 达 ¥${(maxGmvRow.totalGmv||0).toLocaleString()}。总投放消耗 ¥${totalSpend.toLocaleString()}，整体ROI <span class="font-bold" style="color:${avgRoi>=2?'#16a34a':'#c8102e'}">${avgRoi.toFixed(2)}</span>。</p>
     <p><span class="font-semibold" style="color:#003087">【流量转化】</span>累计曝光 ${totalExp.toLocaleString()} 人，观看 ${totalWatch.toLocaleString()} 人，曝光-观看率 <span class="font-bold">${(exp2watch*100).toFixed(2)}%</span>；商品点击 ${totalClick.toLocaleString()} 人，点击-成交转化率 <span class="font-bold">${(click2buy*100).toFixed(2)}%</span>；累计成交 ${totalBuyer.toLocaleString()} 人、${totalOrders} 件。</p>
@@ -1633,33 +1720,26 @@ function renderAnalysis(data) {
   content.innerHTML = html;
 }
 
+function renderDimensionAll() {
+  const data = getDimensionData();
+  renderDimensionKpi(data);
+  renderDimensionCharts(data);
+  renderDimensionAnalysis(data);
+}
+
 function renderAll() {
-  const d1 = getFiltered(1);
   const d2 = getFiltered(2);
   if (currentTab === 1) {
-    if (currentSubTab === 'daily') {
-      // 日报表
-      renderMonthlyBizCards();
-      renderDailyKpiCards();
-      renderDailyFunnelChart();
-      renderDailyAnchorRank();
-      renderTodaySchedule();
-      renderTomorrowSchedule();
-      renderDailyAnalysis();
-    } else {
-      // 区间报表
-      renderKPI1(d1);
-      renderFunnelChart(d1);
-      renderBarChart(d1);
-      renderGmvChart(d1);
-      renderRoiChart(d1);
-      renderGmvRoiRangeChart(d1);
-      renderClickRoiRangeChart(d1);
-      renderGmvConvRangeChart(d1);
-      renderViewsRoiRangeChart(d1);
-      renderTable(1);
-      renderAnalysis(d1);
-    }
+    // 日报表
+    renderMonthlyBizCards();
+    renderDailyKpiCards();
+    renderDailyFunnelChart();
+    renderDailyAnchorRank();
+    renderTodaySchedule();
+    renderTomorrowSchedule();
+    renderDailyAnalysis();
+    // 维度报表
+    renderDimensionAll();
   } else {
     renderMonthRank();
     renderWeekRank();
@@ -1673,44 +1753,41 @@ function renderAll() {
 // ==================== 事件绑定 ====================
 document.getElementById('tab1Btn').onclick = () => switchTab(1);
 document.getElementById('tab2Btn').onclick = () => switchTab(2);
-document.getElementById('subTabDailyBtn').onclick = () => switchSubTab('daily');
-document.getElementById('subTabRangeBtn').onclick = () => switchSubTab('range');
-document.getElementById('dateStart').onchange = e => { dateStart = e.target.value; renderAll(); };
-document.getElementById('dateEnd').onchange = e => { dateEnd = e.target.value; renderAll(); };
-document.getElementById('resetDate').onclick = () => { initDateFilters(); document.getElementById('quickRangeLabel').textContent=''; renderAll(); };
-function applyQuickRange(start, end, label) {
-  dateStart = start; dateEnd = end;
-  document.getElementById('dateStart').value = start;
-  document.getElementById('dateEnd').value = end;
-  document.getElementById('quickRangeLabel').textContent = label;
-  renderAll();
+document.getElementById('dimensionStart').onchange = e => { dimensionStart = e.target.value; document.getElementById('dimensionLabel').textContent = dimensionStart + ' ~ ' + dimensionEnd; renderDimensionAll(); };
+document.getElementById('dimensionEnd').onchange = e => { dimensionEnd = e.target.value; document.getElementById('dimensionLabel').textContent = dimensionStart + ' ~ ' + dimensionEnd; renderDimensionAll(); };
+document.getElementById('dimensionReset').onclick = () => { initDimensionFilters(); renderDimensionAll(); };
+function applyDimensionRange(start, end) {
+  dimensionStart = start; dimensionEnd = end;
+  document.getElementById('dimensionStart').value = start;
+  document.getElementById('dimensionEnd').value = end;
+  document.getElementById('dimensionLabel').textContent = start + ' ~ ' + end;
+  renderDimensionAll();
 }
-document.getElementById('quickWeek').onclick = () => {
+document.getElementById('dimensionLastWeek').onclick = () => {
+  const now = new Date();
+  const day = now.getDay() || 7;
+  const thisMonday = new Date(now); thisMonday.setDate(now.getDate() - day + 1);
+  const lastMonday = new Date(thisMonday); lastMonday.setDate(thisMonday.getDate() - 7);
+  const lastSunday = new Date(lastMonday); lastSunday.setDate(lastMonday.getDate() + 6);
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  applyDimensionRange(fmt(lastMonday), fmt(lastSunday));
+};
+document.getElementById('dimensionThisWeek').onclick = () => {
   const now = new Date();
   const day = now.getDay() || 7;
   const monday = new Date(now); monday.setDate(now.getDate() - day + 1);
   const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
   const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  applyQuickRange(fmt(monday), fmt(sunday), `${fmt(monday).slice(5)} ~ ${fmt(sunday).slice(5)}`);
+  applyDimensionRange(fmt(monday), fmt(sunday));
 };
-document.getElementById('quickMonth').onclick = () => {
+document.getElementById('dimensionLastMonth').onclick = () => {
   const now = new Date();
   const y = now.getFullYear(), m = now.getMonth();
-  const first = `${y}-${String(m+1).padStart(2,'0')}-01`;
-  const lastDay = new Date(y, m+1, 0).getDate();
-  const last = `${y}-${String(m+1).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
-  applyQuickRange(first, last, `${y}年${m+1}月`);
+  const firstDay = new Date(y, m-1, 1);
+  const lastDay = new Date(y, m, 0);
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  applyDimensionRange(fmt(firstDay), fmt(lastDay));
 };
-document.getElementById('quickQuarter').onclick = () => {
-  const now = new Date();
-  const y = now.getFullYear(), q = Math.floor(now.getMonth()/3);
-  const startMonth = q*3, endMonth = q*3+2;
-  const first = `${y}-${String(startMonth+1).padStart(2,'0')}-01`;
-  const lastDay = new Date(y, endMonth+1, 0).getDate();
-  const last = `${y}-${String(endMonth+1).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
-  applyQuickRange(first, last, `${y}年Q${q+1}`);
-};
-document.getElementById('search1').oninput = e => { tableState[1].search = e.target.value; tableState[1].page=1; renderTable(1); };
 document.getElementById('search2').oninput = e => { tableState[2].search = e.target.value; tableState[2].page=1; renderTable(2); };
 document.getElementById('dailyDateSelect').onchange = () => { renderMonthlyBizCards(); renderDailyKpiCards(); renderDailyFunnelChart(); renderDailyAnchorRank(); renderDailyAnalysis(); };
 
@@ -2078,8 +2155,7 @@ document.querySelectorAll('input[type="date"]').forEach(input => {
     }
   });
 });
-initDateFilters();
-initWeekCompare();
+initDimensionFilters();
 initDailyDateSelect();
 initWeekRankSelect();
 renderAll();
