@@ -559,6 +559,8 @@ function switchTab(tab) {
   document.getElementById('tab1Btn').className = tab===1 ? 'tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all';
   document.getElementById('tab2Btn').className = tab===2 ? 'tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all';
   document.getElementById('tab3Btn').className = tab===3 ? 'tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all';
+  // 先滚动到顶部，确保容器在视口中
+  window.scrollTo(0, 0);
   // 延迟渲染，确保DOM更新后ECharts能获取正确的容器尺寸
   setTimeout(function() {
     // 先销毁旧实例，确保重新初始化
@@ -570,11 +572,14 @@ function switchTab(tab) {
     // 多次延迟resize，确保ECharts正确渲染
     setTimeout(function() {
       Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
-    }, 100);
+    }, 200);
     setTimeout(function() {
       Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
-    }, 300);
-  }, 100);
+    }, 500);
+    setTimeout(function() {
+      Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
+    }, 1000);
+  }, 300);
 }
 
 // ==================== KPI 卡片 ====================
