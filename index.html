@@ -1568,7 +1568,7 @@ function switchSubTab(tab) {
     : 'sub-tab-inactive px-5 py-2 rounded-lg text-sm font-medium transition-all';
   document.getElementById('dailyPanel').classList.toggle('hidden', tab !== 'daily');
   document.getElementById('rangePanel').classList.toggle('hidden', tab !== 'range');
-  // 延迟渲染，确保容器完全显示后再初始化ECharts
+  // 延迟500ms渲染，确保容器完全显示后再初始化ECharts
   setTimeout(function() {
     // 销毁旧的ECharts实例，确保重新初始化
     Object.keys(charts).forEach(function(key) {
@@ -1576,13 +1576,18 @@ function switchSubTab(tab) {
       delete charts[key];
     });
     renderAll();
-    // 延迟resize，确保ECharts正确获取容器尺寸
+    // 多次延迟resize，确保ECharts正确获取容器尺寸
     setTimeout(function() {
       Object.values(charts).forEach(function(chart) {
         try { chart.resize(); } catch(e) {}
       });
-    }, 300);
-  }, 200);
+    }, 200);
+    setTimeout(function() {
+      Object.values(charts).forEach(function(chart) {
+        try { chart.resize(); } catch(e) {}
+      });
+    }, 500);
+  }, 500);
 }
 
 // 数据分析框
