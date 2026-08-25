@@ -1568,7 +1568,14 @@ function switchSubTab(tab) {
     : 'sub-tab-inactive px-5 py-2 rounded-lg text-sm font-medium transition-all';
   document.getElementById('dailyPanel').classList.toggle('hidden', tab !== 'daily');
   document.getElementById('rangePanel').classList.toggle('hidden', tab !== 'range');
-  renderAll();
+  // 延迟渲染，确保DOM更新后ECharts能获取正确的容器尺寸
+  setTimeout(function() {
+    renderAll();
+    // 延迟resize，确保ECharts正确渲染
+    setTimeout(function() {
+      Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
+    }, 100);
+  }, 50);
 }
 
 // 数据分析框
