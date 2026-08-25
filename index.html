@@ -1568,21 +1568,14 @@ function switchSubTab(tab) {
     : 'sub-tab-inactive px-5 py-2 rounded-lg text-sm font-medium transition-all';
   document.getElementById('dailyPanel').classList.toggle('hidden', tab !== 'daily');
   document.getElementById('rangePanel').classList.toggle('hidden', tab !== 'range');
-  // 先销毁所有ECharts实例，确保重新初始化
-  Object.keys(charts).forEach(function(key) {
-    try { charts[key].dispose(); } catch(e) {}
-    delete charts[key];
-  });
-  // 延迟渲染，确保容器完全显示后再初始化ECharts
+  // 不销毁实例，直接重新渲染
+  renderAll();
+  // 延迟resize，确保ECharts正确获取容器尺寸
   setTimeout(function() {
-    renderAll();
-    // 再次延迟resize，确保ECharts正确获取容器尺寸
-    setTimeout(function() {
-      Object.values(charts).forEach(function(chart) {
-        try { chart.resize(); } catch(e) {}
-      });
-    }, 200);
-  }, 100);
+    Object.values(charts).forEach(function(chart) {
+      try { chart.resize(); } catch(e) {}
+    });
+  }, 200);
 }
 
 // 数据分析框
