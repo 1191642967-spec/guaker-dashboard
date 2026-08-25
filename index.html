@@ -1570,12 +1570,20 @@ function switchSubTab(tab) {
   document.getElementById('rangePanel').classList.toggle('hidden', tab !== 'range');
   // 延迟渲染，确保DOM更新后ECharts能获取正确的容器尺寸
   setTimeout(function() {
+    // 先销毁旧实例，确保重新初始化
+    Object.keys(charts).forEach(function(key) {
+      try { charts[key].dispose(); } catch(e) {}
+      delete charts[key];
+    });
     renderAll();
-    // 延迟resize，确保ECharts正确渲染
+    // 多次延迟resize，确保ECharts正确渲染
     setTimeout(function() {
       Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
     }, 100);
-  }, 50);
+    setTimeout(function() {
+      Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
+    }, 300);
+  }, 100);
 }
 
 // 数据分析框
