@@ -1568,13 +1568,20 @@ function switchSubTab(tab) {
     : 'sub-tab-inactive px-5 py-2 rounded-lg text-sm font-medium transition-all';
   document.getElementById('dailyPanel').classList.toggle('hidden', tab !== 'daily');
   document.getElementById('rangePanel').classList.toggle('hidden', tab !== 'range');
-  // 不销毁实例，直接重新渲染
-  renderAll();
-  // 延迟resize，确保ECharts正确获取容器尺寸
+  // 延迟渲染，确保容器完全显示后再初始化ECharts
   setTimeout(function() {
-    Object.values(charts).forEach(function(chart) {
-      try { chart.resize(); } catch(e) {}
+    // 销毁旧的ECharts实例，确保重新初始化
+    Object.keys(charts).forEach(function(key) {
+      try { charts[key].dispose(); } catch(e) {}
+      delete charts[key];
     });
+    renderAll();
+    // 延迟resize，确保ECharts正确获取容器尺寸
+    setTimeout(function() {
+      Object.values(charts).forEach(function(chart) {
+        try { chart.resize(); } catch(e) {}
+      });
+    }, 300);
   }, 200);
 }
 
@@ -2082,37 +2089,6 @@ window.addEventListener('load', function() {
   initDailyDateSelect();
   initWeekRankSelect();
   renderAll();
-  // 预渲染区间报表的ECharts图表，确保实例正确创建
-  setTimeout(function() {
-    // 临时显示区间报表面板
-    var rangePanel = document.getElementById('rangePanel');
-    var dailyPanel = document.getElementById('dailyPanel');
-    var wasHidden = rangePanel.classList.contains('hidden');
-    if (wasHidden) {
-      rangePanel.classList.remove('hidden');
-      dailyPanel.classList.add('hidden');
-    }
-    // 渲染区间报表图表
-    var d1 = getFiltered(1);
-    try { renderBarChart(d1); } catch(e) {}
-    try { renderGmvChart(d1); } catch(e) {}
-    try { renderRoiChart(d1); } catch(e) {}
-    try { renderGmvRoiRangeChart(d1); } catch(e) {}
-    try { renderClickRoiRangeChart(d1); } catch(e) {}
-    try { renderGmvConvRangeChart(d1); } catch(e) {}
-    try { renderViewsRoiRangeChart(d1); } catch(e) {}
-    // resize所有图表
-    setTimeout(function() {
-      Object.values(charts).forEach(function(chart) {
-        try { chart.resize(); } catch(e) {}
-      });
-      // 恢复原来的面板状态
-      if (wasHidden) {
-        rangePanel.classList.add('hidden');
-        dailyPanel.classList.remove('hidden');
-      }
-    }, 100);
-  }, 500);
   // 延迟初始化截图按钮，确保DOM渲染完成
   setTimeout(function() { initCardScreenshotButtons(); }, 300);
 });
