@@ -1568,26 +1568,7 @@ function switchSubTab(tab) {
     : 'sub-tab-inactive px-5 py-2 rounded-lg text-sm font-medium transition-all';
   document.getElementById('dailyPanel').classList.toggle('hidden', tab !== 'daily');
   document.getElementById('rangePanel').classList.toggle('hidden', tab !== 'range');
-  // 延迟500ms渲染，确保容器完全显示后再初始化ECharts
-  setTimeout(function() {
-    // 销毁旧的ECharts实例，确保重新初始化
-    Object.keys(charts).forEach(function(key) {
-      try { charts[key].dispose(); } catch(e) {}
-      delete charts[key];
-    });
-    renderAll();
-    // 多次延迟resize，确保ECharts正确获取容器尺寸
-    setTimeout(function() {
-      Object.values(charts).forEach(function(chart) {
-        try { chart.resize(); } catch(e) {}
-      });
-    }, 200);
-    setTimeout(function() {
-      Object.values(charts).forEach(function(chart) {
-        try { chart.resize(); } catch(e) {}
-      });
-    }, 500);
-  }, 500);
+  renderAll();
 }
 
 // 数据分析框
@@ -1670,20 +1651,15 @@ function renderAll() {
     renderDayRank();
     renderTable(2);
   }
-  // 重新初始化截图按钮和图表resize
-  setTimeout(function() {
-    initCardScreenshotButtons();
-    Object.values(charts).forEach(function(chart) {
-      try { chart.resize(); } catch(e) {}
-    });
-  }, 200);
+  // 重新初始化截图按钮
+  setTimeout(() => { initCardScreenshotButtons(); }, 100);
 }
 
 // ==================== 事件绑定 ====================
-document.getElementById('tab1Btn').addEventListener('click', function() { switchTab(1); });
-document.getElementById('tab2Btn').addEventListener('click', function() { switchTab(2); });
-document.getElementById('subTabDailyBtn').addEventListener('click', function() { switchSubTab('daily'); });
-document.getElementById('subTabRangeBtn').addEventListener('click', function() { switchSubTab('range'); });
+document.getElementById('tab1Btn').onclick = () => switchTab(1);
+document.getElementById('tab2Btn').onclick = () => switchTab(2);
+document.getElementById('subTabDailyBtn').onclick = () => switchSubTab('daily');
+document.getElementById('subTabRangeBtn').onclick = () => switchSubTab('range');
 document.getElementById('dateStart').onchange = e => { dateStart = e.target.value; renderAll(); };
 document.getElementById('dateEnd').onchange = e => { dateEnd = e.target.value; renderAll(); };
 document.getElementById('resetDate').onclick = () => { initDateFilters(); document.getElementById('quickRangeLabel').textContent=''; renderAll(); };
@@ -2087,16 +2063,13 @@ document.querySelectorAll('input[type="date"]').forEach(input => {
     }
   });
 });
-// 等待页面完全加载后再初始化
-window.addEventListener('load', function() {
-  initDateFilters();
-  initWeekCompare();
-  initDailyDateSelect();
-  initWeekRankSelect();
-  renderAll();
-  // 延迟初始化截图按钮，确保DOM渲染完成
-  setTimeout(function() { initCardScreenshotButtons(); }, 300);
-});
+initDateFilters();
+initWeekCompare();
+initDailyDateSelect();
+initWeekRankSelect();
+renderAll();
+// 延迟初始化截图按钮，确保DOM渲染完成
+setTimeout(() => { initCardScreenshotButtons(); }, 300);
 </script>
 </body>
 </html>
