@@ -81,6 +81,7 @@
 <div class="max-w-[1600px] mx-auto px-6 pt-6">
   <div class="flex gap-2">
     <button id="tab1Btn" class="tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all">直播间每日数据汇总</button>
+    <button id="tab3Btn" class="tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all">维度报表</button>
     <button id="tab2Btn" class="tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all">日主播数据报表</button>
   </div>
 </div>
@@ -196,9 +197,59 @@
     </div>
 
   </div>
+</section>
 
-  <!-- ========== 维度报表板块 ========== -->
-  <div class="mt-8">
+<!-- ==================== Tab 2：日主播数据报表 ==================== -->
+<section id="tab2" class="pt-6 hidden">
+
+  <!-- 月度主播排名 -->
+  <div class="glass-card rounded-2xl p-5 mb-5">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003087, #003da5);">月度排名</span>
+      <span id="monthRankLabel" class="text-xs text-slate-400"></span>
+    </div>
+    <div id="monthRankList" class="space-y-3"></div>
+  </div>
+
+  <!-- 周度主播排名 -->
+  <div class="glass-card rounded-2xl p-5 mb-5">
+    <div class="flex items-center gap-2 mb-4 flex-wrap">
+      <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003da5, #2563eb);">周度排名</span>
+      <select id="weekRankSelect" class="border border-slate-200 rounded-lg px-3 py-1 text-xs focus:ring-2 focus:ring-indigo-400 outline-none bg-white"></select>
+      <span id="weekRankLabel" class="text-xs text-slate-400"></span>
+    </div>
+    <div id="weekRankList" class="space-y-3"></div>
+  </div>
+
+  <!-- 日度主播排名 -->
+  <div class="glass-card rounded-2xl p-5 mb-5">
+    <div class="flex items-center gap-2 mb-4">
+      <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #c8102e, #e63946);">日度排名</span>
+      <span id="dayRankLabel" class="text-xs text-slate-400"></span>
+    </div>
+    <div id="dayRankList" class="space-y-3"></div>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="glass-card rounded-2xl overflow-hidden">
+    <div class="p-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+      <h3 class="text-sm font-semibold text-slate-700">主播数据明细</h3>
+      <input type="text" id="search2" placeholder="搜索主播、日期、场控..." class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm w-56 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+    </div>
+    <div class="overflow-x-auto">
+      <table id="table2" class="w-full text-xs">
+        <thead class="bg-slate-50 text-slate-600"></thead>
+        <tbody class="text-slate-700"></tbody>
+      </table>
+    </div>
+    <div id="pagination2" class="pagination flex items-center justify-between p-3 border-t border-slate-100 text-sm text-slate-600"></div>
+  </div>
+</section>
+
+<!-- ==================== Tab 3：维度报表 ==================== -->
+<section id="tab3" class="pt-6 hidden">
+  <!-- 维度报表板块 -->
+  <div>
     <!-- 板块标题 -->
     <div class="flex items-center gap-2 mb-5">
       <div class="w-1 h-6 rounded-full" style="background: linear-gradient(180deg, #003da5, #2563eb);"></div>
@@ -276,53 +327,6 @@
       </div>
       <div id="dimensionAnalysisContent" class="text-sm text-slate-700 leading-relaxed space-y-2"></div>
     </div>
-  </div>
-</section>
-
-<!-- ==================== Tab 2：日主播数据报表 ==================== -->
-<section id="tab2" class="pt-6 hidden">
-
-  <!-- 月度主播排名 -->
-  <div class="glass-card rounded-2xl p-5 mb-5">
-    <div class="flex items-center gap-2 mb-4">
-      <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003087, #003da5);">月度排名</span>
-      <span id="monthRankLabel" class="text-xs text-slate-400"></span>
-    </div>
-    <div id="monthRankList" class="space-y-3"></div>
-  </div>
-
-  <!-- 周度主播排名 -->
-  <div class="glass-card rounded-2xl p-5 mb-5">
-    <div class="flex items-center gap-2 mb-4 flex-wrap">
-      <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003da5, #2563eb);">周度排名</span>
-      <select id="weekRankSelect" class="border border-slate-200 rounded-lg px-3 py-1 text-xs focus:ring-2 focus:ring-indigo-400 outline-none bg-white"></select>
-      <span id="weekRankLabel" class="text-xs text-slate-400"></span>
-    </div>
-    <div id="weekRankList" class="space-y-3"></div>
-  </div>
-
-  <!-- 日度主播排名 -->
-  <div class="glass-card rounded-2xl p-5 mb-5">
-    <div class="flex items-center gap-2 mb-4">
-      <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #c8102e, #e63946);">日度排名</span>
-      <span id="dayRankLabel" class="text-xs text-slate-400"></span>
-    </div>
-    <div id="dayRankList" class="space-y-3"></div>
-  </div>
-
-  <!-- 数据表格 -->
-  <div class="glass-card rounded-2xl overflow-hidden">
-    <div class="p-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
-      <h3 class="text-sm font-semibold text-slate-700">主播数据明细</h3>
-      <input type="text" id="search2" placeholder="搜索主播、日期、场控..." class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm w-56 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-    </div>
-    <div class="overflow-x-auto">
-      <table id="table2" class="w-full text-xs">
-        <thead class="bg-slate-50 text-slate-600"></thead>
-        <tbody class="text-slate-700"></tbody>
-      </table>
-    </div>
-    <div id="pagination2" class="pagination flex items-center justify-between p-3 border-t border-slate-100 text-sm text-slate-600"></div>
   </div>
 </section>
 
@@ -551,9 +555,26 @@ function switchTab(tab) {
   currentTab = tab;
   document.getElementById('tab1').classList.toggle('hidden', tab !== 1);
   document.getElementById('tab2').classList.toggle('hidden', tab !== 2);
-  document.getElementById('tab1Btn').className = tab===1 ? 'tab-active px-6 py-2.5 rounded-t-lg text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-t-lg text-sm font-medium transition-all';
-  document.getElementById('tab2Btn').className = tab===2 ? 'tab-active px-6 py-2.5 rounded-t-lg text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-t-lg text-sm font-medium transition-all';
-  setTimeout(() => renderAll(), 50);
+  document.getElementById('tab3').classList.toggle('hidden', tab !== 3);
+  document.getElementById('tab1Btn').className = tab===1 ? 'tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all';
+  document.getElementById('tab2Btn').className = tab===2 ? 'tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all';
+  document.getElementById('tab3Btn').className = tab===3 ? 'tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all';
+  // 延迟渲染，确保DOM更新后ECharts能获取正确的容器尺寸
+  setTimeout(function() {
+    // 先销毁旧实例，确保重新初始化
+    Object.keys(charts).forEach(function(key) {
+      try { charts[key].dispose(); } catch(e) {}
+      delete charts[key];
+    });
+    renderAll();
+    // 多次延迟resize，确保ECharts正确渲染
+    setTimeout(function() {
+      Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
+    }, 100);
+    setTimeout(function() {
+      Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} });
+    }, 300);
+  }, 100);
 }
 
 // ==================== KPI 卡片 ====================
@@ -1738,13 +1759,15 @@ function renderAll() {
     renderTodaySchedule();
     renderTomorrowSchedule();
     renderDailyAnalysis();
-    // 维度报表
-    renderDimensionAll();
-  } else {
+  } else if (currentTab === 2) {
+    // 日主播数据报表
     renderMonthRank();
     renderWeekRank();
     renderDayRank();
     renderTable(2);
+  } else if (currentTab === 3) {
+    // 维度报表
+    renderDimensionAll();
   }
   // 重新初始化截图按钮
   setTimeout(() => { initCardScreenshotButtons(); }, 100);
@@ -1753,6 +1776,7 @@ function renderAll() {
 // ==================== 事件绑定 ====================
 document.getElementById('tab1Btn').onclick = () => switchTab(1);
 document.getElementById('tab2Btn').onclick = () => switchTab(2);
+document.getElementById('tab3Btn').onclick = () => switchTab(3);
 document.getElementById('dimensionStart').onchange = e => { dimensionStart = e.target.value; document.getElementById('dimensionLabel').textContent = dimensionStart + ' ~ ' + dimensionEnd; renderDimensionAll(); };
 document.getElementById('dimensionEnd').onchange = e => { dimensionEnd = e.target.value; document.getElementById('dimensionLabel').textContent = dimensionStart + ' ~ ' + dimensionEnd; renderDimensionAll(); };
 document.getElementById('dimensionReset').onclick = () => { initDimensionFilters(); renderDimensionAll(); };
