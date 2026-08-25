@@ -1675,10 +1675,10 @@ function renderAll() {
 }
 
 // ==================== 事件绑定 ====================
-document.getElementById('tab1Btn').onclick = () => switchTab(1);
-document.getElementById('tab2Btn').onclick = () => switchTab(2);
-document.getElementById('subTabDailyBtn').onclick = () => switchSubTab('daily');
-document.getElementById('subTabRangeBtn').onclick = () => switchSubTab('range');
+document.getElementById('tab1Btn').addEventListener('click', function() { switchTab(1); });
+document.getElementById('tab2Btn').addEventListener('click', function() { switchTab(2); });
+document.getElementById('subTabDailyBtn').addEventListener('click', function() { switchSubTab('daily'); });
+document.getElementById('subTabRangeBtn').addEventListener('click', function() { switchSubTab('range'); });
 document.getElementById('dateStart').onchange = e => { dateStart = e.target.value; renderAll(); };
 document.getElementById('dateEnd').onchange = e => { dateEnd = e.target.value; renderAll(); };
 document.getElementById('resetDate').onclick = () => { initDateFilters(); document.getElementById('quickRangeLabel').textContent=''; renderAll(); };
@@ -2082,44 +2082,47 @@ document.querySelectorAll('input[type="date"]').forEach(input => {
     }
   });
 });
-initDateFilters();
-initWeekCompare();
-initDailyDateSelect();
-initWeekRankSelect();
-renderAll();
-// 预渲染区间报表的ECharts图表，确保实例正确创建
-setTimeout(function() {
-  // 临时显示区间报表面板
-  var rangePanel = document.getElementById('rangePanel');
-  var dailyPanel = document.getElementById('dailyPanel');
-  var wasHidden = rangePanel.classList.contains('hidden');
-  if (wasHidden) {
-    rangePanel.classList.remove('hidden');
-    dailyPanel.classList.add('hidden');
-  }
-  // 渲染区间报表图表
-  var d1 = getFiltered(1);
-  try { renderBarChart(d1); } catch(e) {}
-  try { renderGmvChart(d1); } catch(e) {}
-  try { renderRoiChart(d1); } catch(e) {}
-  try { renderGmvRoiRangeChart(d1); } catch(e) {}
-  try { renderClickRoiRangeChart(d1); } catch(e) {}
-  try { renderGmvConvRangeChart(d1); } catch(e) {}
-  try { renderViewsRoiRangeChart(d1); } catch(e) {}
-  // resize所有图表
+// 等待页面完全加载后再初始化
+window.addEventListener('load', function() {
+  initDateFilters();
+  initWeekCompare();
+  initDailyDateSelect();
+  initWeekRankSelect();
+  renderAll();
+  // 预渲染区间报表的ECharts图表，确保实例正确创建
   setTimeout(function() {
-    Object.values(charts).forEach(function(chart) {
-      try { chart.resize(); } catch(e) {}
-    });
-    // 恢复原来的面板状态
+    // 临时显示区间报表面板
+    var rangePanel = document.getElementById('rangePanel');
+    var dailyPanel = document.getElementById('dailyPanel');
+    var wasHidden = rangePanel.classList.contains('hidden');
     if (wasHidden) {
-      rangePanel.classList.add('hidden');
-      dailyPanel.classList.remove('hidden');
+      rangePanel.classList.remove('hidden');
+      dailyPanel.classList.add('hidden');
     }
-  }, 100);
-}, 500);
-// 延迟初始化截图按钮，确保DOM渲染完成
-setTimeout(() => { initCardScreenshotButtons(); }, 300);
+    // 渲染区间报表图表
+    var d1 = getFiltered(1);
+    try { renderBarChart(d1); } catch(e) {}
+    try { renderGmvChart(d1); } catch(e) {}
+    try { renderRoiChart(d1); } catch(e) {}
+    try { renderGmvRoiRangeChart(d1); } catch(e) {}
+    try { renderClickRoiRangeChart(d1); } catch(e) {}
+    try { renderGmvConvRangeChart(d1); } catch(e) {}
+    try { renderViewsRoiRangeChart(d1); } catch(e) {}
+    // resize所有图表
+    setTimeout(function() {
+      Object.values(charts).forEach(function(chart) {
+        try { chart.resize(); } catch(e) {}
+      });
+      // 恢复原来的面板状态
+      if (wasHidden) {
+        rangePanel.classList.add('hidden');
+        dailyPanel.classList.remove('hidden');
+      }
+    }, 100);
+  }, 500);
+  // 延迟初始化截图按钮，确保DOM渲染完成
+  setTimeout(function() { initCardScreenshotButtons(); }, 300);
+});
 </script>
 </body>
 </html>
