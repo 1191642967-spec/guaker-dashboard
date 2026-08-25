@@ -747,7 +747,13 @@ function renderDayRank() {
 
 // ==================== 图表 ====================
 function getChart(id) {
-  if (!charts[id]) charts[id] = echarts.init(document.getElementById(id));
+  if (!charts[id]) {
+    const dom = document.getElementById(id);
+    // 显式指定宽度和高度，避免隐藏容器初始化时尺寸为0
+    const width = dom.offsetWidth || dom.clientWidth || 600;
+    const height = dom.offsetHeight || dom.clientHeight || 320;
+    charts[id] = echarts.init(dom, null, { width: width, height: height });
+  }
   return charts[id];
 }
 
