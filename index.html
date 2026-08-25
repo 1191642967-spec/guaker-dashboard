@@ -749,10 +749,9 @@ function renderDayRank() {
 function getChart(id) {
   if (!charts[id]) {
     const dom = document.getElementById(id);
-    // 显式指定宽度和高度，避免隐藏容器初始化时尺寸为0
-    const width = dom.offsetWidth || dom.clientWidth || 600;
-    const height = dom.offsetHeight || dom.clientHeight || 320;
-    charts[id] = echarts.init(dom, null, { width: width, height: height });
+    // 直接使用固定宽度，避免隐藏容器初始化时尺寸为0
+    // 后续resize会自动适配容器实际宽度
+    charts[id] = echarts.init(dom, null, { width: 700, height: 320 });
   }
   return charts[id];
 }
