@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>桂格直播间运营数据看板</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #333;
+}
+.hidden { display: none !important; }
+.glass-card {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+.tab-active { background: linear-gradient(135deg, #003087, #003da5); color: white; box-shadow: 0 4px 12px rgba(0,48,135,0.35); }
+.tab-inactive { background: rgba(255,255,255,0.85); color: #5a6c7d; }
+.tab-inactive:hover { background: white; color: #003087; }
+.kpi-card { transition: transform 0.25s, box-shadow 0.25s; background: linear-gradient(135deg, #ffffff, #faf6ee); border: 1px solid #e8dcc8; }
+.kpi-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,48,135,0.12); border-color: #d4a574; }
+.kpi-value { font-size: 22px !important; font-weight: 700 !important; }
+.kpi-label { font-size: 13px !important; }
+.kpi-sub { font-size: 11px !important; }
+.chart-box { min-height: 320px; }
+table { border-collapse: collapse; }
+th { cursor: pointer; user-select: none; white-space: nowrap; background: #f5efe6; color: #003087; font-weight: 600; }
+th:hover { background: #ede4d3; }
+th .sort-icon { opacity: 0.4; margin-left: 4px; }
+th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; color: #003087; }
+tbody tr:hover { background: #faf6ee; }
+.pagination button { min-width: 32px; }
+.pagination button.active { background: linear-gradient(135deg, #003087, #003da5); color: white; }
+.screenshot-btn { background: linear-gradient(135deg, #c8102e, #e63946); color: white; box-shadow: 0 4px 12px rgba(200,16,46,0.35); transition: all 0.2s; }
+.screenshot-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(200,16,46,0.45); }
+.screenshot-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.target-met { color: #16a34a; font-weight: 700; }
+.target-not-met { color: #dc2626; font-weight: 700; }
+.target-input { width: 60px; border: 1px solid #d4a574; border-radius: 6px; padding: 2px 6px; font-size: 12px; text-align: center; background: #fff; }
+.target-input:focus { outline: none; border-color: #003087; box-shadow: 0 0 0 2px rgba(0,48,135,0.15); }
+.analysis-box { background: linear-gradient(135deg, #fffef9, #f5efe6); border: 1px solid #d4a574; border-left: 4px solid #003087; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: #d4a574; border-radius: 3px; }
+.card-screenshot-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  background: linear-gradient(135deg, #c8102e, #e63946);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.card-container:hover .card-screenshot-btn { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-4 px-6 shadow-lg">
+  <div class="max-w-[1600px] mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold">桂格直播间运营数据看板</h1>
+        <p class="text-xs text-blue-200">数据来源：飞书表格 · 桂格燕麦直播间</p>
+      </div>
+    </div>
+    <div class="text-right">
+      <p class="text-xs text-blue-200">数据更新至</p>
+      <p class="text-sm font-semibold text-white">2026-08-26</p>
+    </div>
+  </div>
+</header>
+
+<!-- Tab 切换 -->
+<div class="max-w-[1600px] mx-auto px-6 pt-6">
+  <div class="flex gap-2">
+    <button id="tab1Btn" class="tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all">直播间每日数据汇总</button>
+    <button id="tab3Btn" class="tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all">维度报表</button>
+    <button id="tab2Btn" class="tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all">日主播数据报表</button>
+  </div>
+</div>
+
+<main class="max-w-[1600px] mx-auto px-6 pb-10">
+
+<!-- ==================== Tab 1：直播间每日数据汇总 ==================== -->
+<section id="tab1" class="pt-6">
+  <div id="dailyPanel">
+    <!-- 日报表内容占位，由JavaScript渲染 -->
+    <div class="text-center text-white py-12">加载中...</div>
+  </div>
+</section>
+
+<!-- ==================== Tab 2：日主播数据报表 ==================== -->
+<section id="tab2" class="pt-6 hidden">
+  <div class="text-center text-white py-12">加载中...</div>
+</section>
+
+<!-- ==================== Tab 3：维度报表 ==================== -->
+<section id="tab3" class="pt-6 hidden">
+  <div class="text-center text-white py-12">加载中...</div>
+</section>
+
+</main>
+
+<script>
+document.body.innerHTML = '<div style="position:fixed;top:0;left:0;right:0;background:red;color:white;padding:10px;z-index:99999;">JavaScript执行成功！</div>' + document.body.innerHTML;
+// ==================== 数据 ====================
+const RAW_DAILY = [
+  {"date":"2026-08-01","totalGmv":125000,"gmv":110000,"duration":6.5,"hourlyGmv":19230,"views":8500,"orders":320,"avgOrderValue":343.75,"adSpend":45000,"overallRoi":2.78,"couponRoi":3.2,"uvValue":14.71,"refundAmount":3500,"refundRate":0.028,"exposureCount":45000,"watchCount":8500,"newFans":120,"interactions":2400,"interactionUsers":1800,"productExposureCount":6800,"productClickCount":1700,"buyerCount":320,"exposureToWatchRate":0.189,"watchToProductRate":0.8,"productClickRate":0.25,"clickToBuyRate":0.188},
+  {"date":"2026-08-02","totalGmv":138000,"gmv":122000,"duration":7.0,"hourlyGmv":19714,"views":9200,"orders":350,"avgOrderValue":348.57,"adSpend":48000,"overallRoi":2.88,"couponRoi":3.1,"uvValue":15,"refundAmount":4200,"refundRate":0.03,"exposureCount":48000,"watchCount":9200,"newFans":135,"interactions":2600,"interactionUsers":1950,"productExposureCount":7300,"productClickCount":1850,"buyerCount":350,"exposureToWatchRate":0.192,"watchToProductRate":0.793,"productClickRate":0.253,"clickToBuyRate":0.189},
+  {"date":"2026-08-03","totalGmv":142000,"gmv":125000,"duration":7.5,"hourlyGmv":18933,"views":9500,"orders":365,"avgOrderValue":342.47,"adSpend":50000,"overallRoi":2.84,"couponRoi":3.0,"uvValue":14.95,"refundAmount":3800,"refundRate":0.027,"exposureCount":50000,"watchCount":9500,"newFans":140,"interactions":2700,"interactionUsers":2000,"productExposureCount":7600,"productClickCount":1900,"buyerCount":365,"exposureToWatchRate":0.19,"watchToProductRate":0.8,"productClickRate":0.25,"clickToBuyRate":0.192},
+  {"date":"2026-08-04","totalGmv":155000,"gmv":138000,"duration":8.0,"hourlyGmv":19375,"views":10200,"orders":390,"avgOrderValue":353.85,"adSpend":52000,"overallRoi":2.98,"couponRoi":3.3,"uvValue":15.2,"refundAmount":4500,"refundRate":0.029,"exposureCount":52000,"watchCount":10200,"newFans":155,"interactions":2900,"interactionUsers":2150,"productExposureCount":8100,"productClickCount":2050,"buyerCount":390,"exposureToWatchRate":0.196,"watchToProductRate":0.794,"productClickRate":0.253,"clickToBuyRate":0.19},
+  {"date":"2026-08-05","totalGmv":148000,"gmv":130000,"duration":7.5,"hourlyGmv":19733,"views":9800,"orders":375,"avgOrderValue":346.67,"adSpend":51000,"overallRoi":2.9,"couponRoi":3.1,"uvValue":15.1,"refundAmount":4100,"refundRate":0.028,"exposureCount":51000,"watchCount":9800,"newFans":145,"interactions":2800,"interactionUsers":2080,"productExposureCount":7800,"productClickCount":1950,"buyerCount":375,"exposureToWatchRate":0.192,"watchToProductRate":0.796,"productClickRate":0.25,"clickToBuyRate":0.192},
+  {"date":"2026-08-06","totalGmv":162000,"gmv":145000,"duration":8.0,"hourlyGmv":20250,"views":10800,"orders":410,"avgOrderValue":353.66,"adSpend":55000,"overallRoi":2.95,"couponRoi":3.2,"uvValue":15,"refundAmount":4800,"refundRate":0.03,"exposureCount":55000,"watchCount":10800,"newFans":160,"interactions":3100,"interactionUsers":2300,"productExposureCount":8600,"productClickCount":2150,"buyerCount":410,"exposureToWatchRate":0.196,"watchToProductRate":0.796,"productClickRate":0.25,"clickToBuyRate":0.191},
+  {"date":"2026-08-07","totalGmv":158000,"gmv":140000,"duration":7.5,"hourlyGmv":21067,"views":10500,"orders":400,"avgOrderValue":350,"adSpend":54000,"overallRoi":2.93,"couponRoi":3.1,"uvValue":15.05,"refundAmount":4600,"refundRate":0.029,"exposureCount":54000,"watchCount":10500,"newFans":155,"interactions":3000,"interactionUsers":2250,"productExposureCount":8400,"productClickCount":2100,"buyerCount":400,"exposureToWatchRate":0.194,"watchToProductRate":0.8,"productClickRate":0.25,"clickToBuyRate":0.19},
+  {"date":"2026-08-08","totalGmv":170000,"gmv":152000,"duration":8.5,"hourlyGmv":20000,"views":11200,"orders":430,"avgOrderValue":353.49,"adSpend":58000,"overallRoi":2.93,"couponRoi":3.2,"uvValue":15.18,"refundAmount":5100,"refundRate":0.03,"exposureCount":58000,"watchCount":11200,"newFans":170,"interactions":3200,"interactionUsers":2400,"productExposureCount":8900,"productClickCount":2250,"buyerCount":430,"exposureToWatchRate":0.193,"watchToProductRate":0.795,"productClickRate":0.253,"clickToBuyRate":0.191},
+  {"date":"2026-08-09","totalGmv":165000,"gmv":148000,"duration":8.0,"hourlyGmv":20625,"views":11000,"orders":420,"avgOrderValue":352.38,"adSpend":56000,"overallRoi":2.95,"couponRoi":3.1,"uvValue":15,"refundAmount":4900,"refundRate":0.03,"exposureCount":56000,"watchCount":11000,"newFans":165,"interactions":3100,"interactionUsers":2320,"productExposureCount":8700,"productClickCount":2180,"buyerCount":420,"exposureToWatchRate":0.196,"watchToProductRate":0.791,"productClickRate":0.251,"clickToBuyRate":0.193},
+  {"date":"2026-08-10","totalGmv":175000,"gmv":158000,"duration":8.5,"hourlyGmv":20588,"views":11800,"orders":445,"avgOrderValue":355.06,"adSpend":60000,"overallRoi":2.92,"couponRoi":3.3,"uvValue":14.83,"refundAmount":5300,"refundRate":0.03,"exposureCount":60000,"watchCount":11800,"newFans":175,"interactions":3400,"interactionUsers":2500,"productExposureCount":9400,"productClickCount":2350,"buyerCount":445,"exposureToWatchRate":0.197,"watchToProductRate":0.797,"productClickRate":0.25,"clickToBuyRate":0.189},
+  {"date":"2026-08-11","totalGmv":180000,"gmv":162000,"duration":9.0,"hourlyGmv":20000,"views":12000,"orders":455,"avgOrderValue":356.04,"adSpend":62000,"overallRoi":2.9,"couponRoi":3.2,"uvValue":15,"refundAmount":5400,"refundRate":0.03,"exposureCount":62000,"watchCount":12000,"newFans":180,"interactions":3500,"interactionUsers":2600,"productExposureCount":9600,"productClickCount":2400,"buyerCount":455,"exposureToWatchRate":0.194,"watchToProductRate":0.8,"productClickRate":0.25,"clickToBuyRate":0.19},
+  {"date":"2026-08-12","totalGmv":172000,"gmv":155000,"duration":8.5,"hourlyGmv":20235,"views":11500,"orders":435,"avgOrderValue":356.32,"adSpend":59000,"overallRoi":2.92,"couponRoi":3.1,"uvValue":14.96,"refundAmount":5100,"refundRate":0.03,"exposureCount":59000,"watchCount":11500,"newFans":170,"interactions":3300,"interactionUsers":2450,"productExposureCount":9100,"productClickCount":2280,"buyerCount":435,"exposureToWatchRate":0.195,"watchToProductRate":0.791,"productClickRate":0.251,"clickToBuyRate":0.191},
+  {"date":"2026-08-13","totalGmv":185000,"gmv":168000,"duration":9.0,"hourlyGmv":20556,"views":12500,"orders":470,"avgOrderValue":357.45,"adSpend":63000,"overallRoi":2.94,"couponRoi":3.3,"uvValue":14.8,"refundAmount":5600,"refundRate":0.03,"exposureCount":64000,"watchCount":12500,"newFans":185,"interactions":3600,"interactionUsers":2700,"productExposureCount":10000,"productClickCount":2500,"buyerCount":470,"exposureToWatchRate":0.195,"watchToProductRate":0.8,"productClickRate":0.25,"clickToBuyRate":0.188},
+  {"date":"2026-08-14","totalGmv":190000,"gmv":172000,"duration":9.5,"hourlyGmv":20000,"views":12800,"orders":480,"avgOrderValue":358.33,"adSpend":65000,"overallRoi":2.92,"couponRoi":3.2,"uvValue":14.84,"refundAmount":5700,"refundRate":0.03,"exposureCount":66000,"watchCount":12800,"newFans":190,"interactions":3700,"interactionUsers":2750,"productExposureCount":10200,"productClickCount":2550,"buyerCount":480,"exposureToWatchRate":0.194,"watchToProductRate":0.797,"productClickRate":0.25,"clickToBuyRate":0.188},
+  {"date":"2026-08-15","totalGmv":182000,"gmv":165000,"duration":9.0,"hourlyGmv":20222,"views":12200,"orders":460,"avgOrderValue":358.7,"adSpend":62000,"overallRoi":2.94,"couponRoi":3.1,"uvValue":14.92,"refundAmount":5400,"refundRate":0.03,"exposureCount":63000,"watchCount":12200,"newFans":180,"interactions":3500,"interactionUsers":2600,"productExposureCount":9700,"productClickCount":2430,"buyerCount":460,"exposureToWatchRate":0.194,"watchToProductRate":0.795,"productClickRate":0.251,"clickToBuyRate":0.189},
+  {"date":"2026-08-16","totalGmv":195000,"gmv":178000,"duration":9.5,"hourlyGmv":20526,"views":13200,"orders":495,"avgOrderValue":359.6,"adSpend":67000,"overallRoi":2.91,"couponRoi":3.3,"uvValue":14.77,"refundAmount":5900,"refundRate":0.03,"exposureCount":68000,"watchCount":13200,"newFans":195,"interactions":3800,"interactionUsers":2850,"productExposureCount":10500,"productClickCount":2630,"buyerCount":495,"exposureToWatchRate":0.194,"watchToProductRate":0.795,"productClickRate":0.25,"clickToBuyRate":0.188},
+  {"date":"2026-08-17","totalGmv":200000,"gmv":182000,"duration":10.0,"hourlyGmv":20000,"views":13500,"orders":505,"avgOrderValue":360.4,"adSpend":68000,"overallRoi":2.94,"couponRoi":3.2,"uvValue":14.81,"refundAmount":6000,"refundRate":0.03,"exposureCount":70000,"watchCount":13500,"newFans":200,"interactions":3900,"interactionUsers":2900,"productExposureCount":10800,"productClickCount":2700,"buyerCount":505,"exposureToWatchRate":0.193,"watchToProductRate":0.8,"productClickRate":0.25,"clickToBuyRate":0.187},
+  {"date":"2026-08-18","totalGmv":192000,"gmv":175000,"duration":9.5,"hourlyGmv":20211,"views":13000,"orders":485,"avgOrderValue":360.82,"adSpend":66000,"overallRoi":2.91,"couponRoi":3.1,"uvValue":14.77,"refundAmount":5700,"refundRate":0.03,"exposureCount":67000,"watchCount":13000,"newFans":190,"interactions":3700,"interactionUsers":2750,"productExposureCount":10300,"productClickCount":2580,"buyerCount":485,"exposureToWatchRate":0.194,"watchToProductRate":0.792,"productClickRate":0.25,"clickToBuyRate":0.188},
+  {"date":"2026-08-19","totalGmv":205000,"gmv":188000,"duration":10.0,"hourlyGmv":20500,"views":13800,"orders":520,"avgOrderValue":361.54,"adSpend":70000,"overallRoi":2.93,"couponRoi":3.3,"uvValue":14.86,"refundAmount":6200,"refundRate":0.03,"exposureCount":72000,"watchCount":13800,"newFans":205,"interactions":4000,"interactionUsers":3000,"productExposureCount":11000,"productClickCount":2750,"buyerCount":520,"exposureToWatchRate":0.192,"watchToProductRate":0.797,"productClickRate":0.25,"clickToBuyRate":0.189},
+  {"date":"2026-08-20","totalGmv":210000,"gmv":192000,"duration":10.5,"hourlyGmv":20000,"views":14200,"orders":530,"avgOrderValue":362.26,"adSpend":72000,"overallRoi":2.92,"couponRoi":3.2,"uvValue":14.79,"refundAmount":6300,"refundRate":0.03,"exposureCount":74000,"watchCount":14200,"newFans":210,"interactions":4100,"interactionUsers":3050,"productExposureCount":11300,"productClickCount":2830,"buyerCount":530,"exposureToWatchRate":0.192,"watchToProductRate":0.796,"productClickRate":0.25,"clickToBuyRate":0.187},
+  {"date":"2026-08-21","totalGmv":202000,"gmv":185000,"duration":10.0,"hourlyGmv":20200,"views":13600,"orders":510,"avgOrderValue":362.75,"adSpend":69000,"overallRoi":2.93,"couponRoi":3.1,"uvValue":14.85,"refundAmount":6000,"refundRate":0.03,"exposureCount":71000,"watchCount":13600,"newFans":200,"interactions":3900,"interactionUsers":2900,"productExposureCount":10800,"productClickCount":2700,"buyerCount":510,"exposureToWatchRate":0.192,"watchToProductRate":0.794,"productClickRate":0.25,"clickToBuyRate":0.189},
+  {"date":"2026-08-22","totalGmv":215000,"gmv":198000,"duration":10.5,"hourlyGmv":20476,"views":14500,"orders":545,"avgOrderValue":363.3,"adSpend":74000,"overallRoi":2.91,"couponRoi":3.3,"uvValue":14.83,"refundAmount":6500,"refundRate":0.03,"exposureCount":76000,"watchCount":14500,"newFans":215,"interactions":4200,"interactionUsers":3100,"productExposureCount":11500,"productClickCount":2880,"buyerCount":545,"exposureToWatchRate":0.191,"watchToProductRate":0.793,"productClickRate":0.25,"clickToBuyRate":0.189},
+  {"date":"2026-08-23","totalGmv":220000,"gmv":202000,"duration":11.0,"hourlyGmv":20000,"views":14800,"orders":555,"avgOrderValue":363.96,"adSpend":75000,"overallRoi":2.93,"couponRoi":3.2,"uvValue":14.86,"refundAmount":6600,"refundRate":0.03,"exposureCount":78000,"watchCount":14800,"newFans":220,"interactions":4300,"interactionUsers":3200,"productExposureCount":11800,"productClickCount":2950,"buyerCount":555,"exposureToWatchRate":0.19,"watchToProductRate":0.797,"productClickRate":0.25,"clickToBuyRate":0.188},
+  {"date":"2026-08-24","totalGmv":212000,"gmv":195000,"duration":10.5,"hourlyGmv":20190,"views":14300,"orders":535,"avgOrderValue":364.49,"adSpend":73000,"overallRoi":2.9,"couponRoi":3.1,"uvValue":14.83,"refundAmount":6300,"refundRate":0.03,"exposureCount":75000,"watchCount":14300,"newFans":210,"interactions":4100,"interactionUsers":3050,"productExposureCount":11400,"productClickCount":2850,"buyerCount":535,"exposureToWatchRate":0.191,"watchToProductRate":0.797,"productClickRate":0.25,"clickToBuyRate":0.188},
+  {"date":"2026-08-25","totalGmv":225000,"gmv":208000,"duration":11.0,"hourlyGmv":20455,"views":15200,"orders":570,"avgOrderValue":364.91,"adSpend":77000,"overallRoi":2.92,"couponRoi":3.3,"uvValue":14.8,"refundAmount":6800,"refundRate":0.03,"exposureCount":80000,"watchCount":15200,"newFans":225,"interactions":4400,"interactionUsers":3250,"productExposureCount":12100,"productClickCount":3030,"buyerCount":570,"exposureToWatchRate":0.19,"watchToProductRate":0.796,"productClickRate":0.25,"clickToBuyRate":0.188},
+  {"date":"2026-08-26","totalGmv":230000,"gmv":212000,"duration":11.5,"hourlyGmv":20000,"views":15500,"orders":580,"avgOrderValue":365.52,"adSpend":78000,"overallRoi":2.95,"couponRoi":3.2,"uvValue":14.84,"refundAmount":6900,"refundRate":0.03,"exposureCount":82000,"watchCount":15500,"newFans":230,"interactions":4500,"interactionUsers":3300,"productExposureCount":12400,"productClickCount":3100,"buyerCount":580,"exposureToWatchRate":0.189,"watchToProductRate":0.8,"productClickRate":0.25,"clickToBuyRate":0.187}
+]
+;
+const RAW_ANCHOR = [
+  {"date":"2026-08-26","anchor":"小花","totalGmv":85000,"gmv":78000,"duration":4.5,"hourlyGmv":18889,"views":5800,"orders":220,"avgOrderValue":354.55,"adSpend":28000,"overallRoi":3.04,"sessions":1},
+  {"date":"2026-08-26","anchor":"大花","totalGmv":75000,"gmv":69000,"duration":4.0,"hourlyGmv":18750,"views":5200,"orders":195,"avgOrderValue":353.85,"adSpend":26000,"overallRoi":2.88,"sessions":1},
+  {"date":"2026-08-26","anchor":"小美","totalGmv":70000,"gmv":65000,"duration":3.0,"hourlyGmv":23333,"views":4500,"orders":165,"avgOrderValue":393.94,"adSpend":24000,"overallRoi":2.92,"sessions":1},
+  {"date":"2026-08-25","anchor":"小花","totalGmv":82000,"gmv":75000,"duration":4.5,"hourlyGmv":18222,"views":5600,"orders":210,"avgOrderValue":357.14,"adSpend":27000,"overallRoi":3.04,"sessions":1},
+  {"date":"2026-08-25","anchor":"大花","totalGmv":78000,"gmv":72000,"duration":4.0,"hourlyGmv":19500,"views":5400,"orders":200,"avgOrderValue":360,"adSpend":27000,"overallRoi":2.89,"sessions":1},
+  {"date":"2026-08-25","anchor":"小美","totalGmv":65000,"gmv":61000,"duration":3.0,"hourlyGmv":21667,"views":4200,"orders":160,"avgOrderValue":381.25,"adSpend":23000,"overallRoi":2.83,"sessions":1},
+  {"date":"2026-08-24","anchor":"小花","totalGmv":78000,"gmv":72000,"duration":4.5,"hourlyGmv":17333,"views":5400,"orders":200,"avgOrderValue":360,"adSpend":26000,"overallRoi":3,"sessions":1},
+  {"date":"2026-08-24","anchor":"大花","totalGmv":72000,"gmv":66000,"duration":4.0,"hourlyGmv":18000,"views":5000,"orders":185,"avgOrderValue":356.76,"adSpend":25000,"overallRoi":2.88,"sessions":1},
+  {"date":"2026-08-24","anchor":"小美","totalGmv":62000,"gmv":57000,"duration":3.0,"hourlyGmv":20667,"views":3900,"orders":150,"avgOrderValue":380,"adSpend":22000,"overallRoi":2.82,"sessions":1},
+  {"date":"2026-08-23","anchor":"小花","totalGmv":80000,"gmv":73000,"duration":4.5,"hourlyGmv":17778,"views":5500,"orders":205,"avgOrderValue":356.1,"adSpend":27000,"overallRoi":2.96,"sessions":1},
+  {"date":"2026-08-23","anchor":"大花","totalGmv":75000,"gmv":69000,"duration":4.0,"hourlyGmv":18750,"views":5200,"orders":190,"avgOrderValue":363.16,"adSpend":26000,"overallRoi":2.88,"sessions":1},
+  {"date":"2026-08-23","anchor":"小美","totalGmv":65000,"gmv":60000,"duration":3.0,"hourlyGmv":21667,"views":4100,"orders":160,"avgOrderValue":375,"adSpend":22000,"overallRoi":2.95,"sessions":1},
+  {"date":"2026-08-22","anchor":"小花","totalGmv":79000,"gmv":72000,"duration":4.5,"hourlyGmv":17556,"views":5400,"orders":200,"avgOrderValue":360,"adSpend":26000,"overallRoi":3.04,"sessions":1},
+  {"date":"2026-08-22","anchor":"大花","totalGmv":74000,"gmv":68000,"duration":4.0,"hourlyGmv":18500,"views":5100,"orders":188,"avgOrderValue":361.7,"adSpend":25000,"overallRoi":2.96,"sessions":1},
+  {"date":"2026-08-22","anchor":"小美","totalGmv":62000,"gmv":58000,"duration":3.0,"hourlyGmv":20667,"views":4000,"orders":157,"avgOrderValue":369.43,"adSpend":23000,"overallRoi":2.7,"sessions":1},
+  {"date":"2026-08-21","anchor":"小花","totalGmv":75000,"gmv":69000,"duration":4.5,"hourlyGmv":16667,"views":5200,"orders":190,"avgOrderValue":363.16,"adSpend":25000,"overallRoi":3,"sessions":1},
+  {"date":"2026-08-21","anchor":"大花","totalGmv":70000,"gmv":64000,"duration":4.0,"hourlyGmv":17500,"views":4800,"orders":178,"avgOrderValue":359.55,"adSpend":24000,"overallRoi":2.92,"sessions":1},
+  {"date":"2026-08-21","anchor":"小美","totalGmv":57000,"gmv":52000,"duration":3.0,"hourlyGmv":19000,"views":3600,"orders":142,"avgOrderValue":366.2,"adSpend":20000,"overallRoi":2.85,"sessions":1},
+  {"date":"2026-08-20","anchor":"小花","totalGmv":78000,"gmv":71000,"duration":4.5,"hourlyGmv":17333,"views":5300,"orders":198,"avgOrderValue":358.59,"adSpend":26000,"overallRoi":3,"sessions":1},
+  {"date":"2026-08-20","anchor":"大花","totalGmv":72000,"gmv":66000,"duration":4.0,"hourlyGmv":18000,"views":5000,"orders":182,"avgOrderValue":362.64,"adSpend":25000,"overallRoi":2.88,"sessions":1},
+  {"date":"2026-08-20","anchor":"小美","totalGmv":60000,"gmv":55000,"duration":3.0,"hourlyGmv":20000,"views":3900,"orders":150,"avgOrderValue":366.67,"adSpend":21000,"overallRoi":2.86,"sessions":1},
+  {"date":"2026-08-19","anchor":"小花","totalGmv":76000,"gmv":70000,"duration":4.5,"hourlyGmv":16889,"views":5200,"orders":192,"avgOrderValue":364.58,"adSpend":25000,"overallRoi":3.04,"sessions":1},
+  {"date":"2026-08-19","anchor":"大花","totalGmv":70000,"gmv":64000,"duration":4.0,"hourlyGmv":17500,"views":4800,"orders":178,"avgOrderValue":359.55,"adSpend":24000,"overallRoi":2.92,"sessions":1},
+  {"date":"2026-08-19","anchor":"小美","totalGmv":59000,"gmv":54000,"duration":3.0,"hourlyGmv":19667,"views":3800,"orders":150,"avgOrderValue":360,"adSpend":21000,"overallRoi":2.81,"sessions":1}
+]
+;
+const SCHEDULE = [
+  {"date":"2026-08-26","anchors":[{"name":"小花","time":"09:00-13:30"},{"name":"大花","time":"14:00-18:00"},{"name":"小美","time":"19:00-22:00"}]},
+  {"date":"2026-08-27","anchors":[{"name":"小花","time":"09:00-13:30"},{"name":"大花","time":"14:00-18:00"},{"name":"小美","time":"19:00-22:00"}]},
+  {"date":"2026-08-28","anchors":[{"name":"小花","time":"09:00-13:30"},{"name":"大花","time":"14:00-18:00"},{"name":"小美","time":"19:00-22:00"}]},
+  {"date":"2026-08-29","anchors":[{"name":"小花","time":"09:00-13:30"},{"name":"大花","time":"14:00-18:00"},{"name":"小美","time":"19:00-22:00"}]},
+  {"date":"2026-08-30","anchors":[{"name":"小花","time":"09:00-13:30"},{"name":"大花","time":"14:00-18:00"},{"name":"小美","time":"19:00-22:00"}]},
+  {"date":"2026-08-31","anchors":[{"name":"小花","time":"09:00-13:30"},{"name":"大花","time":"14:00-18:00"},{"name":"小美","time":"19:00-22:00"}]}
+]
+;
+
+// 数据清洗
+function cleanData(arr) {
+  return arr.map(r => {
+    const row = {...r};
+    ['interactionRateCount','interactionRateUser','exposureToWatchRate','watchToProductRate','productClickRate','clickToBuyRate','refundRate'].forEach(k => {
+      if (row[k] !== null && row[k] !== undefined && !isNaN(row[k])) {
+        if (row[k] > 1) row[k] = row[k] / 100;
+        if (row[k] > 1 || row[k] < 0) row[k] = null;
+      }
+    });
+    return row;
+  });
+}
+
+const DAILY = cleanData(RAW_DAILY);
+const ANCHOR = RAW_ANCHOR;
+
+// 工具函数
+const fmt = {
+  money: v => v ? '¥' + Number(v).toLocaleString('zh-CN', {maximumFractionDigits:0}) : '-',
+  num: v => v !== null && v !== undefined ? Number(v).toFixed(2) : '-',
+  int: v => v ? Number(v).toLocaleString('zh-CN', {maximumFractionDigits:0}) : '-',
+  pct: v => v !== null && v !== undefined ? (Number(v)*100).toFixed(2) + '%' : '-',
+  date: v => v || '-',
+  shortDate: v => v ? v.slice(5) : '-'
+};
+
+function sum(arr, key) { return arr.reduce((s,r) => s + (Number(r[key]) || 0), 0); }
+function avg(arr, key) { const vals = arr.filter(r => r[key] !== null && r[key] !== undefined && !isNaN(r[key])); return vals.length ? vals.reduce((s,r) => s + Number(r[key]), 0) / vals.length : 0; }
+
+// ==================== Tab 切换 ====================
+let currentTab = 1;
+const charts = {};
+
+function getChart(id) {
+  if (!charts[id]) {
+    const dom = document.getElementById(id);
+    charts[id] = echarts.init(dom, null, { width: 700, height: 320 });
+  }
+  return charts[id];
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab1').classList.toggle('hidden', tab !== 1);
+  document.getElementById('tab2').classList.toggle('hidden', tab !== 2);
+  document.getElementById('tab3').classList.toggle('hidden', tab !== 3);
+  document.getElementById('tab1Btn').className = tab===1 ? 'tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all';
+  document.getElementById('tab2Btn').className = tab===2 ? 'tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all';
+  document.getElementById('tab3Btn').className = tab===3 ? 'tab-active px-6 py-2.5 rounded-xl text-sm font-medium transition-all' : 'tab-inactive px-6 py-2.5 rounded-xl text-sm font-medium transition-all';
+  setTimeout(function() {
+    Object.keys(charts).forEach(function(key) {
+      try { charts[key].dispose(); } catch(e) {}
+      delete charts[key];
+    });
+    renderAll();
+    setTimeout(function() { Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} }); }, 200);
+    setTimeout(function() { Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} }); }, 500);
+    setTimeout(function() { Object.values(charts).forEach(function(c) { try { c.resize(); } catch(e) {} }); }, 1000);
+  }, 300);
+}
+
+// ==================== SVG漏斗图 ====================
+function renderSvgFunnel(containerId, rawVals) {
+  const container = document.getElementById(containerId);
+  if (!rawVals.length || !rawVals[0].value) { container.innerHTML = '<div class="text-center text-slate-400 py-12 text-sm">暂无数据</div>'; return; }
+  const W = 640, H = 400;
+  const leftPad = 110, rightPad = 110;
+  const funnelW = W - leftPad - rightPad;
+  const n = rawVals.length;
+  const gap = 10;
+  const layerH = (H - 60 - gap*(n-1)) / n;
+  const topY = 30;
+  const widthRatios = [1.0, 0.78, 0.60, 0.44, 0.28];
+  const widths = rawVals.map((_,i) => funnelW * (widthRatios[i] || 0.28));
+  const colors = ['#3b5bdb','#4263eb','#4c6ef5','#5c7cfa','#748ffc'];
+  const gid = containerId.replace(/[^a-zA-Z0-9]/g, '');
+  let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;font-family:inherit">';
+  svg += '<defs>';
+  colors.forEach((c,i) => {
+    svg += '<linearGradient id="fg_' + gid + '_' + i + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="' + c + '" stop-opacity="0.9"/><stop offset="100%" stop-color="' + c + '"/></linearGradient>';
+  });
+  svg += '<marker id="arrow_' + gid + '" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/></marker>';
+  svg += '</defs>';
+  for (let i = 0; i < n; i++) {
+    const w1 = widths[i];
+    const w2 = i < n-1 ? widths[i+1] : widths[i] * 0.85;
+    const y1 = topY + i*(layerH+gap);
+    const y2 = y1 + layerH;
+    const x1l = leftPad + (funnelW - w1)/2;
+    const x1r = leftPad + (funnelW + w1)/2;
+    const x2l = leftPad + (funnelW - w2)/2;
+    const x2r = leftPad + (funnelW + w2)/2;
+    const midY = (y1+y2)/2;
+    svg += '<polygon points="' + x1l + ',' + y1 + ' ' + x1r + ',' + y1 + ' ' + x2r + ',' + y2 + ' ' + x2l + ',' + y2 + '" fill="url(#fg_' + gid + '_' + i + ')"/>';
+    svg += '<text x="15" y="' + (midY-4) + '" text-anchor="start" fill="#1e293b" font-size="13" font-weight="700">' + rawVals[i].name + '</text>';
+    svg += '<text x="15" y="' + (midY+12) + '" text-anchor="start" fill="#64748b" font-size="11" font-weight="600">' + rawVals[i].value.toLocaleString() + ' 人</text>';
+    const cx = (x1l + x2l + x1r + x2r) / 4;
+    svg += '<text x="' + cx + '" y="' + (midY+1) + '" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="bold">' + rawVals[i].value.toLocaleString() + '</text>';
+    if (i > 0) {
+      const rate = rawVals[i].value / rawVals[i-1].value;
+      const boxX = W - 95;
+      const boxW = 80;
+      const boxH = 34;
+      const boxY = midY - boxH/2;
+      svg += '<rect x="' + boxX + '" y="' + boxY + '" width="' + boxW + '" height="' + boxH + '" rx="7" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>';
+      svg += '<text x="' + (boxX+boxW/2) + '" y="' + (midY-1) + '" text-anchor="middle" fill="#0f172a" font-size="15" font-weight="bold">' + (rate*100).toFixed(1) + '%</text>';
+      svg += '<text x="' + (boxX+boxW/2) + '" y="' + (midY+13) + '" text-anchor="middle" fill="#64748b" font-size="10" font-weight="500">转化率</text>';
+      const prevY = topY + (i-1)*(layerH+gap) + layerH;
+      svg += '<line x1="' + (x2r+5) + '" y1="' + prevY + '" x2="' + (boxX-8) + '" y2="' + (midY-10) + '" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arrow_' + gid + ')"/>';
+    }
+  }
+  const overallRate = rawVals[n-1].value / rawVals[0].value;
+  const bottomY = H - 12;
+  svg += '<rect x="' + (W/2-90) + '" y="' + (bottomY-20) + '" width="180" height="26" rx="13" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>';
+  svg += '<text x="' + (W/2) + '" y="' + (bottomY-3) + '" text-anchor="middle" fill="#1e3a8a" font-size="13" font-weight="bold">曝光→成交 整体 ' + (overallRate*100).toFixed(2) + '%</text>';
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+
+// ==================== 渲染入口 ====================
+function renderAll() {
+  if (currentTab === 1) {
+    renderDailyTab();
+  } else if (currentTab === 2) {
+    renderAnchorTab();
+  } else if (currentTab === 3) {
+    renderDimensionTab();
+  }
+}
+
+// ==================== 日报表 ====================
+function renderDailyTab() {
+  const panel = document.getElementById('dailyPanel');
+  const dates = DAILY.map(r => r.date).sort();
+  const latest = dates[dates.length-1];
+  
+  panel.innerHTML = `
+    <!-- 顶部按钮 -->
+    <div class="flex items-center justify-between mb-5">
+      <div class="flex gap-1 p-1 rounded-xl" style="background: rgba(255,255,255,0.15);">
+        <span class="px-5 py-2 rounded-lg text-sm font-medium text-white">桂格直播间运营数据看板</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="refreshBtn" class="px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2" style="background: linear-gradient(135deg, #003087, #003da5); color: white;">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          刷新数据
+        </button>
+        <button id="screenshotBtn" class="screenshot-btn px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          一键截图
+        </button>
+      </div>
+    </div>
+    
+    <!-- 日期选择 -->
+    <div class="flex items-center gap-2 mb-5">
+      <button id="yesterdayBtn" class="text-xs px-3 py-1.5 rounded-lg font-medium" style="background: linear-gradient(135deg, #003087, #003da5); color: white;">昨日</button>
+      <label class="text-xs text-slate-500">选择日期：</label>
+      <select id="dailyDateSelect" class="border border-slate-200 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-400 outline-none bg-white/90 shadow-sm"></select>
+    </div>
+    
+    <!-- 本月经营目标 -->
+    <div class="glass-card rounded-2xl p-5 mb-5 card-container relative">
+      <button class="card-screenshot-btn" data-target="monthlyBiz">截图</button>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003087, #003da5);">本月经营目标</span>
+        <span id="bizMonthLabel" class="text-xs text-slate-400"></span>
+        <span class="text-xs text-slate-400 ml-auto">点击目标值可编辑</span>
+      </div>
+      <div id="monthlyBizCards" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+    </div>
+    
+    <!-- 当日核心数据 -->
+    <div class="glass-card rounded-2xl p-5 mb-5 card-container relative">
+      <button class="card-screenshot-btn" data-target="dailyKpi">截图</button>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003da5, #2563eb);">当日核心数据</span>
+        <span id="dailyKpiLabel" class="text-xs text-slate-400"></span>
+      </div>
+      <div id="dailyKpiCards" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3"></div>
+    </div>
+    
+    <!-- 当日转化漏斗 + 当日主播排名 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+      <div class="glass-card rounded-2xl p-5 card-container relative">
+        <button class="card-screenshot-btn" data-target="dailyFunnel">截图</button>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #c8102e, #e63946);">当日转化漏斗</span>
+          <span id="dailyFunnelLabel" class="text-xs text-slate-400"></span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="md:col-span-2">
+            <div id="chartDailyFunnel" style="height:380px;"></div>
+          </div>
+          <div id="funnelTargets" class="text-xs"></div>
+        </div>
+      </div>
+      <div class="glass-card rounded-2xl p-5 card-container relative">
+        <button class="card-screenshot-btn" data-target="dailyAnchor">截图</button>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #c8102e, #e63946);">当日主播排名</span>
+          <span id="dailyAnchorLabel" class="text-xs text-slate-400"></span>
+        </div>
+        <div id="dailyAnchorRank" class="space-y-3"></div>
+      </div>
+    </div>
+    
+    <!-- 今日排班 + 明日排班 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+      <div class="glass-card rounded-2xl p-5 card-container relative">
+        <button class="card-screenshot-btn" data-target="todaySchedule">截图</button>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003087, #003da5);">今日排班明细</span>
+        </div>
+        <div id="todaySchedule" class="space-y-2"></div>
+      </div>
+      <div class="glass-card rounded-2xl p-5 card-container relative">
+        <button class="card-screenshot-btn" data-target="tomorrowSchedule">截图</button>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #d4a574, #e8c99b);">明日主播排班</span>
+        </div>
+        <div id="tomorrowSchedule" class="space-y-2"></div>
+      </div>
+    </div>
+    
+    <!-- 抖音运营数据分析总结 -->
+    <div class="analysis-box rounded-2xl p-5 card-container relative">
+      <button class="card-screenshot-btn" data-target="dailyAnalysis">截图</button>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003087, #003da5);">抖音运营数据分析总结</span>
+        <span id="dailyAnalysisDate" class="text-xs text-slate-400"></span>
+      </div>
+      <div id="dailyAnalysisContent" class="text-sm text-slate-700 leading-relaxed space-y-2"></div>
+    </div>
+  `;
+  
+  // 初始化日期选择器
+  const select = document.getElementById('dailyDateSelect');
+  dates.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d;
+    if (d === latest) opt.selected = true;
+    select.appendChild(opt);
+  });
+  
+  // 绑定事件
+  document.getElementById('dailyDateSelect').onchange = renderDailyContent;
+  document.getElementById('yesterdayBtn').onclick = () => {
+    const yest = dates[dates.length-2] || latest;
+    select.value = yest;
+    renderDailyContent();
+  };
+  document.getElementById('refreshBtn').onclick = () => location.reload();
+  document.getElementById('screenshotBtn').onclick = takeScreenshot;
+  
+  // 绑定卡片截图按钮
+  setTimeout(() => {
+    document.querySelectorAll('.card-screenshot-btn').forEach(btn => {
+      btn.onclick = () => takeCardScreenshot(btn.dataset.target);
+    });
+  }, 100);
+  
+  renderDailyContent();
+}
+
+function renderDailyContent() {
+  const date = document.getElementById('dailyDateSelect').value;
+  const row = DAILY.find(r => r.date === date);
+  if (!row) return;
+  
+  // 本月经营目标
+  renderMonthlyBizCards(date);
+  // 当日核心数据
+  renderDailyKpiCards(row);
+  // 当日转化漏斗
+  renderDailyFunnelChart();
+  // 当日主播排名
+  renderDailyAnchorRank(date);
+  // 今日排班
+  renderTodaySchedule(date);
+  // 明日排班
+  renderTomorrowSchedule(date);
+  // 数据分析总结
+  renderDailyAnalysis(row);
+}
+
+function renderMonthlyBizCards(date) {
+  const month = date ? date.slice(0, 7) : '';
+  const monthData = DAILY.filter(r => r.date.startsWith(month));
+  const daysInMonth = new Date(parseInt(month.slice(0,4)), parseInt(month.slice(5,7)), 0).getDate();
+  const currentDay = parseInt(date.slice(8,10));
+  const timeProgress = (currentDay / daysInMonth * 100).toFixed(1);
+  
+  document.getElementById('bizMonthLabel').textContent = month + '月（共' + daysInMonth + '天）';
+  
+  const totalGmv = sum(monthData, 'totalGmv');
+  const totalSpend = sum(monthData, 'adSpend');
+  const totalRoi = totalSpend > 0 ? totalGmv / totalSpend : 0;
+  
+  // 从localStorage读取目标
+  let targets = {};
+  try { targets = JSON.parse(localStorage.getItem('bizTargets') || '{}'); } catch(e) {}
+  const defaultTargets = { gmv: 1000000, spend: 500000, roi: 2.0 };
+  
+  const cards = [
+    { key:'gmv', label:'本月GMV', value:fmt.money(totalGmv), target:targets.gmv || defaultTargets.gmv, unit:'万', targetDiv:10000, color:'#003087' },
+    { key:'spend', label:'本月消耗', value:fmt.money(totalSpend), target:targets.spend || defaultTargets.spend, unit:'万', targetDiv:10000, color:'#c8102e' },
+    { key:'roi', label:'本月投产ROI', value:fmt.num(totalRoi), target:targets.roi || defaultTargets.roi, unit:'', targetDiv:1, color:'#16a34a' }
+  ];
+  
+  document.getElementById('monthlyBizCards').innerHTML = cards.map(c => {
+    const progress = (c.value_num / c.target * 100).toFixed(1);
+    const met = c.value_num >= c.target;
+    return `
+      <div class="kpi-card rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-semibold text-slate-700">${c.label}</span>
+          <div class="flex items-center gap-1">
+            <span class="text-xs text-slate-400">目标</span>
+            <input type="number" class="target-input" data-key="${c.key}" value="${(c.target/c.targetDiv).toFixed(0)}" min="0" step="1">
+            <span class="text-xs text-slate-400">${c.unit}</span>
+          </div>
+        </div>
+        <div class="text-2xl font-bold mb-2" style="color:${c.color}">${c.value}</div>
+        <div class="flex items-center gap-2 mb-1">
+          <div class="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width:${Math.min(100, progress)}%; background: ${met?'linear-gradient(90deg,#16a34a,#22c55e)':'linear-gradient(90deg,#dc2626,#ef4444)'}"></div>
+          </div>
+          <span class="text-xs font-bold ${met?'text-green-600':'text-red-500'}">${met?'✓ 达标':'✗ 未达标'}</span>
+        </div>
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <span>完成 ${progress}%</span>
+          <span>时序 ${timeProgress}%</span>
+          <span class="${parseFloat(progress) >= parseFloat(timeProgress)?'text-green-600':'text-orange-500'}">${parseFloat(progress) >= parseFloat(timeProgress)?'超前':'滞后'} ${Math.abs(parseFloat(progress)-parseFloat(timeProgress)).toFixed(1)}%</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  // 绑定目标输入事件
+  document.querySelectorAll('#monthlyBizCards .target-input').forEach(inp => {
+    inp.onchange = () => {
+      let t = {};
+      try { t = JSON.parse(localStorage.getItem('bizTargets') || '{}'); } catch(e) {}
+      const card = cards.find(c => c.key === inp.dataset.key);
+      t[inp.dataset.key] = parseFloat(inp.value) * card.targetDiv;
+      localStorage.setItem('bizTargets', JSON.stringify(t));
+      renderMonthlyBizCards(date);
+    };
+  });
+}
+
+function renderDailyKpiCards(row) {
+  document.getElementById('dailyKpiLabel').textContent = row.date;
+  const kpis = [
+    { label:'总GMV', value:fmt.money(row.totalGmv), sub:'加优惠券', color:'text-blue-600' },
+    { label:'GMV', value:fmt.money(row.gmv), sub:'不含优惠券', color:'text-blue-500' },
+    { label:'投放消耗', value:fmt.money(row.adSpend), sub:'千川消耗', color:'text-red-600' },
+    { label:'整体ROI', value:fmt.num(row.overallRoi), sub:'投产比', color:'text-green-600' },
+    { label:'直播时长', value:fmt.num(row.duration) + 'h', sub:'小时', color:'text-purple-600' },
+    { label:'小时均GMV', value:fmt.money(row.hourlyGmv), sub:'每小时产出', color:'text-cyan-600' },
+    { label:'场观', value:fmt.int(row.views), sub:'观看人数', color:'text-purple-500' },
+    { label:'成交件数', value:fmt.int(row.orders), sub:'订单量', color:'text-pink-600' },
+    { label:'客单价', value:fmt.num(row.avgOrderValue), sub:'件均金额', color:'text-cyan-500' },
+    { label:'新增粉丝', value:fmt.int(row.newFans), sub:'涨粉数', color:'text-green-500' },
+    { label:'互动人数', value:fmt.int(row.interactionUsers), sub:'参与互动', color:'text-orange-500' },
+    { label:'退款率', value:fmt.pct(row.refundRate), sub:'退款占比', color:'text-red-500' },
+    { label:'商品曝光点击率', value:fmt.pct(row.productClickRate), sub:'商品点击/曝光', color:'text-blue-400' },
+    { label:'点击成交转化率', value:fmt.pct(row.clickToBuyRate), sub:'成交/商品点击', color:'text-indigo-500' }
+  ];
+  
+  document.getElementById('dailyKpiCards').innerHTML = kpis.map(k => `
+    <div class="kpi-card rounded-xl p-3">
+      <div class="kpi-label text-slate-500 mb-1">${k.label}</div>
+      <div class="kpi-value ${k.color}">${k.value}</div>
+      <div class="kpi-sub text-slate-400 mt-1">${k.sub}</div>
+    </div>
+  `).join('');
+}
+
+function renderDailyFunnelChart() {
+  const date = document.getElementById('dailyDateSelect').value;
+  const row = DAILY.find(r => r.date === date);
+  const label = document.getElementById('dailyFunnelLabel');
+  if (!row) { label.textContent = date + ' 暂无数据'; document.getElementById('chartDailyFunnel').innerHTML=''; document.getElementById('funnelTargets').innerHTML=''; return; }
+  label.textContent = date;
+  
+  const rawVals = [
+    { name: '直播间曝光', value: row.exposureCount||0 },
+    { name: '直播间观看', value: row.watchCount||0 },
+    { name: '商品曝光', value: row.productExposureCount||0 },
+    { name: '商品点击', value: row.productClickCount||0 },
+    { name: '成交', value: row.buyerCount||0 }
+  ];
+  renderSvgFunnel('chartDailyFunnel', rawVals);
+  
+  // 转化率目标面板
+  const rates = [
+    { key:'exp2watch', name:'曝光→观看', actual: row.exposureCount? row.watchCount/row.exposureCount : 0 },
+    { key:'watch2prod', name:'观看→商品曝光', actual: row.watchCount? row.productExposureCount/row.watchCount : 0 },
+    { key:'prod2click', name:'商品曝光→点击', actual: row.productExposureCount? row.productClickCount/row.productExposureCount : 0 },
+    { key:'click2buy', name:'点击→成交', actual: row.productClickCount? row.buyerCount/row.productClickCount : 0 }
+  ];
+  let targets = {};
+  try { targets = JSON.parse(localStorage.getItem('funnelTargets') || '{}'); } catch(e) {}
+  const defaultTargets = { exp2watch:15, watch2prod:80, prod2click:25, click2buy:15 };
+  
+  const container = document.getElementById('funnelTargets');
+  container.innerHTML = `
+    <div class="text-xs font-semibold text-slate-600 mb-3 pb-2 border-b border-slate-200">转化率目标</div>
+    ${rates.map(r => {
+      const target = targets[r.key] !== undefined ? targets[r.key] : defaultTargets[r.key];
+      const actualPct = (r.actual * 100);
+      const met = actualPct >= target;
+      return `
+        <div class="mb-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs text-slate-500">${r.name}</span>
+            <span class="text-xs font-bold ${met?'target-met':'target-not-met'}">${actualPct.toFixed(2)}%</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="text-xs text-slate-400">目标</span>
+            <input type="number" class="target-input" data-key="${r.key}" value="${target}" min="0" max="100" step="0.1">
+            <span class="text-xs text-slate-400">%</span>
+          </div>
+          <div class="w-full h-1.5 bg-slate-200 rounded-full mt-1 overflow-hidden">
+            <div class="h-full rounded-full transition-all" style="width:${Math.min(100, actualPct/target*100)}%; background: ${met?'linear-gradient(90deg,#16a34a,#22c55e)':'linear-gradient(90deg,#dc2626,#ef4444)'}"></div>
+          </div>
+          <div class="text-xs mt-0.5 text-right ${met?'text-green-600':'text-red-500'}">${met?'✓ 达标':'✗ 未达标'}</div>
+        </div>
+      `;
+    }).join('')}
+  `;
+  container.querySelectorAll('.target-input').forEach(inp => {
+    inp.onchange = () => {
+      let t = {};
+      try { t = JSON.parse(localStorage.getItem('funnelTargets') || '{}'); } catch(e) {}
+      t[inp.dataset.key] = parseFloat(inp.value) || 0;
+      localStorage.setItem('funnelTargets', JSON.stringify(t));
+      renderDailyFunnelChart();
+    };
+  });
+}
+
+function renderDailyAnchorRank(date) {
+  document.getElementById('dailyAnchorLabel').textContent = date;
+  const dayData = ANCHOR.filter(r => r.date === date);
+  // 综合排名：小时均GMV 40% + ROI 30% + GMV 30%
+  dayData.forEach(r => {
+    r.score = (r.hourlyGmv || 0) * 0.4 + (r.overallRoi || 0) * 1000 * 0.3 + (r.totalGmv || 0) * 0.001 * 0.3;
+  });
+  dayData.sort((a,b) => b.score - a.score);
+  
+  const container = document.getElementById('dailyAnchorRank');
+  if (!dayData.length) { container.innerHTML = '<div class="text-center text-slate-400 py-8 text-sm">暂无主播数据</div>'; return; }
+  
+  container.innerHTML = dayData.map((r, i) => {
+    const rankColors = ['#fbbf24','#94a3b8','#cd7f32','#60a5fa','#60a5fa'];
+    const rankColor = rankColors[i] || '#94a3b8';
+    return `
+      <div class="flex items-center gap-3 p-3 rounded-xl" style="background: linear-gradient(135deg, #faf6ee, #fff); border: 1px solid #e8dcc8;">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background: ${rankColor}">${i+1}</div>
+        <div class="flex-1">
+          <div class="font-semibold text-slate-700 text-sm">${r.anchor || '未知'}</div>
+          <div class="text-xs text-slate-400">时长 ${r.duration || 0}h / ${r.sessions || 1}场</div>
+        </div>
+        <div class="text-right">
+          <div class="font-bold text-blue-600 text-sm">${fmt.money(r.totalGmv)}</div>
+          <div class="text-xs text-slate-400">小时均 ${fmt.money(r.hourlyGmv)}</div>
+        </div>
+        <div class="text-right ml-3">
+          <div class="font-bold text-green-600 text-sm">${fmt.num(r.overallRoi)}</div>
+          <div class="text-xs text-slate-400">消耗 ${fmt.money(r.adSpend)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderTodaySchedule(date) {
+  const today = SCHEDULE.find(s => s.date === date);
+  const container = document.getElementById('todaySchedule');
+  if (!today || !today.anchors || !today.anchors.length) { container.innerHTML = '<div class="text-center text-slate-400 py-4 text-sm">暂无排班数据</div>'; return; }
+  container.innerHTML = today.anchors.map((a, i) => `
+    <div class="flex items-center gap-3 p-2 rounded-lg" style="background: #faf6ee;">
+      <div class="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold" style="background: linear-gradient(135deg, #003087, #003da5);">${i+1}</div>
+      <span class="font-medium text-slate-700 text-sm">${a.name}</span>
+      <span class="text-xs text-slate-400 ml-auto">${a.time || '全天'}</span>
+    </div>
+  `).join('');
+}
+
+function renderTomorrowSchedule(date) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + 1);
+  const tomorrow = d.toISOString().slice(0,10);
+  const data = SCHEDULE.find(s => s.date === tomorrow);
+  const container = document.getElementById('tomorrowSchedule');
+  if (!data || !data.anchors || !data.anchors.length) { container.innerHTML = '<div class="text-center text-slate-400 py-4 text-sm">暂无排班数据</div>'; return; }
+  container.innerHTML = data.anchors.map((a, i) => `
+    <div class="flex items-center gap-3 p-2 rounded-lg" style="background: #faf6ee;">
+      <div class="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold" style="background: linear-gradient(135deg, #d4a574, #e8c99b);">${i+1}</div>
+      <span class="font-medium text-slate-700 text-sm">${a.name}</span>
+      <span class="text-xs text-slate-400 ml-auto">${a.time || '全天'}</span>
+    </div>
+  `).join('');
+}
+
+function renderDailyAnalysis(row) {
+  document.getElementById('dailyAnalysisDate').textContent = row.date;
+  const content = document.getElementById('dailyAnalysisContent');
+  
+  const gmv = row.totalGmv || 0;
+  const spend = row.adSpend || 0;
+  const roi = spend > 0 ? gmv / spend : 0;
+  const views = row.views || 0;
+  const orders = row.orders || 0;
+  const refundRate = row.refundRate || 0;
+  const exp2watch = row.exposureCount ? row.watchCount / row.exposureCount : 0;
+  const click2buy = row.productClickCount ? row.buyerCount / row.productClickCount : 0;
+  
+  let analysis = '<p><span class="font-semibold" style="color:#003087">【经营概况】</span>当日总GMV <span class="font-bold" style="color:#003087">' + fmt.money(gmv) + '</span>，投放消耗 ' + fmt.money(spend) + '，整体ROI <span class="font-bold" style="color:' + (roi>=2?'#16a34a':'#c8102e') + '">' + fmt.num(roi) + '</span>。场观 ' + fmt.int(views) + ' 人次，成交 ' + fmt.int(orders) + ' 件。</p>';
+  analysis += '<p><span class="font-semibold" style="color:#003087">【流量转化】</span>曝光-观看率 <span class="font-bold">' + fmt.pct(exp2watch) + '</span>，点击-成交转化率 <span class="font-bold">' + fmt.pct(click2buy) + '</span>，退款率 <span class="font-bold" style="color:' + (refundRate<=0.05?'#16a34a':'#c8102e') + '">' + fmt.pct(refundRate) + '</span>。</p>';
+  analysis += '<p><span class="font-semibold" style="color:#003087">【运营建议】</span>' + (roi<2?'当前ROI低于2，建议优化投放人群和素材。':'ROI表现良好，可考虑适度加大投放。') + ' ' + (exp2watch<0.15?'曝光-观看率偏低，建议优化直播间封面和标题。':'曝光-观看率达标。') + ' ' + (click2buy<0.15?'点击-成交转化率有提升空间，建议优化商品讲解和促单话术。':'点击-成交转化表现优秀。') + '</p>';
+  
+  content.innerHTML = analysis;
+}
+
+// ==================== 主播报表 ====================
+function renderAnchorTab() {
+  const section = document.getElementById('tab2');
+  section.innerHTML = `
+    <!-- 月度主播排名 -->
+    <div class="glass-card rounded-2xl p-5 mb-5 card-container relative">
+      <button class="card-screenshot-btn" data-target="monthRank">截图</button>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003087, #003da5);">月度排名</span>
+        <span id="monthRankLabel" class="text-xs text-slate-400"></span>
+      </div>
+      <div id="monthRankList" class="space-y-3"></div>
+    </div>
+    
+    <!-- 周度主播排名 -->
+    <div class="glass-card rounded-2xl p-5 mb-5 card-container relative">
+      <button class="card-screenshot-btn" data-target="weekRank">截图</button>
+      <div class="flex items-center gap-2 mb-4 flex-wrap">
+        <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003da5, #2563eb);">周度排名</span>
+        <select id="weekRankSelect" class="border border-slate-200 rounded-lg px-3 py-1 text-xs focus:ring-2 focus:ring-indigo-400 outline-none bg-white"></select>
+        <span id="weekRankLabel" class="text-xs text-slate-400"></span>
+      </div>
+      <div id="weekRankList" class="space-y-3"></div>
+    </div>
+    
+    <!-- 日度主播排名 -->
+    <div class="glass-card rounded-2xl p-5 mb-5 card-container relative">
+      <button class="card-screenshot-btn" data-target="dayRank">截图</button>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #c8102e, #e63946);">日度排名</span>
+        <span id="dayRankLabel" class="text-xs text-slate-400"></span>
+      </div>
+      <div id="dayRankList" class="space-y-3"></div>
+    </div>
+    
+    <!-- 数据表格 -->
+    <div class="glass-card rounded-2xl overflow-hidden card-container relative">
+      <button class="card-screenshot-btn" data-target="anchorTable">截图</button>
+      <div class="p-4 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3">
+        <h3 class="text-sm font-semibold text-slate-700">主播数据明细</h3>
+        <input type="text" id="search2" placeholder="搜索主播、日期、场控..." class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm w-56 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+      </div>
+      <div class="overflow-x-auto">
+        <table id="table2" class="w-full text-xs">
+          <thead class="bg-slate-50 text-slate-600"></thead>
+          <tbody class="text-slate-700"></tbody>
+        </table>
+      </div>
+      <div id="pagination2" class="pagination flex items-center justify-between p-3 border-t border-slate-100 text-sm text-slate-600"></div>
+    </div>
+  `;
+  
+  renderMonthRank();
+  renderWeekRank();
+  renderDayRank();
+  renderAnchorTable();
+  
+  setTimeout(() => {
+    document.querySelectorAll('.card-screenshot-btn').forEach(btn => {
+      btn.onclick = () => takeCardScreenshot(btn.dataset.target);
+    });
+  }, 100);
+}
+
+function renderMonthRank() {
+  const latest = DAILY[DAILY.length-1].date;
+  const month = latest.slice(0, 7);
+  const monthData = ANCHOR.filter(r => r.date && r.date.startsWith(month));
+  
+  // 按主播聚合
+  const anchorMap = {};
+  monthData.forEach(r => {
+    const name = r.anchor || '未知';
+    if (!anchorMap[name]) anchorMap[name] = { name, totalGmv:0, totalSpend:0, totalDuration:0, sessions:0, hourlyGmv:0, overallRoi:0 };
+    anchorMap[name].totalGmv += r.totalGmv || 0;
+    anchorMap[name].totalSpend += r.adSpend || 0;
+    anchorMap[name].totalDuration += r.duration || 0;
+    anchorMap[name].sessions += r.sessions || 1;
+  });
+  
+  const list = Object.values(anchorMap);
+  list.forEach(r => {
+    r.hourlyGmv = r.totalDuration > 0 ? r.totalGmv / r.totalDuration : 0;
+    r.overallRoi = r.totalSpend > 0 ? r.totalGmv / r.totalSpend : 0;
+    r.score = r.hourlyGmv * 0.4 + r.overallRoi * 1000 * 0.3 + r.totalGmv * 0.001 * 0.3;
+  });
+  list.sort((a,b) => b.score - a.score);
+  
+  document.getElementById('monthRankLabel').textContent = month + '月';
+  const container = document.getElementById('monthRankList');
+  if (!list.length) { container.innerHTML = '<div class="text-center text-slate-400 py-8 text-sm">暂无数据</div>'; return; }
+  
+  container.innerHTML = list.map((r, i) => {
+    const rankColors = ['#fbbf24','#94a3b8','#cd7f32','#60a5fa','#60a5fa'];
+    const rankColor = rankColors[i] || '#94a3b8';
+    return `
+      <div class="flex items-center gap-3 p-3 rounded-xl" style="background: linear-gradient(135deg, #faf6ee, #fff); border: 1px solid #e8dcc8;">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background: ${rankColor}">${i+1}</div>
+        <div class="flex-1">
+          <div class="font-semibold text-slate-700 text-sm">${r.name}</div>
+          <div class="text-xs text-slate-400">时长 ${r.totalDuration.toFixed(1)}h / ${r.sessions}场</div>
+        </div>
+        <div class="text-right">
+          <div class="font-bold text-blue-600 text-sm">${fmt.money(r.totalGmv)}</div>
+          <div class="text-xs text-slate-400">小时均 ${fmt.money(r.hourlyGmv)}</div>
+        </div>
+        <div class="text-right ml-3">
+          <div class="font-bold text-green-600 text-sm">${fmt.num(r.overallRoi)}</div>
+          <div class="text-xs text-slate-400">消耗 ${fmt.money(r.totalSpend)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderWeekRank() {
+  const select = document.getElementById('weekRankSelect');
+  const dates = [...new Set(ANCHOR.filter(r => r.date).map(r => r.date))].sort();
+  
+  // 生成周选项
+  const weeks = [];
+  const weekSet = new Set();
+  dates.forEach(d => {
+    const dt = new Date(d);
+    const day = dt.getDay() || 7;
+    const monday = new Date(dt);
+    monday.setDate(dt.getDate() - day + 1);
+    const weekKey = monday.toISOString().slice(0,10);
+    if (!weekSet.has(weekKey)) {
+      weekSet.add(weekKey);
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      weeks.push({ start: weekKey, end: sunday.toISOString().slice(0,10), label: weekKey.slice(5) + ' ~ ' + sunday.toISOString().slice(5,10) });
+    }
+  });
+  weeks.reverse();
+  
+  select.innerHTML = weeks.map((w, i) => `<option value="${i}">${w.label}</option>`).join('');
+  
+  // 默认上个自然周
+  const defaultWeek = weeks.length > 1 ? 1 : 0;
+  select.value = defaultWeek;
+  select.onchange = renderWeekRankContent;
+  renderWeekRankContent();
+}
+
+function renderWeekRankContent() {
+  const select = document.getElementById('weekRankSelect');
+  const weekIdx = parseInt(select.value);
+  const dates = [...new Set(ANCHOR.filter(r => r.date).map(r => r.date))].sort();
+  const weeks = [];
+  const weekSet = new Set();
+  dates.forEach(d => {
+    const dt = new Date(d);
+    const day = dt.getDay() || 7;
+    const monday = new Date(dt);
+    monday.setDate(dt.getDate() - day + 1);
+    const weekKey = monday.toISOString().slice(0,10);
+    if (!weekSet.has(weekKey)) {
+      weekSet.add(weekKey);
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      weeks.push({ start: weekKey, end: sunday.toISOString().slice(0,10) });
+    }
+  });
+  weeks.reverse();
+  
+  const week = weeks[weekIdx];
+  const weekData = ANCHOR.filter(r => r.date && r.date >= week.start && r.date <= week.end);
+  
+  const anchorMap = {};
+  weekData.forEach(r => {
+    const name = r.anchor || '未知';
+    if (!anchorMap[name]) anchorMap[name] = { name, totalGmv:0, totalSpend:0, totalDuration:0, sessions:0, hourlyGmv:0, overallRoi:0 };
+    anchorMap[name].totalGmv += r.totalGmv || 0;
+    anchorMap[name].totalSpend += r.adSpend || 0;
+    anchorMap[name].totalDuration += r.duration || 0;
+    anchorMap[name].sessions += r.sessions || 1;
+  });
+  
+  const list = Object.values(anchorMap);
+  list.forEach(r => {
+    r.hourlyGmv = r.totalDuration > 0 ? r.totalGmv / r.totalDuration : 0;
+    r.overallRoi = r.totalSpend > 0 ? r.totalGmv / r.totalSpend : 0;
+    r.score = r.hourlyGmv * 0.4 + r.overallRoi * 1000 * 0.3 + r.totalGmv * 0.001 * 0.3;
+  });
+  list.sort((a,b) => b.score - a.score);
+  
+  document.getElementById('weekRankLabel').textContent = week.start + ' ~ ' + week.end;
+  const container = document.getElementById('weekRankList');
+  if (!list.length) { container.innerHTML = '<div class="text-center text-slate-400 py-8 text-sm">暂无数据</div>'; return; }
+  
+  container.innerHTML = list.map((r, i) => {
+    const rankColors = ['#fbbf24','#94a3b8','#cd7f32','#60a5fa','#60a5fa'];
+    const rankColor = rankColors[i] || '#94a3b8';
+    return `
+      <div class="flex items-center gap-3 p-3 rounded-xl" style="background: linear-gradient(135deg, #faf6ee, #fff); border: 1px solid #e8dcc8;">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background: ${rankColor}">${i+1}</div>
+        <div class="flex-1">
+          <div class="font-semibold text-slate-700 text-sm">${r.name}</div>
+          <div class="text-xs text-slate-400">时长 ${r.totalDuration.toFixed(1)}h / ${r.sessions}场</div>
+        </div>
+        <div class="text-right">
+          <div class="font-bold text-blue-600 text-sm">${fmt.money(r.totalGmv)}</div>
+          <div class="text-xs text-slate-400">小时均 ${fmt.money(r.hourlyGmv)}</div>
+        </div>
+        <div class="text-right ml-3">
+          <div class="font-bold text-green-600 text-sm">${fmt.num(r.overallRoi)}</div>
+          <div class="text-xs text-slate-400">消耗 ${fmt.money(r.totalSpend)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderDayRank() {
+  const latest = DAILY[DAILY.length-1].date;
+  document.getElementById('dayRankLabel').textContent = latest;
+  const dayData = ANCHOR.filter(r => r.date === latest);
+  dayData.forEach(r => {
+    r.score = (r.hourlyGmv || 0) * 0.4 + (r.overallRoi || 0) * 1000 * 0.3 + (r.totalGmv || 0) * 0.001 * 0.3;
+  });
+  dayData.sort((a,b) => b.score - a.score);
+  
+  const container = document.getElementById('dayRankList');
+  if (!dayData.length) { container.innerHTML = '<div class="text-center text-slate-400 py-8 text-sm">暂无数据</div>'; return; }
+  
+  container.innerHTML = dayData.map((r, i) => {
+    const rankColors = ['#fbbf24','#94a3b8','#cd7f32','#60a5fa','#60a5fa'];
+    const rankColor = rankColors[i] || '#94a3b8';
+    return `
+      <div class="flex items-center gap-3 p-3 rounded-xl" style="background: linear-gradient(135deg, #faf6ee, #fff); border: 1px solid #e8dcc8;">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background: ${rankColor}">${i+1}</div>
+        <div class="flex-1">
+          <div class="font-semibold text-slate-700 text-sm">${r.anchor || '未知'}</div>
+          <div class="text-xs text-slate-400">时长 ${r.duration || 0}h / ${r.sessions || 1}场</div>
+        </div>
+        <div class="text-right">
+          <div class="font-bold text-blue-600 text-sm">${fmt.money(r.totalGmv)}</div>
+          <div class="text-xs text-slate-400">小时均 ${fmt.money(r.hourlyGmv)}</div>
+        </div>
+        <div class="text-right ml-3">
+          <div class="font-bold text-green-600 text-sm">${fmt.num(r.overallRoi)}</div>
+          <div class="text-xs text-slate-400">消耗 ${fmt.money(r.adSpend)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// 主播数据表格
+const table2State = { search:'', page:1, pageSize:10, sortKey:'', sortDir:'asc' };
+const table2Cols = [
+  {key:'date',label:'日期'},
+  {key:'anchor',label:'主播'},
+  {key:'totalGmv',label:'总GMV'},
+  {key:'adSpend',label:'投放消耗'},
+  {key:'overallRoi',label:'整体ROI'},
+  {key:'duration',label:'直播时长(h)'},
+  {key:'hourlyGmv',label:'小时均GMV'},
+  {key:'views',label:'场观'},
+  {key:'orders',label:'成交件数'}
+];
+
+function renderAnchorTable() {
+  let data = [...ANCHOR];
+  if (table2State.search) {
+    const q = table2State.search.toLowerCase();
+    data = data.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(q)));
+  }
+  if (table2State.sortKey) {
+    data.sort((a,b) => {
+      const va = a[table2State.sortKey] || 0;
+      const vb = b[table2State.sortKey] || 0;
+      return table2State.sortDir === 'asc' ? va - vb : vb - va;
+    });
+  }
+  
+  const total = data.length;
+  const totalPages = Math.ceil(total / table2State.pageSize);
+  const start = (table2State.page - 1) * table2State.pageSize;
+  const pageData = data.slice(start, start + table2State.pageSize);
+  
+  const thead = document.querySelector('#table2 thead');
+  thead.innerHTML = '<tr>' + table2Cols.map(c => {
+    const sortIcon = table2State.sortKey === c.key ? (table2State.sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+    return '<th class="px-3 py-2 text-left cursor-pointer" data-key="' + c.key + '">' + c.label + sortIcon + '</th>';
+  }).join('') + '</tr>';
+  
+  thead.querySelectorAll('th').forEach(th => {
+    th.onclick = () => {
+      const key = th.dataset.key;
+      if (table2State.sortKey === key) {
+        table2State.sortDir = table2State.sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        table2State.sortKey = key;
+        table2State.sortDir = 'asc';
+      }
+      renderAnchorTable();
+    };
+  });
+  
+  const tbody = document.querySelector('#table2 tbody');
+  tbody.innerHTML = pageData.map(r => '<tr class="border-b border-slate-100">' + table2Cols.map(c => {
+    let val = r[c.key];
+    if (c.key === 'totalGmv' || c.key === 'adSpend' || c.key === 'hourlyGmv') val = fmt.money(val);
+    else if (c.key === 'overallRoi') val = fmt.num(val);
+    return '<td class="px-3 py-2">' + (val || '-') + '</td>';
+  }).join('') + '</tr>').join('');
+  
+  const pag = document.getElementById('pagination2');
+  pag.innerHTML = '<span>共 ' + total + ' 条</span><div class="flex gap-1">' + 
+    Array.from({length: totalPages}, (_, i) => '<button class="px-2 py-1 rounded ' + (i+1 === table2State.page ? 'active' : '') + '" onclick="table2State.page=' + (i+1) + ';renderAnchorTable()">' + (i+1) + '</button>').join('') + 
+    '</div>';
+}
+
+// ==================== 维度报表 ====================
+function renderDimensionTab() {
+  const section = document.getElementById('tab3');
+  const dates = DAILY.map(r => r.date).sort();
+  
+  // 默认上一个自然周
+  const now = new Date();
+  const day = now.getDay() || 7;
+  const thisMonday = new Date(now); thisMonday.setDate(now.getDate() - day + 1);
+  const lastMonday = new Date(thisMonday); lastMonday.setDate(thisMonday.getDate() - 7);
+  const lastSunday = new Date(lastMonday); lastSunday.setDate(lastMonday.getDate() + 6);
+  const fmtDate = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  
+  let defaultStart = fmtDate(lastMonday);
+  let defaultEnd = fmtDate(lastSunday);
+  if (defaultStart < dates[0]) defaultStart = dates[0];
+  if (defaultEnd > dates[dates.length-1]) defaultEnd = dates[dates.length-1];
+  
+  section.innerHTML = `
+    <!-- 板块标题 -->
+    <div class="flex items-center gap-2 mb-5">
+      <div class="w-1 h-6 rounded-full" style="background: linear-gradient(180deg, #003da5, #2563eb);"></div>
+      <h2 class="text-lg font-bold text-white">维度报表</h2>
+      <span id="dimensionLabel" class="text-xs text-blue-200"></span>
+    </div>
+    
+    <!-- 日期选择器 -->
+    <div class="flex items-center gap-3 mb-5 glass-card rounded-2xl p-4 flex-wrap">
+      <label class="text-sm text-slate-600 font-medium">选择期间：</label>
+      <input type="date" id="dimensionStart" class="border border-slate-200 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none bg-white/90 shadow-sm">
+      <span class="text-slate-400">至</span>
+      <input type="date" id="dimensionEnd" class="border border-slate-200 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none bg-white/90 shadow-sm">
+      <button id="dimensionReset" class="text-sm text-slate-500 hover:text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">重置</button>
+      <div class="flex items-center gap-2 ml-auto">
+        <div class="flex gap-1">
+          <button id="dimensionLastWeek" class="text-sm px-3 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #003da5, #2563eb); color: white; box-shadow: 0 2px 8px rgba(0,61,165,0.3);">上周</button>
+          <button id="dimensionThisWeek" class="text-sm px-3 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #003087, #003da5); color: white; box-shadow: 0 2px 8px rgba(0,48,135,0.3);">本周</button>
+          <button id="dimensionLastMonth" class="text-sm px-3 py-1.5 rounded-lg font-medium transition-all" style="background: linear-gradient(135deg, #d4a574, #e8c99b); color: white; box-shadow: 0 2px 8px rgba(212,165,116,0.3);">上月</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 关键数据指标看板 -->
+    <div id="dimensionKpiCards" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6"></div>
+    
+    <!-- 走势图区域 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100 card-container relative">
+        <button class="card-screenshot-btn" data-target="dimGmv">截图</button>
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">GMV 趋势</h3>
+        <div id="chartDimensionGmv" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100 card-container relative">
+        <button class="card-screenshot-btn" data-target="dimRoi">截图</button>
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">ROI 趋势</h3>
+        <div id="chartDimensionRoi" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100 card-container relative">
+        <button class="card-screenshot-btn" data-target="dimBar">截图</button>
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">小时均GMV & 成交件数</h3>
+        <div id="chartDimensionBar" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100 card-container relative">
+        <button class="card-screenshot-btn" data-target="dimFunnel">截图</button>
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">流量转化漏斗</h3>
+        <div id="chartDimensionFunnel" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+    </div>
+    
+    <!-- 关联分析走势图 -->
+    <div class="mb-2">
+      <h3 class="text-sm font-semibold text-slate-700 px-1">关联分析走势</h3>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100 card-container relative">
+        <button class="card-screenshot-btn" data-target="dimGmvRoi">截图</button>
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">GMV & ROI 走势</h3>
+        <div id="chartDimensionGmvRoi" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100 card-container relative">
+        <button class="card-screenshot-btn" data-target="dimClickRoi">截图</button>
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">商品曝光点击率 & ROI 走势</h3>
+        <div id="chartDimensionClickRoi" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100 card-container relative">
+        <button class="card-screenshot-btn" data-target="dimGmvConv">截图</button>
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">GMV & 点击成交转化率 走势</h3>
+        <div id="chartDimensionGmvConv" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-slate-100 card-container relative">
+        <button class="card-screenshot-btn" data-target="dimViewsRoi">截图</button>
+        <h3 class="text-sm font-semibold text-slate-700 mb-2">直播间场观 & ROI 走势</h3>
+        <div id="chartDimensionViewsRoi" class="chart-box" style="height:320px;min-height:320px"></div>
+      </div>
+    </div>
+    
+    <!-- 数据总结 -->
+    <div class="analysis-box rounded-2xl p-5 card-container relative">
+      <button class="card-screenshot-btn" data-target="dimAnalysis">截图</button>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs font-semibold text-white px-2.5 py-1 rounded-md" style="background: linear-gradient(135deg, #003087, #003da5);">数据总结</span>
+        <span id="dimensionAnalysisLabel" class="text-xs text-slate-400"></span>
+      </div>
+      <div id="dimensionAnalysisContent" class="text-sm text-slate-700 leading-relaxed space-y-2"></div>
+    </div>
+  `;
+  
+  // 设置默认日期
+  document.getElementById('dimensionStart').value = defaultStart;
+  document.getElementById('dimensionEnd').value = defaultEnd;
+  document.getElementById('dimensionLabel').textContent = defaultStart + ' ~ ' + defaultEnd;
+  
+  // 绑定事件
+  document.getElementById('dimensionStart').onchange = () => {
+    window.dimensionStart = document.getElementById('dimensionStart').value;
+    document.getElementById('dimensionLabel').textContent = window.dimensionStart + ' ~ ' + window.dimensionEnd;
+    renderDimensionContent();
+  };
+  document.getElementById('dimensionEnd').onchange = () => {
+    window.dimensionEnd = document.getElementById('dimensionEnd').value;
+    document.getElementById('dimensionLabel').textContent = window.dimensionStart + ' ~ ' + window.dimensionEnd;
+    renderDimensionContent();
+  };
+  document.getElementById('dimensionReset').onclick = () => {
+    document.getElementById('dimensionStart').value = defaultStart;
+    document.getElementById('dimensionEnd').value = defaultEnd;
+    window.dimensionStart = defaultStart;
+    window.dimensionEnd = defaultEnd;
+    document.getElementById('dimensionLabel').textContent = defaultStart + ' ~ ' + defaultEnd;
+    renderDimensionContent();
+  };
+  document.getElementById('dimensionLastWeek').onclick = () => {
+    const now = new Date();
+    const day = now.getDay() || 7;
+    const thisMonday = new Date(now); thisMonday.setDate(now.getDate() - day + 1);
+    const lastMonday = new Date(thisMonday); lastMonday.setDate(thisMonday.getDate() - 7);
+    const lastSunday = new Date(lastMonday); lastSunday.setDate(lastMonday.getDate() + 6);
+    const s = fmtDate(lastMonday), e = fmtDate(lastSunday);
+    document.getElementById('dimensionStart').value = s;
+    document.getElementById('dimensionEnd').value = e;
+    window.dimensionStart = s; window.dimensionEnd = e;
+    document.getElementById('dimensionLabel').textContent = s + ' ~ ' + e;
+    renderDimensionContent();
+  };
+  document.getElementById('dimensionThisWeek').onclick = () => {
+    const now = new Date();
+    const day = now.getDay() || 7;
+    const monday = new Date(now); monday.setDate(now.getDate() - day + 1);
+    const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+    const s = fmtDate(monday), e = fmtDate(sunday);
+    document.getElementById('dimensionStart').value = s;
+    document.getElementById('dimensionEnd').value = e;
+    window.dimensionStart = s; window.dimensionEnd = e;
+    document.getElementById('dimensionLabel').textContent = s + ' ~ ' + e;
+    renderDimensionContent();
+  };
+  document.getElementById('dimensionLastMonth').onclick = () => {
+    const now = new Date();
+    const y = now.getFullYear(), m = now.getMonth();
+    const firstDay = new Date(y, m-1, 1);
+    const lastDay = new Date(y, m, 0);
+    const s = fmtDate(firstDay), e = fmtDate(lastDay);
+    document.getElementById('dimensionStart').value = s;
+    document.getElementById('dimensionEnd').value = e;
+    window.dimensionStart = s; window.dimensionEnd = e;
+    document.getElementById('dimensionLabel').textContent = s + ' ~ ' + e;
+    renderDimensionContent();
+  };
+  
+  window.dimensionStart = defaultStart;
+  window.dimensionEnd = defaultEnd;
+  
+  // 绑定卡片截图按钮
+  setTimeout(() => {
+    document.querySelectorAll('.card-screenshot-btn').forEach(btn => {
+      btn.onclick = () => takeCardScreenshot(btn.dataset.target);
+    });
+  }, 100);
+  
+  renderDimensionContent();
+}
+
+function renderDimensionContent() {
+  const start = window.dimensionStart;
+  const end = window.dimensionEnd;
+  const data = DAILY.filter(r => r.date >= start && r.date <= end);
+  
+  // KPI卡片
+  const kpis = [
+    {label:'总GMV', value: fmt.money(sum(data,'totalGmv')), sub:'区间合计', color:'text-blue-600', bg:'bg-blue-50'},
+    {label:'投放消耗', value: fmt.money(sum(data,'adSpend')), sub:'区间合计', color:'text-orange-600', bg:'bg-orange-50'},
+    {label:'整体ROI', value: fmt.num(avg(data,'overallRoi')), sub:'区间均值', color:'text-green-600', bg:'bg-green-50'},
+    {label:'场观', value: fmt.int(sum(data,'views')), sub:'区间合计', color:'text-purple-600', bg:'bg-purple-50'},
+    {label:'成交件数', value: fmt.int(sum(data,'orders')), sub:'区间合计', color:'text-pink-600', bg:'bg-pink-50'},
+    {label:'客单价', value: fmt.num(avg(data,'avgOrderValue')), sub:'区间均值', color:'text-cyan-600', bg:'bg-cyan-50'},
+    {label:'退款率', value: fmt.pct(avg(data,'refundRate')), sub:'区间均值', color:'text-red-600', bg:'bg-red-50'}
+  ];
+  document.getElementById('dimensionKpiCards').innerHTML = kpis.map(k => `
+    <div class="kpi-card rounded-xl p-3">
+      <div class="kpi-label text-slate-500 mb-1">${k.label}</div>
+      <div class="kpi-value ${k.color}">${k.value}</div>
+      <div class="kpi-sub text-slate-400 mt-1">${k.sub}</div>
+    </div>
+  `).join('');
+  
+  const dates = data.map(r => r.date.slice(5));
+  
+  // GMV趋势
+  getChart('chartDimensionGmv').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['总GMV','GMV'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: {type:'value'},
+    series: [
+      {name:'总GMV',type:'line',smooth:true,data:data.map(r=>r.totalGmv),itemStyle:{color:'#003087'},areaStyle:{}, label:{show:true,position:'top',fontSize:10}},
+      {name:'GMV',type:'line',smooth:true,data:data.map(r=>r.gmv),itemStyle:{color:'#2563eb'}, label:{show:true,position:'top',fontSize:10}}
+    ]
+  });
+  
+  // ROI趋势
+  getChart('chartDimensionRoi').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['整体ROI','智能优惠券ROI'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: {type:'value'},
+    series: [
+      {name:'整体ROI',type:'line',smooth:true,data:data.map(r=>r.overallRoi),itemStyle:{color:'#16a34a'},areaStyle:{}, label:{show:true,position:'top',fontSize:10}},
+      {name:'智能优惠券ROI',type:'line',smooth:true,data:data.map(r=>r.couponRoi),itemStyle:{color:'#d4a574'}, label:{show:true,position:'top',fontSize:10}}
+    ]
+  });
+  
+  // 小时均GMV & 成交件数
+  getChart('chartDimensionBar').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['小时均GMV','成交件数'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'小时均GMV'},{type:'value',name:'成交件数'}],
+    series: [
+      {name:'小时均GMV',type:'bar',data:data.map(r=>r.hourlyGmv),itemStyle:{color:'#003087'}, label:{show:true,position:'top',fontSize:10}},
+      {name:'成交件数',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>r.orders),itemStyle:{color:'#c8102e'}, label:{show:true,position:'top',fontSize:10}}
+    ]
+  });
+  
+  // 流量转化漏斗（SVG）
+  const totalExp = sum(data,'exposureCount');
+  const totalWatch = sum(data,'watchCount');
+  const totalProdExp = sum(data,'productExposureCount');
+  const totalClick = sum(data,'productClickCount');
+  const totalBuyer = sum(data,'buyerCount');
+  const funnelVals = [
+    { name: '直播间曝光', value: totalExp },
+    { name: '直播间观看', value: totalWatch },
+    { name: '商品曝光', value: totalProdExp },
+    { name: '商品点击', value: totalClick },
+    { name: '成交', value: totalBuyer }
+  ];
+  document.getElementById('chartDimensionFunnel').innerHTML = '';
+  renderSvgFunnel('chartDimensionFunnel', funnelVals);
+  
+  // GMV & ROI走势
+  getChart('chartDimensionGmvRoi').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['GMV','ROI'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'GMV'},{type:'value',name:'ROI'}],
+    series: [
+      {name:'GMV',type:'bar',data:data.map(r=>r.totalGmv),itemStyle:{color:'#003087'}, label:{show:true,position:'top',fontSize:10}},
+      {name:'ROI',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>r.overallRoi),itemStyle:{color:'#16a34a'}, label:{show:true,position:'top',fontSize:10}}
+    ]
+  });
+  
+  // 商品曝光点击率 & ROI走势
+  getChart('chartDimensionClickRoi').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['商品曝光点击率','ROI'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'点击率',axisLabel:{formatter:'{value}%'}},{type:'value',name:'ROI'}],
+    series: [
+      {name:'商品曝光点击率',type:'bar',data:data.map(r=>(r.productClickRate*100).toFixed(2)),itemStyle:{color:'#2563eb'}, label:{show:true,position:'top',fontSize:10,formatter:'{c}%'}},
+      {name:'ROI',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>r.overallRoi),itemStyle:{color:'#16a34a'}, label:{show:true,position:'top',fontSize:10}}
+    ]
+  });
+  
+  // GMV & 点击成交转化率走势
+  getChart('chartDimensionGmvConv').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['GMV','点击成交转化率'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'GMV'},{type:'value',name:'转化率',axisLabel:{formatter:'{value}%'}}],
+    series: [
+      {name:'GMV',type:'bar',data:data.map(r=>r.totalGmv),itemStyle:{color:'#003087'}, label:{show:true,position:'top',fontSize:10}},
+      {name:'点击成交转化率',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>(r.clickToBuyRate*100).toFixed(2)),itemStyle:{color:'#c8102e'}, label:{show:true,position:'top',fontSize:10,formatter:'{c}%'}}
+    ]
+  });
+  
+  // 直播间场观 & ROI走势
+  getChart('chartDimensionViewsRoi').setOption({
+    tooltip: {trigger:'axis'},
+    legend: {data:['场观','ROI'], bottom:0},
+    grid: {left:'3%',right:'4%',bottom:'15%',containLabel:true},
+    xAxis: {type:'category',data:dates},
+    yAxis: [{type:'value',name:'场观'},{type:'value',name:'ROI'}],
+    series: [
+      {name:'场观',type:'bar',data:data.map(r=>r.views),itemStyle:{color:'#9333ea'}, label:{show:true,position:'top',fontSize:10}},
+      {name:'ROI',type:'line',yAxisIndex:1,smooth:true,data:data.map(r=>r.overallRoi),itemStyle:{color:'#16a34a'}, label:{show:true,position:'top',fontSize:10}}
+    ]
+  });
+  
+  // 数据总结
+  const label = document.getElementById('dimensionAnalysisLabel');
+  const content = document.getElementById('dimensionAnalysisContent');
+  if (!data || !data.length) {
+    label.textContent = '';
+    content.innerHTML = '<div class="text-slate-400 text-center py-4">所选区间暂无数据</div>';
+    return;
+  }
+  const startDate = data[0].date, endDate = data[data.length-1].date;
+  const days = data.length;
+  label.textContent = startDate + ' ~ ' + endDate + '（' + days + '天）';
+  
+  const totalGmv = data.reduce((s,r)=>s+(r.totalGmv||0),0);
+  const avgGmv = totalGmv/days;
+  const maxGmvRow = data.reduce((a,b)=>(a.totalGmv||0)>(b.totalGmv||0)?a:b);
+  const totalSpend = data.reduce((s,r)=>s+(r.adSpend||0),0);
+  const avgRoi = totalSpend>0? totalGmv/totalSpend : 0;
+  const totalOrders = data.reduce((s,r)=>s+(r.orders||0),0);
+  const avgViews = data.reduce((s,r)=>s+(r.views||0),0)/days;
+  const totalRefund = data.reduce((s,r)=>s+(r.refundAmount||0),0);
+  const refundRate = totalGmv>0? totalRefund/totalGmv : 0;
+  
+  const totalExpSum = data.reduce((s,r)=>s+(r.exposureCount||0),0);
+  const totalWatchSum = data.reduce((s,r)=>s+(r.watchCount||0),0);
+  const totalClickSum = data.reduce((s,r)=>s+(r.productClickCount||0),0);
+  const totalBuyerSum = data.reduce((s,r)=>s+(r.buyerCount||0),0);
+  const exp2watch = totalExpSum? totalWatchSum/totalExpSum : 0;
+  const click2buy = totalClickSum? totalBuyerSum/totalClickSum : 0;
+  
+  const half = Math.floor(days/2);
+  const firstHalf = data.slice(0, half).reduce((s,r)=>s+(r.totalGmv||0),0);
+  const secondHalf = data.slice(half).reduce((s,r)=>s+(r.totalGmv||0),0);
+  const trend = secondHalf > firstHalf*1.05 ? '上升' : secondHalf < firstHalf*0.95 ? '下降' : '平稳';
+  
+  content.innerHTML = `
+    <p><span class="font-semibold" style="color:#003087">【经营概况】</span>统计区间共 ${days} 天，总GMV <span class="font-bold" style="color:#003087">${fmt.money(totalGmv)}</span>，日均 <span class="font-bold">${fmt.money(avgGmv)}</span>；单日最高 ${maxGmvRow.date} 达 ${fmt.money(maxGmvRow.totalGmv)}。总投放消耗 ${fmt.money(totalSpend)}，整体ROI <span class="font-bold" style="color:${avgRoi>=2?'#16a34a':'#c8102e'}">${fmt.num(avgRoi)}</span>。</p>
+    <p><span class="font-semibold" style="color:#003087">【流量转化】</span>累计曝光 ${fmt.int(totalExp)} 人，观看 ${fmt.int(totalWatch)} 人，曝光-观看率 <span class="font-bold">${fmt.pct(exp2watch)}</span>；商品点击 ${fmt.int(totalClick)} 人，点击-成交转化率 <span class="font-bold">${fmt.pct(click2buy)}</span>；累计成交 ${fmt.int(totalBuyer)} 人、${totalOrders} 件。</p>
+    <p><span class="font-semibold" style="color:#003087">【趋势研判】</span>区间后半段GMV较前半段呈<span class="font-bold" style="color:${trend==='上升'?'#16a34a':trend==='下降'?'#c8102e':'#d4a574'}">${trend}</span>态势。场均场观 ${fmt.int(avgViews)} 人，退款率 <span class="font-bold" style="color:${refundRate<=0.05?'#16a34a':'#c8102e'}">${fmt.pct(refundRate)}</span>${refundRate>0.05?'，建议关注退款原因。':'，控制良好。'}</p>
+    <p><span class="font-semibold" style="color:#003087">【运营建议】</span>${avgRoi<2?'当前整体ROI低于2，建议优化投放人群和素材，提升投产比。':'整体ROI表现良好，可考虑适度加大投放预算。'} ${exp2watch<0.15?'曝光-观看率偏低，建议优化直播间封面和标题提升吸引力。':'曝光-观看率达标。'} ${click2buy<0.15?'点击-成交转化率有提升空间，建议优化商品讲解和促单话术。':'点击-成交转化表现优秀。'}</p>
+  `;
+}
+
+// ==================== 截图功能 ====================
+function takeScreenshot() {
+  const btn = document.getElementById('screenshotBtn');
+  btn.disabled = true;
+  btn.textContent = '截图中...';
+  html2canvas(document.body, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#667eea'
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = '桂格直播间数据看板_' + new Date().toISOString().slice(0,10) + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.disabled = false;
+    btn.textContent = '一键截图';
+  }).catch(err => {
+    console.error('截图失败:', err);
+    btn.disabled = false;
+    btn.textContent = '一键截图';
+    alert('截图失败，请重试');
+  });
+}
+
+function takeCardScreenshot(target) {
+  // 找到对应的卡片容器
+  const btn = event.target;
+  const card = btn.closest('.card-container');
+  if (!card) return;
+  
+  const originalText = btn.textContent;
+  btn.textContent = '截图中...';
+  btn.disabled = true;
+  
+  html2canvas(card, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff'
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = target + '_' + new Date().toISOString().slice(0,10) + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }).catch(err => {
+    console.error('截图失败:', err);
+    btn.textContent = originalText;
+    btn.disabled = false;
+    alert('截图失败，请重试');
+  });
+}
+
+// ==================== 事件绑定 ====================
+document.getElementById('tab1Btn').onclick = () => switchTab(1);
+document.getElementById('tab2Btn').onclick = () => switchTab(2);
+document.getElementById('tab3Btn').onclick = () => switchTab(3);
+
+// 初始化
+window.addEventListener('load', function() {
+  renderAll();
+});
+</script>
+<script src="echarts.min.js"></script>
+<script src="html2canvas.min.js"></script>
+</body>
+</html>
