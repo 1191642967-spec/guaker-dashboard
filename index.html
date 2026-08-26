@@ -1457,9 +1457,14 @@ document.getElementById('tab2Btn').onclick = () => switchTab(2);
 document.getElementById('tab3Btn').onclick = () => switchTab(3);
 
 // 初始化
-window.addEventListener('load', function() {
+console.log('开始初始化');
+try {
   renderAll();
-});
+  console.log('renderAll执行成功');
+} catch(e) {
+  console.error('renderAll执行失败:', e.message);
+  document.body.innerHTML = '<div style="padding:20px;color:red;"><h2>renderAll错误</h2><p>' + e.message + '</p><pre>' + e.stack + '</pre></div>';
+}
 </script>
 </body>
 </html>
