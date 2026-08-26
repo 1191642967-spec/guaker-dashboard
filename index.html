@@ -119,7 +119,7 @@ tbody tr:hover { background: #faf6ee; }
 </main>
 
 <script>
-alert('JavaScript开始执行');
+document.body.innerHTML = '<div style="position:fixed;top:0;left:0;right:0;background:red;color:white;padding:10px;z-index:99999;">JavaScript执行成功！</div>' + document.body.innerHTML;
 // ==================== 数据 ====================
 const RAW_DAILY = [
   {"date":"2026-08-01","totalGmv":125000,"gmv":110000,"duration":6.5,"hourlyGmv":19230,"views":8500,"orders":320,"avgOrderValue":343.75,"adSpend":45000,"overallRoi":2.78,"couponRoi":3.2,"uvValue":14.71,"refundAmount":3500,"refundRate":0.028,"exposureCount":45000,"watchCount":8500,"newFans":120,"interactions":2400,"interactionUsers":1800,"productExposureCount":6800,"productClickCount":1700,"buyerCount":320,"exposureToWatchRate":0.189,"watchToProductRate":0.8,"productClickRate":0.25,"clickToBuyRate":0.188},
