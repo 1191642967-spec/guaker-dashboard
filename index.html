@@ -121,21 +121,7 @@ tbody tr:hover { background: #faf6ee; }
 </main>
 
 <script>
-// 调试信息
-document.body.innerHTML = '<div style="padding:20px;"><h2>调试模式</h2><p id="debugLog">JavaScript开始执行...</p></div>';
-function debugLog(msg) {
-  console.log(msg);
-  var el = document.getElementById('debugLog');
-  if (el) el.innerHTML += '<br>' + msg;
-}
-debugLog('1. JavaScript开始执行');
-
-window.onerror = function(msg, url, line, col, error) {
-  debugLog('全局错误: ' + msg + ' 行:' + line + ' 列:' + col);
-  return false;
-};
-
-debugLog('2. 开始定义数据');
+// ==================== 数据 ====================
 const RAW_DAILY = [
   {"date":"2026-08-01","totalGmv":125000,"gmv":110000,"duration":6.5,"hourlyGmv":19230,"views":8500,"orders":320,"avgOrderValue":343.75,"adSpend":45000,"overallRoi":2.78,"couponRoi":3.2,"uvValue":14.71,"refundAmount":3500,"refundRate":0.028,"exposureCount":45000,"watchCount":8500,"newFans":120,"interactions":2400,"interactionUsers":1800,"productExposureCount":6800,"productClickCount":1700,"buyerCount":320,"exposureToWatchRate":0.189,"watchToProductRate":0.8,"productClickRate":0.25,"clickToBuyRate":0.188},
   {"date":"2026-08-02","totalGmv":138000,"gmv":122000,"duration":7.0,"hourlyGmv":19714,"views":9200,"orders":350,"avgOrderValue":348.57,"adSpend":48000,"overallRoi":2.88,"couponRoi":3.1,"uvValue":15,"refundAmount":4200,"refundRate":0.03,"exposureCount":48000,"watchCount":9200,"newFans":135,"interactions":2600,"interactionUsers":1950,"productExposureCount":7300,"productClickCount":1850,"buyerCount":350,"exposureToWatchRate":0.192,"watchToProductRate":0.793,"productClickRate":0.253,"clickToBuyRate":0.189},
@@ -1463,14 +1449,9 @@ document.getElementById('tab2Btn').onclick = () => switchTab(2);
 document.getElementById('tab3Btn').onclick = () => switchTab(3);
 
 // 初始化
-console.log('开始初始化');
-try {
+window.addEventListener('load', function() {
   renderAll();
-  console.log('renderAll执行成功');
-} catch(e) {
-  console.error('renderAll执行失败:', e.message);
-  document.body.innerHTML = '<div style="padding:20px;color:red;"><h2>renderAll错误</h2><p>' + e.message + '</p><pre>' + e.stack + '</pre></div>';
-}
+});
 </script>
 </body>
 </html>
