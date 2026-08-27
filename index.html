@@ -86,6 +86,24 @@ body {
 .update-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+/* ===== Main Tabs ===== */
+.main-tabs {
+  display: flex; gap: 8px; margin-bottom: 20px;
+  padding: 6px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; backdrop-filter: blur(10px);
+}
+.main-tab {
+  flex: 1; padding: 14px 20px; border-radius: 10px; font-size: 15px; font-weight: 700;
+  cursor: pointer; border: none; background: transparent; color: var(--text-secondary);
+  transition: all 0.25s; font-family: inherit; text-align: center; letter-spacing: 0.5px;
+}
+.main-tab:hover { color: var(--text-primary); background: var(--bg-secondary); }
+.main-tab.active {
+  background: linear-gradient(135deg, var(--blue), #2563EB); color: white;
+  box-shadow: 0 4px 16px var(--blue-glow);
+}
+.main-tab .tab-icon { margin-right: 6px; }
+
 /* ===== Section Card ===== */
 .section {
   background: var(--bg-card); border: 1px solid var(--border);
@@ -179,7 +197,7 @@ body {
   border: 1px solid #E5E7EB;
   border-radius: 16px;
   padding: 20px 24px;
-  margin-bottom: 0;
+  margin-bottom: 20px;
 }
 .funnel-light-body { display: flex; gap: 36px; align-items: flex-start; }
 .funnel-diagram { flex: 1; position: relative; padding: 8px 110px 20px 110px; }
@@ -376,6 +394,9 @@ body {
   .header { flex-direction: column; align-items: flex-start; }
   .header-right { margin-left: 0; }
   .period-kpis { grid-template-columns: 1fr; }
+  .main-tab { padding: 10px 8px; font-size: 13px; }
+  .main-tab .tab-icon { display: none; }
+  .funnel-diagram { padding: 8px 90px 20px 90px; }
 }
 </style>
 </head>
@@ -390,6 +411,7 @@ body {
 let allData = null;
 let currentDate = null;
 let currentAnchorTab = 'daily';
+let currentMainTab = 'daily';
 let monthlyTargets = { gmv: 100, adSpend: 50, roi: 2.2 };
 
 function fmt(n, d=0) {
@@ -424,17 +446,36 @@ function render() {
   const monthRecords = allData.records.filter(r => r.date.startsWith(currentDate.slice(0,7)));
   const monthly = calcMonthly(monthRecords);
 
+  let content = '';
+  if (currentMainTab === 'daily') {
+    content = renderMonthlyTargets(monthly, monthRecords.length)
+      + renderDailyMetrics(d)
+      + renderFunnel(d)
+      + renderAnalysis(d, monthly);
+  } else if (currentMainTab === 'period') {
+    content = renderPeriodData();
+  } else if (currentMainTab === 'anchor') {
+    content = renderAnchorData();
+  }
+
   app.innerHTML = `
     ${renderHeader()}
-    ${renderMonthlyTargets(monthly, monthRecords.length)}
-    ${renderDailyMetrics(d)}
-    ${renderFunnel(d)}
-    ${renderPeriodData()}
-    ${renderAnchorData()}
-    ${renderAnalysis(d, monthly)}
+    ${renderMainTabs()}
+    ${content}
   `;
   bindEvents();
-  renderPeriodChart();
+  if (currentMainTab === 'period') renderPeriodChart();
+}
+
+function renderMainTabs() {
+  const tabs = [
+    {key:'daily', label:'日数据看板', icon:'📊'},
+    {key:'period', label:'阶段数据', icon:'📈'},
+    {key:'anchor', label:'主播数据', icon:'👤'},
+  ];
+  return `<div class="main-tabs">
+    ${tabs.map(t=>`<button class="main-tab ${t.key===currentMainTab?'active':''}" data-maintab="${t.key}"><span class="tab-icon">${t.icon}</span>${t.label}</button>`).join('')}
+  </div>`;
 }
 
 function calcMonthly(recs) {
@@ -558,8 +599,7 @@ function renderFunnel(d) {
     </div>`;
   }).join('');
 
-  return `<div class="two-col">
-    <div class="funnel-light-section">
+  return `<div class="section funnel-light-section">
       <div class="section-header"><span class="section-badge blue">当日转化漏斗</span>
         <span class="section-date" style="color:#6B7280">${currentDate}</span>
         <span class="section-icon" style="background:#F3F4F6;color:#9CA3AF;border-color:#E5E7EB">◎</span></div>
@@ -573,9 +613,7 @@ function renderFunnel(d) {
           ${targetItems}
         </div>
       </div>
-    </div>
-    ${renderAnchorRankingInline()}
-  </div>`;
+    </div>`;
 }
 
 function renderAnchorRankingInline() {
@@ -712,6 +750,9 @@ function bindEvents() {
   });
   document.querySelectorAll('.anchor-tab').forEach(tab=>{
     tab.addEventListener('click', function(){ currentAnchorTab=this.dataset.tab; render(); });
+  });
+  document.querySelectorAll('.main-tab').forEach(tab=>{
+    tab.addEventListener('click', function(){ currentMainTab=this.dataset.maintab; render(); });
   });
 }
 
