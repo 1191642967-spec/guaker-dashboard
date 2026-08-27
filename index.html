@@ -249,7 +249,7 @@ body {
   margin-bottom: 20px;
 }
 .funnel-light-body { display: flex; gap: 36px; align-items: flex-start; }
-.funnel-diagram { flex: 1; position: relative; padding: 8px 100px 20px 0; }
+.funnel-diagram { flex: 1; position: relative; padding: 8px 10px 20px 0; }
 .funnel-row {
   display: flex; align-items: center; gap: 10px; position: relative;
   margin-bottom: 8px; min-height: 46px;
@@ -262,7 +262,7 @@ body {
 .funnel-trapezoid {
   height: 44px; display: flex; align-items: center; justify-content: center;
   color: white; font-weight: 700; font-size: 15px; position: relative;
-  clip-path: polygon(0% 0%, 88% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0% 100%);
   transition: filter 0.2s;
 }
 .funnel-trapezoid:hover { filter: brightness(1.1); }
@@ -445,7 +445,7 @@ body {
   .period-kpis { grid-template-columns: 1fr; }
   .main-tab { padding: 10px 8px; font-size: 13px; }
   .main-tab .tab-icon { display: none; }
-  .funnel-diagram { padding: 8px 80px 20px 0; }
+  .funnel-diagram { padding: 8px 10px 20px 0; }
   .funnel-row-label { width: 80px; }
   .schedule-grid { grid-template-columns: 1fr; }
 }
@@ -626,15 +626,9 @@ function renderFunnel(d) {
   const overall = d.exposure>0 ? d.buyers/d.exposure : 0;
 
   const funnelRows = levels.map((lv,i) => {
-    const rateBadge = lv.rate !== undefined ? `
-      <div class="funnel-rate-badge">
-        <span class="rate-label">转化率</span>
-        <span class="rate-value">${fmtPct(lv.rate,1)}</span>
-      </div>` : '';
     return `<div class="funnel-row">
       <div class="funnel-row-label"><span class="fname">${lv.name}</span><span class="fnum">${fmt(lv.num,0)} 人</span></div>
       <div class="funnel-trapezoid ${lv.cls}">${fmt(lv.num,0)}</div>
-      ${rateBadge}
     </div>`;
   }).join('');
 
