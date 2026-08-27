@@ -249,13 +249,13 @@ body {
   margin-bottom: 20px;
 }
 .funnel-light-body { display: flex; gap: 36px; align-items: flex-start; }
-.funnel-diagram { flex: 1; position: relative; padding: 8px 110px 20px 110px; }
+.funnel-diagram { flex: 1; position: relative; padding: 8px 100px 20px 0; }
 .funnel-row {
-  display: flex; align-items: center; position: relative;
+  display: flex; align-items: center; gap: 10px; position: relative;
   margin-bottom: 8px; min-height: 46px;
 }
 .funnel-row-label {
-  position: absolute; left: 0; width: 100px; text-align: right;
+  width: 96px; flex-shrink: 0; text-align: right;
 }
 .funnel-row-label .fname { font-size: 13px; font-weight: 700; color: #1F2937; display: block; }
 .funnel-row-label .fnum { font-size: 11px; color: #9CA3AF; margin-top: 1px; }
@@ -445,7 +445,8 @@ body {
   .period-kpis { grid-template-columns: 1fr; }
   .main-tab { padding: 10px 8px; font-size: 13px; }
   .main-tab .tab-icon { display: none; }
-  .funnel-diagram { padding: 8px 90px 20px 90px; }
+  .funnel-diagram { padding: 8px 80px 20px 0; }
+  .funnel-row-label { width: 80px; }
   .schedule-grid { grid-template-columns: 1fr; }
 }
 </style>
