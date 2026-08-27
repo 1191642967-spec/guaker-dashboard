@@ -150,6 +150,7 @@ body {
 .schedule-status.live { background: rgba(239,68,68,0.15); color: var(--red-light); animation: pulse 2s infinite; }
 .schedule-status.waiting { background: rgba(245,158,11,0.15); color: var(--gold-light); }
 .schedule-status.scheduled { background: rgba(148,163,184,0.15); color: var(--text-secondary); }
+.schedule-status.completed { background: rgba(16,185,129,0.1); color: var(--text-muted); }
 .schedule-empty { text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px; }
 
 /* ===== Section Card ===== */
@@ -261,15 +262,15 @@ body {
 .funnel-trapezoid {
   height: 44px; display: flex; align-items: center; justify-content: center;
   color: white; font-weight: 700; font-size: 15px; position: relative;
-  clip-path: polygon(6% 0%, 94% 0%, 100% 100%, 0% 100%);
+  clip-path: polygon(0% 0%, 88% 0%, 100% 100%, 0% 100%);
   transition: filter 0.2s;
 }
 .funnel-trapezoid:hover { filter: brightness(1.1); }
 .funnel-trapezoid.l1 { width: 100%; background: linear-gradient(135deg, #5B8DEF, #3B6FE0); }
-.funnel-trapezoid.l2 { width: 82%; background: linear-gradient(135deg, #4A7CE8, #2E5DD8); margin-left: 9%; }
-.funnel-trapezoid.l3 { width: 64%; background: linear-gradient(135deg, #3D6BDB, #234DC8); margin-left: 18%; }
-.funnel-trapezoid.l4 { width: 46%; background: linear-gradient(135deg, #3059C9, #1A3DB5); margin-left: 27%; }
-.funnel-trapezoid.l5 { width: 30%; background: linear-gradient(135deg, #2548B8, #1530A0); margin-left: 35%; }
+.funnel-trapezoid.l2 { width: 82%; background: linear-gradient(135deg, #4A7CE8, #2E5DD8); }
+.funnel-trapezoid.l3 { width: 64%; background: linear-gradient(135deg, #3D6BDB, #234DC8); }
+.funnel-trapezoid.l4 { width: 46%; background: linear-gradient(135deg, #3059C9, #1A3DB5); }
+.funnel-trapezoid.l5 { width: 30%; background: linear-gradient(135deg, #2548B8, #1530A0); }
 
 .funnel-rate-badge {
   position: absolute; right: 0; top: 50%; transform: translateY(-50%);
@@ -462,20 +463,6 @@ let currentDate = null;
 let currentAnchorTab = 'daily';
 let currentMainTab = 'daily';
 let monthlyTargets = { gmv: 100, adSpend: 50, roi: 2.2 };
-
-// 主播排班配置（可根据实际排班修改）
-const anchorSchedule = {
-  today: [
-    {name: '朱吴琪', shift: '早班', time: '08:00 - 12:00', status: 'live', avatar: 'c1'},
-    {name: '琦琦', shift: '午班', time: '12:00 - 16:00', status: 'waiting', avatar: 'c2'},
-    {name: '樊斐', shift: '晚班', time: '16:00 - 20:00', status: 'waiting', avatar: 'c3'},
-  ],
-  tomorrow: [
-    {name: '琦琦', shift: '早班', time: '08:00 - 12:00', status: 'scheduled', avatar: 'c2'},
-    {name: '樊斐', shift: '午班', time: '12:00 - 16:00', status: 'scheduled', avatar: 'c3'},
-    {name: '朱吴琪', shift: '晚班', time: '16:00 - 20:00', status: 'scheduled', avatar: 'c1'},
-  ]
-};
 
 function fmt(n, d=0) {
   if (n === null || n === undefined || isNaN(n)) return '—';
@@ -691,47 +678,80 @@ function renderAnchorRankingInline() {
 }
 
 function renderSchedule() {
+  const schedule = allData.schedule || [];
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const tomorrowStr = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth()+1).padStart(2,'0')}-${String(tomorrow.getDate()).padStart(2,'0')}`;
   const wd = ['周日','周一','周二','周三','周四','周五','周六'];
-  const todayStr = `${today.getMonth()+1}月${today.getDate()}日 ${wd[today.getDay()]}`;
-  const tomorrowStr = `${tomorrow.getMonth()+1}月${tomorrow.getDate()}日 ${wd[tomorrow.getDay()]}`;
+  const todayLabel = `${today.getMonth()+1}月${today.getDate()}日 ${wd[today.getDay()]}`;
+  const tomorrowLabel = `${tomorrow.getMonth()+1}月${tomorrow.getDate()}日 ${wd[tomorrow.getDay()]}`;
 
-  const statusText = { live: '直播中', waiting: '待开播', scheduled: '已排班' };
+  const avatarColors = {};
+  const colorList = ['c1','c2','c3'];
+  let colorIdx = 0;
+  function getAvatar(name) {
+    if (!avatarColors[name]) {
+      avatarColors[name] = colorList[colorIdx % colorList.length];
+      colorIdx++;
+    }
+    return avatarColors[name];
+  }
 
-  const renderCard = (data, dateStr, type, title, dotColor) => {
-    if (!data || data.length === 0) {
+  function getStatus(timeStr, isToday) {
+    if (!isToday) return 'scheduled';
+    const now = new Date();
+    const parts = timeStr.split('-');
+    if (parts.length !== 2) return 'scheduled';
+    const startParts = parts[0].split(':');
+    const endParts = parts[1].split(':');
+    const startMin = parseInt(startParts[0])*60 + parseInt(startParts[1]||0);
+    let endMin = parseInt(endParts[0])*60 + parseInt(endParts[1]||0);
+    if (endMin <= startMin) endMin += 24*60; // crosses midnight
+    const nowMin = now.getHours()*60 + now.getMinutes();
+    if (nowMin < startMin) return 'waiting';
+    if (nowMin >= startMin && nowMin < endMin) return 'live';
+    return 'completed';
+  }
+
+  const statusText = { live: '直播中', waiting: '待开播', scheduled: '已排班', completed: '已结束' };
+
+  const renderCard = (dateStr, dateLabel, type, title, dotColor, isToday) => {
+    const daySchedule = schedule.filter(s => s.date === dateStr);
+    if (daySchedule.length === 0) {
       return `<div class="schedule-card ${type}">
         <div class="schedule-card-header">
           <div class="schedule-card-title"><span class="dot ${dotColor}"></span>${title}</div>
-          <div class="schedule-card-date">${dateStr}</div>
+          <div class="schedule-card-date">${dateLabel}</div>
         </div>
         <div class="schedule-empty">暂无排班</div>
       </div>`;
     }
-    const items = data.map(s => `
-      <div class="schedule-item">
-        <div class="schedule-avatar ${s.avatar}">${s.name.charAt(0)}</div>
+    const items = daySchedule.map(s => {
+      const status = getStatus(s.time, isToday);
+      const restNote = s.rest ? ` <span style="font-size:10px;color:var(--text-muted)">休息:${s.rest}</span>` : '';
+      return `<div class="schedule-item">
+        <div class="schedule-avatar ${getAvatar(s.anchor)}">${s.anchor.charAt(0)}</div>
         <div class="schedule-info">
-          <div class="schedule-name">${s.name}</div>
+          <div class="schedule-name">${s.anchor}${restNote}</div>
           <div class="schedule-time"><span class="schedule-shift">${s.shift}</span>${s.time}</div>
         </div>
-        <div class="schedule-status ${s.status}">${statusText[s.status]||s.status}</div>
-      </div>
-    `).join('');
+        <div class="schedule-status ${status}">${statusText[status]||status}</div>
+      </div>`;
+    }).join('');
     return `<div class="schedule-card ${type}">
       <div class="schedule-card-header">
         <div class="schedule-card-title"><span class="dot ${dotColor}"></span>${title}</div>
-        <div class="schedule-card-date">${dateStr}</div>
+        <div class="schedule-card-date">${dateLabel}</div>
       </div>
       <div class="schedule-list">${items}</div>
     </div>`;
   };
 
   return `<div class="schedule-grid">
-    ${renderCard(anchorSchedule.today, todayStr, 'today', '今日主播排班', 'blue')}
-    ${renderCard(anchorSchedule.tomorrow, tomorrowStr, 'tomorrow', '后一日主播排班', 'purple')}
+    ${renderCard(todayStr, todayLabel, 'today', '今日主播排班', 'blue', true)}
+    ${renderCard(tomorrowStr, tomorrowLabel, 'tomorrow', '后一日主播排班', 'purple', false)}
   </div>`;
 }
 
