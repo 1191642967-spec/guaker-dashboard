@@ -559,7 +559,8 @@ function calcMonthly(recs) {
 }
 
 function renderHeader() {
-  const opts = allData.records.map(r => `<option value="${r.date}" ${r.date===currentDate?'selected':''}>${fmtDateCN(r.date)}</option>`).join('');
+  const recentRecords = allData.records.slice(-31);
+  const opts = recentRecords.map(r => `<option value="${r.date}" ${r.date===currentDate?'selected':''}>${fmtDateCN(r.date)}</option>`).join('');
   return `<div class="header">
     <div class="header-logo">桂</div>
     <div><div class="header-title">桂格直播间运营数据看板</div><div class="header-subtitle">Guaker Livestream Operations Dashboard</div></div>
