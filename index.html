@@ -611,7 +611,6 @@ function renderMonthlyTargets(m, daysElapsed) {
 function renderDailyMetrics(d) {
   const m = [
     {l:'总GMV', v:'¥'+fmt(d.total_gmv,2), s:'加优惠券', c:'blue'},
-    {l:'GMV', v:'¥'+fmt(d.gmv,2), s:'不含优惠券', c:'cyan'},
     {l:'投放消耗', v:'¥'+fmt(d.ad_spend,2), s:'千川消耗', c:'orange'},
     {l:'整体ROI', v:d.roi?d.roi.toFixed(2):'—', s:'投产比', c:'green'},
     {l:'直播时长', v:(d.duration||0).toFixed(1)+'h', s:'小时', c:'dark'},
@@ -620,7 +619,6 @@ function renderDailyMetrics(d) {
     {l:'成交件数', v:fmt(d.orders,0), s:'订单量', c:'red'},
     {l:'客单价', v:'¥'+fmt(d.aov,2), s:'件均金额', c:'dark'},
     {l:'新增粉丝', v:fmt(d.new_followers,0), s:'涨粉数', c:'green'},
-    {l:'互动人数', v:fmt(d.interactors,0), s:'参与互动', c:'gold'},
     {l:'退款率', v:fmtPct(d.refund_rate,2), s:'退款占比', c:'red'},
     {l:'商品曝光点击率', v:fmtPct(d.product_click_rate,2), s:'点击/曝光', c:'purple'},
     {l:'点击成交转化率', v:fmtPct(d.click_buy_rate,2), s:'成交/点击', c:'purple'},
