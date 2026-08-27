@@ -104,6 +104,54 @@ body {
 }
 .main-tab .tab-icon { margin-right: 6px; }
 
+/* ===== Anchor Schedule ===== */
+.schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.schedule-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 20px; backdrop-filter: blur(10px);
+}
+.schedule-card.today { border-color: rgba(59,130,246,0.3); }
+.schedule-card.tomorrow { border-color: rgba(139,92,246,0.3); }
+.schedule-card-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+  padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.schedule-card-title {
+  display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700;
+}
+.schedule-card-title .dot { width: 8px; height: 8px; border-radius: 50%; }
+.schedule-card-title .dot.blue { background: var(--blue); box-shadow: 0 0 8px var(--blue-glow); }
+.schedule-card-title .dot.purple { background: var(--purple); box-shadow: 0 0 8px rgba(139,92,246,0.4); }
+.schedule-card-date { font-size: 12px; color: var(--text-muted); }
+.schedule-list { display: flex; flex-direction: column; gap: 10px; }
+.schedule-item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  background: var(--bg-secondary); border-radius: 10px; border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.schedule-item:hover { border-color: var(--border-light); transform: translateX(2px); }
+.schedule-avatar {
+  width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+}
+.schedule-avatar.c1 { background: linear-gradient(135deg, #3B82F6, #1D4ED8); }
+.schedule-avatar.c2 { background: linear-gradient(135deg, #F97316, #EA580C); }
+.schedule-avatar.c3 { background: linear-gradient(135deg, #10B981, #059669); }
+.schedule-info { flex: 1; }
+.schedule-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.schedule-time { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+.schedule-shift {
+  font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+  background: rgba(59,130,246,0.15); color: var(--blue-light);
+}
+.schedule-status {
+  font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 12px; flex-shrink: 0;
+}
+.schedule-status.live { background: rgba(239,68,68,0.15); color: var(--red-light); animation: pulse 2s infinite; }
+.schedule-status.waiting { background: rgba(245,158,11,0.15); color: var(--gold-light); }
+.schedule-status.scheduled { background: rgba(148,163,184,0.15); color: var(--text-secondary); }
+.schedule-empty { text-align: center; padding: 20px; color: var(--text-muted); font-size: 13px; }
+
 /* ===== Section Card ===== */
 .section {
   background: var(--bg-card); border: 1px solid var(--border);
@@ -397,6 +445,7 @@ body {
   .main-tab { padding: 10px 8px; font-size: 13px; }
   .main-tab .tab-icon { display: none; }
   .funnel-diagram { padding: 8px 90px 20px 90px; }
+  .schedule-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -413,6 +462,20 @@ let currentDate = null;
 let currentAnchorTab = 'daily';
 let currentMainTab = 'daily';
 let monthlyTargets = { gmv: 100, adSpend: 50, roi: 2.2 };
+
+// 主播排班配置（可根据实际排班修改）
+const anchorSchedule = {
+  today: [
+    {name: '朱吴琪', shift: '早班', time: '08:00 - 12:00', status: 'live', avatar: 'c1'},
+    {name: '琦琦', shift: '午班', time: '12:00 - 16:00', status: 'waiting', avatar: 'c2'},
+    {name: '樊斐', shift: '晚班', time: '16:00 - 20:00', status: 'waiting', avatar: 'c3'},
+  ],
+  tomorrow: [
+    {name: '琦琦', shift: '早班', time: '08:00 - 12:00', status: 'scheduled', avatar: 'c2'},
+    {name: '樊斐', shift: '午班', time: '12:00 - 16:00', status: 'scheduled', avatar: 'c3'},
+    {name: '朱吴琪', shift: '晚班', time: '16:00 - 20:00', status: 'scheduled', avatar: 'c1'},
+  ]
+};
 
 function fmt(n, d=0) {
   if (n === null || n === undefined || isNaN(n)) return '—';
@@ -452,6 +515,7 @@ function render() {
       + renderDailyMetrics(d)
       + renderFunnel(d)
       + renderAnchorRankingInline()
+      + renderSchedule()
       + renderAnalysis(d, monthly);
   } else if (currentMainTab === 'period') {
     content = renderPeriodData();
@@ -624,6 +688,51 @@ function renderAnchorRankingInline() {
   return `<div class="section"><div class="section-header"><span class="section-badge gold">当日主播排名</span>
     <span class="section-date">${currentDate} · 综合排名</span><span class="section-icon">★</span></div>
     <div class="ranking-list">${list.map(a=>renderAnchorItem(a)).join('')}</div></div>`;
+}
+
+function renderSchedule() {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const wd = ['周日','周一','周二','周三','周四','周五','周六'];
+  const todayStr = `${today.getMonth()+1}月${today.getDate()}日 ${wd[today.getDay()]}`;
+  const tomorrowStr = `${tomorrow.getMonth()+1}月${tomorrow.getDate()}日 ${wd[tomorrow.getDay()]}`;
+
+  const statusText = { live: '直播中', waiting: '待开播', scheduled: '已排班' };
+
+  const renderCard = (data, dateStr, type, title, dotColor) => {
+    if (!data || data.length === 0) {
+      return `<div class="schedule-card ${type}">
+        <div class="schedule-card-header">
+          <div class="schedule-card-title"><span class="dot ${dotColor}"></span>${title}</div>
+          <div class="schedule-card-date">${dateStr}</div>
+        </div>
+        <div class="schedule-empty">暂无排班</div>
+      </div>`;
+    }
+    const items = data.map(s => `
+      <div class="schedule-item">
+        <div class="schedule-avatar ${s.avatar}">${s.name.charAt(0)}</div>
+        <div class="schedule-info">
+          <div class="schedule-name">${s.name}</div>
+          <div class="schedule-time"><span class="schedule-shift">${s.shift}</span>${s.time}</div>
+        </div>
+        <div class="schedule-status ${s.status}">${statusText[s.status]||s.status}</div>
+      </div>
+    `).join('');
+    return `<div class="schedule-card ${type}">
+      <div class="schedule-card-header">
+        <div class="schedule-card-title"><span class="dot ${dotColor}"></span>${title}</div>
+        <div class="schedule-card-date">${dateStr}</div>
+      </div>
+      <div class="schedule-list">${items}</div>
+    </div>`;
+  };
+
+  return `<div class="schedule-grid">
+    ${renderCard(anchorSchedule.today, todayStr, 'today', '今日主播排班', 'blue')}
+    ${renderCard(anchorSchedule.tomorrow, tomorrowStr, 'tomorrow', '后一日主播排班', 'purple')}
+  </div>`;
 }
 
 function renderAnchorItem(a) {
