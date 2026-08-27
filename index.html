@@ -556,7 +556,7 @@ function calcMonthly(recs) {
     orders: t('orders'), new_followers: t('new_followers'), exposure: t('exposure'),
     watchers: t('watchers'), product_exposure: t('product_exposure'),
     product_clicks: t('product_clicks'), buyers: t('buyers'), refund_amount: t('refund_amount'),
-    roi: ad_spend > 0 ? gmv/ad_spend : 0,
+    roi: ad_spend > 0 ? total_gmv/ad_spend : 0,
     refund_rate: total_gmv > 0 ? t('refund_amount')/total_gmv : 0,
   };
 }
