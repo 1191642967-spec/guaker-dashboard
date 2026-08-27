@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>桂格直播间运营数据看板</title>
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 <style>
 :root {
   --bg-primary: #0F172A;
@@ -172,44 +173,81 @@ body {
 .two-col { display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; margin-bottom: 20px; }
 .two-col.equal { grid-template-columns: 1fr 1fr; }
 
-/* ===== Funnel (CSS aesthetic) ===== */
-.funnel-wrap { display: flex; gap: 24px; align-items: stretch; }
-.funnel-chart-css { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; padding: 10px 0; }
-.funnel-level {
-  display: flex; align-items: center; justify-content: center; position: relative;
-  margin-bottom: -2px; transition: all 0.3s;
+/* ===== Funnel (Light Reference Design) ===== */
+.funnel-light-section {
+  background: linear-gradient(135deg, #FAFBFC, #F0F2F5);
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 0;
 }
-.funnel-level:hover { filter: brightness(1.15); }
+.funnel-light-body { display: flex; gap: 36px; align-items: flex-start; }
+.funnel-diagram { flex: 1; position: relative; padding: 8px 110px 20px 110px; }
+.funnel-row {
+  display: flex; align-items: center; position: relative;
+  margin-bottom: 8px; min-height: 46px;
+}
+.funnel-row-label {
+  position: absolute; left: 0; width: 100px; text-align: right;
+}
+.funnel-row-label .fname { font-size: 13px; font-weight: 700; color: #1F2937; display: block; }
+.funnel-row-label .fnum { font-size: 11px; color: #9CA3AF; margin-top: 1px; }
 .funnel-trapezoid {
-  display: flex; align-items: center; justify-content: center;
-  color: white; font-weight: 700; font-size: 13px; text-align: center;
-  position: relative;
+  height: 44px; display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 15px; position: relative;
+  clip-path: polygon(6% 0%, 94% 0%, 100% 100%, 0% 100%);
+  transition: filter 0.2s;
 }
-.funnel-label { position: absolute; left: -120px; text-align: right; font-size: 12px; color: var(--text-secondary); width: 100px; }
-.funnel-label .fname { font-weight: 600; color: var(--text-primary); display: block; }
-.funnel-label .fnum { font-size: 11px; color: var(--text-muted); }
-.funnel-rate {
-  position: absolute; right: -90px; font-size: 12px; font-weight: 600;
-  padding: 3px 10px; border-radius: 12px; width: 70px; text-align: center;
-}
-.funnel-rate.pass { background: rgba(16,185,129,0.15); color: var(--green-light); border: 1px solid rgba(16,185,129,0.3); }
-.funnel-rate.fail { background: rgba(239,68,68,0.15); color: var(--red-light); border: 1px solid rgba(239,68,68,0.3); }
-.funnel-overall {
-  margin-top: 16px; padding: 10px 24px; background: rgba(59,130,246,0.1);
-  border: 1px solid rgba(59,130,246,0.3); border-radius: 10px; text-align: center;
-}
-.funnel-overall .label { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
-.funnel-overall .value { font-size: 18px; font-weight: 800; color: var(--blue-light); }
+.funnel-trapezoid:hover { filter: brightness(1.1); }
+.funnel-trapezoid.l1 { width: 100%; background: linear-gradient(135deg, #5B8DEF, #3B6FE0); }
+.funnel-trapezoid.l2 { width: 82%; background: linear-gradient(135deg, #4A7CE8, #2E5DD8); margin-left: 9%; }
+.funnel-trapezoid.l3 { width: 64%; background: linear-gradient(135deg, #3D6BDB, #234DC8); margin-left: 18%; }
+.funnel-trapezoid.l4 { width: 46%; background: linear-gradient(135deg, #3059C9, #1A3DB5); margin-left: 27%; }
+.funnel-trapezoid.l5 { width: 30%; background: linear-gradient(135deg, #2548B8, #1530A0); margin-left: 35%; }
 
-.funnel-side { width: 200px; display: flex; flex-direction: column; gap: 10px; }
-.funnel-target-card {
-  padding: 12px 14px; border-radius: 10px; background: var(--bg-secondary);
-  border: 1px solid var(--border);
+.funnel-rate-badge {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px;
+  padding: 5px 14px; white-space: nowrap; text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
-.ftc-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-.ftc-row { display: flex; align-items: baseline; justify-content: space-between; }
-.ftc-value { font-size: 16px; font-weight: 700; }
-.ftc-target { font-size: 11px; color: var(--text-muted); }
+.funnel-rate-badge::before {
+  content: ''; position: absolute; left: -18px; top: 50%; transform: translateY(-50%);
+  width: 18px; height: 1px; background: #D1D5DB;
+}
+.funnel-rate-badge .rate-label { font-size: 10px; color: #9CA3AF; display: block; font-weight: 400; }
+.funnel-rate-badge .rate-value { font-size: 14px; font-weight: 700; color: #374151; }
+
+.funnel-overall-pill {
+  margin: 18px auto 0; display: table; padding: 8px 28px;
+  background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 20px;
+  font-size: 13px; font-weight: 600; color: #2563EB;
+}
+
+.funnel-targets-panel { width: 250px; flex-shrink: 0; }
+.funnel-targets-title {
+  font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 16px;
+  padding-bottom: 10px; border-bottom: 1px solid #E5E7EB;
+}
+.ftarget-item { margin-bottom: 16px; }
+.ftarget-item:last-child { margin-bottom: 0; }
+.ftarget-name { font-size: 12px; color: #6B7280; margin-bottom: 5px; font-weight: 500; }
+.ftarget-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.ftarget-value { font-size: 18px; font-weight: 800; }
+.ftarget-value.fail { color: #EF4444; }
+.ftarget-value.pass { color: #10B981; }
+.ftarget-input-row { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #9CA3AF; }
+.ftarget-input {
+  width: 42px; padding: 3px 6px; border: 1px solid #D1D5DB; border-radius: 4px;
+  font-size: 12px; text-align: center; font-family: inherit; background: white; color: #374151;
+}
+.ftarget-progress { height: 6px; background: #F3F4F6; border-radius: 3px; overflow: hidden; margin: 6px 0; }
+.ftarget-progress-fill { height: 100%; border-radius: 3px; transition: width 0.6s; }
+.ftarget-progress-fill.fail { background: linear-gradient(90deg, #EF4444, #F87171); }
+.ftarget-progress-fill.pass { background: linear-gradient(90deg, #10B981, #34D399); }
+.ftarget-status { font-size: 11px; font-weight: 600; }
+.ftarget-status.fail { color: #EF4444; }
+.ftarget-status.pass { color: #10B981; }
 
 /* ===== Anchor Ranking ===== */
 .anchor-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
@@ -324,9 +362,9 @@ body {
   .monthly-targets { grid-template-columns: 1fr; }
   .metrics-grid { grid-template-columns: repeat(3, 1fr); }
   .two-col, .two-col.equal { grid-template-columns: 1fr; }
-  .funnel-wrap { flex-direction: column; }
-  .funnel-side { width: 100%; flex-direction: row; flex-wrap: wrap; }
-  .funnel-target-card { flex: 1; min-width: 140px; }
+  .funnel-light-body { flex-direction: column; }
+  .funnel-targets-panel { width: 100%; }
+  .funnel-diagram { padding: 8px 110px 20px 110px; }
   .period-kpis { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 600px) {
@@ -485,42 +523,55 @@ function renderDailyMetrics(d) {
 
 function renderFunnel(d) {
   const levels = [
-    {name:'直播间曝光', num:d.exposure||0, rate:1, target:null, w:100, h:44, color:'#3B82F6'},
-    {name:'直播间观看', num:d.watchers||0, rate:d.exposure_watch_rate||0, target:0.15, w:80, h:40, color:'#2563EB'},
-    {name:'商品曝光', num:d.product_exposure||0, rate:d.watch_product_rate||0, target:0.80, w:62, h:36, color:'#1D4ED8'},
-    {name:'商品点击', num:d.product_clicks||0, rate:d.product_click_rate||0, target:0.25, w:44, h:32, color:'#1E40AF'},
-    {name:'成交', num:d.buyers||0, rate:d.click_buy_rate||0, target:0.15, w:28, h:28, color:'#1E3A8A'},
+    {name:'直播间曝光', num:d.exposure||0, cls:'l1'},
+    {name:'直播间观看', num:d.watchers||0, cls:'l2', rate:d.exposure_watch_rate||0, target:0.15, rateName:'曝光→观看'},
+    {name:'商品曝光', num:d.product_exposure||0, cls:'l3', rate:d.watch_product_rate||0, target:0.80, rateName:'观看→商品曝光'},
+    {name:'商品点击', num:d.product_clicks||0, cls:'l4', rate:d.product_click_rate||0, target:0.25, rateName:'商品曝光→点击'},
+    {name:'成交', num:d.buyers||0, cls:'l5', rate:d.click_buy_rate||0, target:0.15, rateName:'点击→成交'},
   ];
   const overall = d.exposure>0 ? d.buyers/d.exposure : 0;
 
-  const funnelHtml = levels.map((lv,i) => {
-    const pass = lv.target ? lv.rate >= lv.target : true;
-    return `<div class="funnel-level" style="height:${lv.h+8}px">
-      <div class="funnel-label"><span class="fname">${lv.name}</span><span class="fnum">${fmt(lv.num,0)}人</span></div>
-      <div class="funnel-trapezoid" style="width:${lv.w}%;height:${lv.h}px;background:linear-gradient(135deg,${lv.color},${lv.color}dd);border-radius:4px;box-shadow:0 2px 12px ${lv.color}44;">
-        ${fmt(lv.num,0)}
-      </div>
-      ${lv.target ? `<div class="funnel-rate ${pass?'pass':'fail'}">${fmtPct(lv.rate,1)}</div>` : ''}
+  const funnelRows = levels.map((lv,i) => {
+    const rateBadge = lv.rate !== undefined ? `
+      <div class="funnel-rate-badge">
+        <span class="rate-label">转化率</span>
+        <span class="rate-value">${fmtPct(lv.rate,1)}</span>
+      </div>` : '';
+    return `<div class="funnel-row">
+      <div class="funnel-row-label"><span class="fname">${lv.name}</span><span class="fnum">${fmt(lv.num,0)} 人</span></div>
+      <div class="funnel-trapezoid ${lv.cls}">${fmt(lv.num,0)}</div>
+      ${rateBadge}
     </div>`;
   }).join('');
 
-  const sideCards = levels.filter(l=>l.target).map(lv => {
+  const targetItems = levels.filter(l=>l.rate !== undefined).map(lv => {
     const pass = lv.rate >= lv.target;
-    return `<div class="funnel-target-card">
-      <div class="ftc-label">${lv.name}转化率</div>
-      <div class="ftc-row"><span class="ftc-value" style="color:${pass?'var(--green-light)':'var(--red-light)'}">${fmtPct(lv.rate,2)}</span><span class="ftc-target">目标 ${(lv.target*100).toFixed(0)}%</span></div>
-      <div style="font-size:10px;color:${pass?'var(--green)':'var(--red)'};margin-top:3px">${pass?'✓ 达标':'✗ 未达标'}</div>
+    const progressPct = Math.min((lv.rate / lv.target) * 100, 100);
+    return `<div class="ftarget-item">
+      <div class="ftarget-name">${lv.rateName}</div>
+      <div class="ftarget-row">
+        <span class="ftarget-value ${pass?'pass':'fail'}">${fmtPct(lv.rate,2)}</span>
+        <span class="ftarget-input-row">目标 <input type="number" class="ftarget-input" value="${(lv.target*100).toFixed(0)}" readonly> %</span>
+      </div>
+      <div class="ftarget-progress"><div class="ftarget-progress-fill ${pass?'pass':'fail'}" style="width:${progressPct}%"></div></div>
+      <div class="ftarget-status ${pass?'pass':'fail'}">${pass?'✓ 达标':'✗ 未达标'}</div>
     </div>`;
   }).join('');
 
   return `<div class="two-col">
-    <div class="section"><div class="section-header"><span class="section-badge cyan">当日转化漏斗</span>
-      <span class="section-date">${currentDate}</span><span class="section-icon">◎</span></div>
-      <div class="funnel-wrap">
-        <div class="funnel-chart-css">${funnelHtml}
-          <div class="funnel-overall"><div class="label">曝光→成交 整体转化率</div><div class="value">${fmtPct(overall,2)}</div></div>
+    <div class="funnel-light-section">
+      <div class="section-header"><span class="section-badge blue">当日转化漏斗</span>
+        <span class="section-date" style="color:#6B7280">${currentDate}</span>
+        <span class="section-icon" style="background:#F3F4F6;color:#9CA3AF;border-color:#E5E7EB">◎</span></div>
+      <div class="funnel-light-body">
+        <div class="funnel-diagram">
+          ${funnelRows}
+          <div class="funnel-overall-pill">曝光→成交 整体 ${fmtPct(overall,2)}</div>
         </div>
-        <div class="funnel-side">${sideCards}</div>
+        <div class="funnel-targets-panel">
+          <div class="funnel-targets-title">转化率目标</div>
+          ${targetItems}
+        </div>
       </div>
     </div>
     ${renderAnchorRankingInline()}
