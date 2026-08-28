@@ -635,7 +635,7 @@ function renderDailyMetrics(d) {
 function renderFunnel(d) {
   const levels = [
     {name:'直播间曝光', num:d.exposure||0, cls:'l1'},
-    {name:'直播间观看', num:d.watchers||0, cls:'l2', rate:d.exposure_watch_rate||0, target:0.12, rateName:'曝光→观看'},
+    {name:'直播间观看', num:d.watchers||0, cls:'l2', rate:d.exposure_watch_rate||0, targetMin:0.12, targetMax:0.15, rateName:'曝光→观看'},
     {name:'商品曝光', num:d.product_exposure||0, cls:'l3', rate:d.watch_product_rate||0, target:0.90, rateName:'观看→商品曝光'},
     {name:'商品点击', num:d.product_clicks||0, cls:'l4', rate:d.product_click_rate||0, target:0.30, rateName:'商品曝光→点击'},
     {name:'成交', num:d.buyers||0, cls:'l5', rate:d.click_buy_rate||0, target:0.15, rateName:'点击→成交'},
@@ -650,13 +650,16 @@ function renderFunnel(d) {
   }).join('');
 
   const targetItems = levels.filter(l=>l.rate !== undefined).map(lv => {
-    const pass = lv.rate >= lv.target;
-    const progressPct = Math.min((lv.rate / lv.target) * 100, 100);
+    const isRange = lv.targetMin !== undefined && lv.targetMax !== undefined;
+    const pass = isRange ? (lv.rate >= lv.targetMin && lv.rate <= lv.targetMax) : (lv.rate >= lv.target);
+    const refTarget = isRange ? lv.targetMax : lv.target;
+    const progressPct = Math.min((lv.rate / refTarget) * 100, 100);
+    const targetDisplay = isRange ? `${(lv.targetMin*100).toFixed(0)}-${(lv.targetMax*100).toFixed(0)}` : (lv.target*100).toFixed(0);
     return `<div class="ftarget-item">
       <div class="ftarget-name">${lv.rateName}</div>
       <div class="ftarget-row">
         <span class="ftarget-value ${pass?'pass':'fail'}">${fmtPct(lv.rate,2)}</span>
-        <span class="ftarget-input-row">目标 <input type="number" class="ftarget-input" value="${(lv.target*100).toFixed(0)}" readonly> %</span>
+        <span class="ftarget-input-row">目标 <input type="number" class="ftarget-input" value="${targetDisplay}" readonly> %</span>
       </div>
       <div class="ftarget-progress"><div class="ftarget-progress-fill ${pass?'pass':'fail'}" style="width:${progressPct}%"></div></div>
       <div class="ftarget-status ${pass?'pass':'fail'}">${pass?'✓ 达标':'✗ 未达标'}</div>
