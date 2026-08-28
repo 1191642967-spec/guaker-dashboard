@@ -320,6 +320,7 @@ body {
 .ftarget-value { font-size: 18px; font-weight: 800; }
 .ftarget-value.fail { color: #EF4444; }
 .ftarget-value.pass { color: #10B981; }
+.ftarget-value.excellent { color: #F59E0B; }
 .ftarget-input-row { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted); }
 .ftarget-input {
   width: 42px; padding: 3px 6px; border: 1px solid var(--border-light); border-radius: 4px;
@@ -329,9 +330,11 @@ body {
 .ftarget-progress-fill { height: 100%; border-radius: 3px; transition: width 0.6s; }
 .ftarget-progress-fill.fail { background: linear-gradient(90deg, #EF4444, #F87171); }
 .ftarget-progress-fill.pass { background: linear-gradient(90deg, #10B981, #34D399); }
+.ftarget-progress-fill.excellent { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
 .ftarget-status { font-size: 11px; font-weight: 600; }
 .ftarget-status.fail { color: #EF4444; }
 .ftarget-status.pass { color: #10B981; }
+.ftarget-status.excellent { color: #F59E0B; }
 
 /* ===== Anchor Ranking ===== */
 .anchor-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
@@ -651,18 +654,26 @@ function renderFunnel(d) {
 
   const targetItems = levels.filter(l=>l.rate !== undefined).map(lv => {
     const isRange = lv.targetMin !== undefined && lv.targetMax !== undefined;
-    const pass = isRange ? (lv.rate >= lv.targetMin && lv.rate <= lv.targetMax) : (lv.rate >= lv.target);
+    let status, statusText;
+    if (isRange) {
+      if (lv.rate > lv.targetMax) { status = 'excellent'; statusText = '★ 优秀'; }
+      else if (lv.rate >= lv.targetMin) { status = 'pass'; statusText = '✓ 达标'; }
+      else { status = 'fail'; statusText = '✗ 未达标'; }
+    } else {
+      if (lv.rate >= lv.target) { status = 'pass'; statusText = '✓ 达标'; }
+      else { status = 'fail'; statusText = '✗ 未达标'; }
+    }
     const refTarget = isRange ? lv.targetMax : lv.target;
     const progressPct = Math.min((lv.rate / refTarget) * 100, 100);
     const targetDisplay = isRange ? `${(lv.targetMin*100).toFixed(0)}-${(lv.targetMax*100).toFixed(0)}` : (lv.target*100).toFixed(0);
     return `<div class="ftarget-item">
       <div class="ftarget-name">${lv.rateName}</div>
       <div class="ftarget-row">
-        <span class="ftarget-value ${pass?'pass':'fail'}">${fmtPct(lv.rate,2)}</span>
+        <span class="ftarget-value ${status}">${fmtPct(lv.rate,2)}</span>
         <span class="ftarget-input-row">目标 <input type="number" class="ftarget-input" value="${targetDisplay}" readonly> %</span>
       </div>
-      <div class="ftarget-progress"><div class="ftarget-progress-fill ${pass?'pass':'fail'}" style="width:${progressPct}%"></div></div>
-      <div class="ftarget-status ${pass?'pass':'fail'}">${pass?'✓ 达标':'✗ 未达标'}</div>
+      <div class="ftarget-progress"><div class="ftarget-progress-fill ${status}" style="width:${progressPct}%"></div></div>
+      <div class="ftarget-status ${status}">${statusText}</div>
     </div>`;
   }).join('');
 
