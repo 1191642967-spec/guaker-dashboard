@@ -635,9 +635,9 @@ function renderDailyMetrics(d) {
 function renderFunnel(d) {
   const levels = [
     {name:'直播间曝光', num:d.exposure||0, cls:'l1'},
-    {name:'直播间观看', num:d.watchers||0, cls:'l2', rate:d.exposure_watch_rate||0, target:0.15, rateName:'曝光→观看'},
-    {name:'商品曝光', num:d.product_exposure||0, cls:'l3', rate:d.watch_product_rate||0, target:0.80, rateName:'观看→商品曝光'},
-    {name:'商品点击', num:d.product_clicks||0, cls:'l4', rate:d.product_click_rate||0, target:0.25, rateName:'商品曝光→点击'},
+    {name:'直播间观看', num:d.watchers||0, cls:'l2', rate:d.exposure_watch_rate||0, target:0.12, rateName:'曝光→观看'},
+    {name:'商品曝光', num:d.product_exposure||0, cls:'l3', rate:d.watch_product_rate||0, target:0.90, rateName:'观看→商品曝光'},
+    {name:'商品点击', num:d.product_clicks||0, cls:'l4', rate:d.product_click_rate||0, target:0.30, rateName:'商品曝光→点击'},
     {name:'成交', num:d.buyers||0, cls:'l5', rate:d.click_buy_rate||0, target:0.15, rateName:'点击→成交'},
   ];
   const overall = d.exposure>0 ? d.buyers/d.exposure : 0;
