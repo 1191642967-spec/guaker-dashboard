@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-22 10:05:02",
+  "updated_at": "2026-09-23 07:19:14",
   "records": [
     {
       "date": "2026-01-01",
@@ -7746,15 +7746,15 @@
         "date": "2026-09-21",
         "name": "朱吴琪",
         "color": "#F59E0B",
-        "total_gmv": 29221.1,
-        "gmv": 18723.37,
-        "ad_spend": 8284.68,
+        "total_gmv": 28126.9,
+        "gmv": 18022.26,
+        "ad_spend": 7974.45,
         "roi": 2.26,
-        "duration": 4.3,
-        "hourly_gmv": 4341.0,
-        "views": 16195.0,
-        "orders": 406.0,
-        "new_followers": 52.0,
+        "duration": 4.6,
+        "hourly_gmv": 3955.0,
+        "views": 15589.0,
+        "orders": 391.0,
+        "new_followers": 50.0,
         "sessions": 1,
         "score": 1.0,
         "rank": 1
@@ -7763,84 +7763,84 @@
         "date": "2026-09-21",
         "name": "琦琦",
         "color": "#6B7280",
-        "total_gmv": 23229.56,
-        "gmv": 14884.3,
-        "ad_spend": 7225.39,
-        "roi": 2.06,
-        "duration": 4.2,
-        "hourly_gmv": 3585.0,
-        "views": 12874.0,
-        "orders": 323.0,
-        "new_followers": 41.0,
+        "total_gmv": 19095.53,
+        "gmv": 12235.43,
+        "ad_spend": 5638.45,
+        "roi": 2.17,
+        "duration": 4.0,
+        "hourly_gmv": 3022.0,
+        "views": 10583.0,
+        "orders": 265.0,
+        "new_followers": 34.0,
         "sessions": 1,
-        "score": 0.8392,
+        "score": 0.7888,
         "rank": 2
       },
       {
         "date": "2026-09-21",
         "name": "樊斐",
         "color": "#D97706",
-        "total_gmv": 14309.23,
-        "gmv": 9168.61,
-        "ad_spend": 4205.78,
-        "roi": 2.18,
-        "duration": 4.1,
-        "hourly_gmv": 2253.0,
-        "views": 7931.0,
-        "orders": 199.0,
-        "new_followers": 25.0,
+        "total_gmv": 19537.46,
+        "gmv": 12518.59,
+        "ad_spend": 6387.04,
+        "roi": 1.96,
+        "duration": 4.7,
+        "hourly_gmv": 2656.0,
+        "views": 10828.0,
+        "orders": 271.0,
+        "new_followers": 35.0,
         "sessions": 1,
-        "score": 0.641,
+        "score": 0.7395,
         "rank": 3
       }
     ],
     "weekly": [
       {
-        "name": "琦琦",
-        "color": "#6B7280",
-        "gmv": 181389.47,
-        "total_gmv": 259083.84,
-        "ad_spend": 83533.95,
-        "duration": 31.9,
-        "views": 128915.0,
-        "orders": 3659.0,
-        "new_followers": 382.0,
+        "name": "朱吴琪",
+        "color": "#F59E0B",
+        "gmv": 130032.95,
+        "total_gmv": 180304.84,
+        "ad_spend": 58119.32,
+        "duration": 30.5,
+        "views": 91152.0,
+        "orders": 2522.0,
+        "new_followers": 282.0,
         "sessions": 7,
-        "hourly_gmv": 5686.0,
-        "roi": 2.17,
-        "score": 0.9868,
+        "hourly_gmv": 4263.0,
+        "roi": 2.24,
+        "score": 1.0,
         "rank": 1
       },
       {
-        "name": "朱吴琪",
-        "color": "#F59E0B",
-        "gmv": 82204.23,
-        "total_gmv": 107711.94,
-        "ad_spend": 36185.74,
-        "duration": 18.2,
-        "views": 55009.0,
-        "orders": 1468.0,
-        "new_followers": 186.0,
-        "sessions": 4,
-        "hourly_gmv": 4517.0,
-        "roi": 2.27,
-        "score": 0.7196,
+        "name": "琦琦",
+        "color": "#6B7280",
+        "gmv": 126271.56,
+        "total_gmv": 175669.03,
+        "ad_spend": 58196.26,
+        "duration": 31.9,
+        "views": 88433.0,
+        "orders": 2460.0,
+        "new_followers": 274.0,
+        "sessions": 7,
+        "hourly_gmv": 3958.0,
+        "roi": 2.17,
+        "score": 0.9576,
         "rank": 2
       },
       {
         "name": "樊斐",
         "color": "#D97706",
-        "gmv": 70692.51,
-        "total_gmv": 98548.51,
-        "ad_spend": 36238.68,
-        "duration": 22.9,
-        "views": 51203.0,
-        "orders": 1384.0,
-        "new_followers": 161.0,
-        "sessions": 5,
-        "hourly_gmv": 3087.0,
-        "roi": 1.95,
-        "score": 0.5765,
+        "gmv": 77981.72,
+        "total_gmv": 109370.44,
+        "ad_spend": 38635.61,
+        "duration": 30.4,
+        "views": 55542.0,
+        "orders": 1530.0,
+        "new_followers": 173.0,
+        "sessions": 7,
+        "hourly_gmv": 2565.0,
+        "roi": 2.02,
+        "score": 0.6909,
         "rank": 3
       }
     ],
@@ -7850,51 +7850,51 @@
     },
     "monthly": [
       {
-        "name": "琦琦",
-        "color": "#6B7280",
-        "gmv": 294677.6,
-        "total_gmv": 451891.12,
-        "ad_spend": 135760.73,
-        "duration": 91.6,
-        "views": 239231.0,
-        "orders": 6192.0,
-        "new_followers": 743.0,
-        "sessions": 20,
-        "hourly_gmv": 3217.0,
-        "roi": 2.17,
-        "score": 0.9868,
+        "name": "朱吴琪",
+        "color": "#F59E0B",
+        "gmv": 260419.83,
+        "total_gmv": 397916.59,
+        "ad_spend": 116632.54,
+        "duration": 91.3,
+        "views": 214066.0,
+        "orders": 5361.0,
+        "new_followers": 682.0,
+        "sessions": 21,
+        "hourly_gmv": 2852.0,
+        "roi": 2.23,
+        "score": 1.0,
         "rank": 1
       },
       {
-        "name": "朱吴琪",
-        "color": "#F59E0B",
-        "gmv": 221159.33,
-        "total_gmv": 336841.62,
-        "ad_spend": 97616.48,
-        "duration": 76.7,
-        "views": 184010.0,
-        "orders": 4414.0,
-        "new_followers": 604.0,
-        "sessions": 17,
-        "hourly_gmv": 2883.0,
-        "roi": 2.27,
-        "score": 0.8691,
+        "name": "琦琦",
+        "color": "#6B7280",
+        "gmv": 244721.99,
+        "total_gmv": 373737.84,
+        "ad_spend": 112842.3,
+        "duration": 94.6,
+        "views": 200934.0,
+        "orders": 5041.0,
+        "new_followers": 642.0,
+        "sessions": 21,
+        "hourly_gmv": 2587.0,
+        "roi": 2.17,
+        "score": 0.9399,
         "rank": 2
       },
       {
         "name": "樊斐",
         "color": "#D97706",
-        "gmv": 148965.97,
-        "total_gmv": 228433.87,
-        "ad_spend": 73388.71,
-        "duration": 81.5,
-        "views": 124919.0,
-        "orders": 3105.0,
-        "new_followers": 407.0,
-        "sessions": 18,
-        "hourly_gmv": 1828.0,
+        "gmv": 159661.03,
+        "total_gmv": 245512.17,
+        "ad_spend": 78729.69,
+        "duration": 92.5,
+        "views": 133161.0,
+        "orders": 3307.0,
+        "new_followers": 430.0,
+        "sessions": 21,
+        "hourly_gmv": 1726.0,
         "roi": 2.03,
-        "score": 0.641,
+        "score": 0.6999,
         "rank": 3
       }
     ],
@@ -7903,1094 +7903,5 @@
       "month": 9
     }
   },
-  "schedule": [
-    {
-      "date": "2026-08-01",
-      "time": "6:00-10:30",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": "朱吴琪"
-    },
-    {
-      "date": "2026-08-01",
-      "time": "10:30-15:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-02",
-      "time": "6:00-10:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-02",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-02",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-03",
-      "time": "6:00-10:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-03",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-03",
-      "time": "19:30-00:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-04",
-      "time": "6:00-10:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-04",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-04",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-05",
-      "time": "6:00-10:30",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-05",
-      "time": "10:30-15:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-05",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-06",
-      "time": "6:00-10:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-06",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-06",
-      "time": "19:30-00:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-07",
-      "time": "6:00-10:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-07",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-07",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-08",
-      "time": "6:00-10:30",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-08",
-      "time": "15:00-19:30",
-      "anchor": "柚子",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-08",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪/琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-09",
-      "time": "6:00-10:30",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": "琦琦"
-    },
-    {
-      "date": "2026-08-09",
-      "time": "15:00-19:30",
-      "anchor": "柚子",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-09",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-10",
-      "time": "6:00-10:30",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-10",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-10",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-11",
-      "time": "6:00-10:30",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-11",
-      "time": "10:30-15:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-11",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-12",
-      "time": "6:00-10:30",
-      "anchor": "柚子",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-12",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-12",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-12",
-      "time": "19:30-00:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-13",
-      "time": "6:00-10:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-13",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-13",
-      "time": "15:00-19:30",
-      "anchor": "柚子",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-13",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-14",
-      "time": "6:00-10:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-14",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-14",
-      "time": "15:00-19:30",
-      "anchor": "柚子",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-14",
-      "time": "19:30-00:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-15",
-      "time": "6:00-10:30",
-      "anchor": "柚子",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": "周冰清"
-    },
-    {
-      "date": "2026-08-15",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-15",
-      "time": "15:00-19:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-15",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-16",
-      "time": "6:00-10:30",
-      "anchor": "柚子",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": "周冰清"
-    },
-    {
-      "date": "2026-08-16",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-16",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-16",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-17",
-      "time": "6:00-10:30",
-      "anchor": "柚子",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-17",
-      "time": "10:30-15:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-17",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-17",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-18",
-      "time": "6:00-10:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": "琦琦"
-    },
-    {
-      "date": "2026-08-18",
-      "time": "15:00-19:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-18",
-      "time": "19:30-00:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-19",
-      "time": "6:00-10:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-19",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-19",
-      "time": "15:00-19:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-19",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-20",
-      "time": "6:00-10:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-20",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-20",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-20",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-21",
-      "time": "6:00-10:30",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": "朱吴琪"
-    },
-    {
-      "date": "2026-08-21",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-21",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-22",
-      "time": "6:00-10:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-22",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-22",
-      "time": "15:00-19:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-22",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-23",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-23",
-      "time": "15:00-19:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-23",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-24",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-24",
-      "time": "15:00-19:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-24",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-25",
-      "time": "10:30-15:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-25",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-25",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-26",
-      "time": "10:30-15:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-26",
-      "time": "15:00-19:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-26",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-27",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-27",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-28",
-      "time": "15:00-19:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-28",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-29",
-      "time": "15:00-19:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-29",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-30",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-30",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-31",
-      "time": "15:00-19:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-08-31",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-01",
-      "time": "10:30-15:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-01",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-01",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-02",
-      "time": "10:30-15:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-02",
-      "time": "15:00-19:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-02",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-03",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-03",
-      "time": "15:00-19:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-03",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-04",
-      "time": "6:00-10:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-04",
-      "time": "10:30-15:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-04",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-05",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-05",
-      "time": "15:00-19:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-05",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-06",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-06",
-      "time": "15:00-19:30",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-06",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-07",
-      "time": "10:30-15:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-07",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-07",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-08",
-      "time": "10:30-15:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-08",
-      "time": "15:00-19:30",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-08",
-      "time": "19:30-00:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-09",
-      "time": "10:30-15:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-09",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-09",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-10",
-      "time": "10:30-15:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-10",
-      "time": "15:00-19:30",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-10",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-11",
-      "time": "10:30-15:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-11",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-11",
-      "time": "19:30-00:00",
-      "anchor": "朱吴琪",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-17",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-17",
-      "time": "15:00-19:30",
-      "anchor": "朱吴琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-17",
-      "time": "19:30-00:00",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-18",
-      "time": "10:30-15:00",
-      "anchor": "周冰清",
-      "duration": 4.5,
-      "shift": "午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-18",
-      "time": "15:00-19:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "下午班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-18",
-      "time": "19:30-00:00",
-      "anchor": "樊斐",
-      "duration": 4.5,
-      "shift": "晚班",
-      "rest": null
-    },
-    {
-      "date": "2026-09-19",
-      "time": "6:00-10:30",
-      "anchor": "琦琦",
-      "duration": 4.5,
-      "shift": "早班",
-      "rest": null
-    }
-  ]
+  "schedule": []
 }
